@@ -18,6 +18,9 @@ we evaluated the model in accuracy and modle size.
 |accuracy|  0.9716    | 0.97353 |0.970 |0.9735|
 |model size| 12M | 40M |  4.4M |28M|
 
+
+
+
 You can find more deatils of these models in     
 `./flower102/mobilenet`  
 `./flowers102/resnet18`    
