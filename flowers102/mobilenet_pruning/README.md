@@ -5,7 +5,7 @@ The pruning model can be download from here ([trained model](https://pan.baidu.c
 ### Reproduce 
 1. download the mobilenet model trained on flower102.
 
-	the `mobilenet_flowers102.tar.gz`( [Download from BaiduCloud](https://pan.baidu.com/s/1slK3wlB)) is the trained model on flower102. Accuracy is 97.16%.
+	the `mobilenet_flowers102.tar.gz`( [Download from BaiduCloud](https://pan.baidu.com/s/1geHkrw3)) is the trained model on flower102. Accuracy is 97.16%.
 
 2. train the model   
 `python train.py`
@@ -18,6 +18,6 @@ the `dynamic_prunig` has not been merged in paddle, if u want to use it, use the
 
 `$ git clone https://github.com/NHZlX/Paddle.git `     
 `$ git checkout auto_pruning`     
-`$ git remote add upstream https://github.com/PaddlePaddle/Paddle` 
+`$ git remote add upstream https://github.com/PaddlePaddle/Paddle`       
 `$ git fetch upstream`     
 `$ git pull upstream develop`

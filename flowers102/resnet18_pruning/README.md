@@ -19,6 +19,6 @@ the `dynamic_prunig` has not been merged in paddle, if u want to use it, use the
 
 `$ git clone https://github.com/NHZlX/Paddle.git `     
 `$ git checkout auto_pruning`     
-`$ git remote add upstream https://github.com/PaddlePaddle/Paddle` 
+`$ git remote add upstream https://github.com/PaddlePaddle/Paddle`     
 `$ git fetch upstream`     
 `$ git pull upstream develop`
