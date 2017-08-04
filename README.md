@@ -5,9 +5,9 @@
 ### we did four tests on mobilenet and resnet18，they are:
 
  - train the mobilenet model on flowers102 using pretrained imagenet model.  
- - train the resnet102 model on flower102 using pretrained imagenet model.
+ - train the resnet18 model on flower102 using pretrained imagenet model.
  - fine-tune the mobilenet model trained on flower102 using dynamic pruning.
- - fine-tune the resnet108 model trained on flower102 using dynamic pruning. 
+ - fine-tune the resnet18 model trained on flower102 using dynamic pruning. 
 
 
 ### result

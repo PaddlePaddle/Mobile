@@ -3,7 +3,7 @@ The trained model can be download from here ([trained model](https://pan.baidu.c
 
 
 ### Reproduce 
-1. download the pretaind model.
+1. download the pretraind model.
 
 	the `imagenet_pretrained_resnet18.tar.gz`( [Download from BaiduCloud](https://pan.baidu.com/s/1gf7rd0v)) is the pretrained model on imagenet, top-1 accuracy : 70.91%
  top-5 accuracy 89.6%
