@@ -1,6 +1,7 @@
 # Inference demo
 
 This is an inference demo program based on the Paddle C API. But this demo is based on the c++ code, so need to use g++ or clang++ to compile. 
+The demo can be run from the command line and used to test the inference performance of various models.
 
 ## Android
 To compile and run this demo in the Android environment, follow these steps:
