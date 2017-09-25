@@ -1,7 +1,5 @@
 # Rounding 
 
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
-
 ###  Rounding test of Mobilenet(1.0,  224 * 224 input) on flowers102 dataset.
 
 
@@ -21,13 +19,11 @@
 Given floating parameters `V`, first our goal is to represent `V` as 8-bit integers `V'`. And then we transformed back `V'` back into its approximate high-precision value by performing the inverse of the quantization operation. At last, we perform gzip to our quantized && inverse-quantized model. The whole process can reduces our model by 70%.
 
 ### process
-- First, we use UInt8 quantization, that is, the parameters are sacled to [0, 255]
-	
-$$V' =\frac{255}{Vmax - Vmin} * (V - Vmin)$$
+- First, we use UInt8 quantization, that is, the parameters are sacled to [0, 255]    
+ ![](../../others/rounding1.png)
 
-- Second, we inverse the quantization.
- $$V = \frac{V' * (Vmax - Vmin)}{255} + Vmin$$
-
+- Second, we inverse the quantization.      
+	 ![](../../others/rounding2.png)
 
 In the last, We apply gzip compress the inverse-quantized model, and the compression ratio can be up to 70%.
 
