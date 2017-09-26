@@ -24,5 +24,5 @@ Given floating parameters `V`, first our goal is to represent `V` as 8-bit integ
 - Second, we inverse the quantization.      
 	 ![](../../source/rounding2.png)
 
-In the last, We apply gzip compress the inverse-quantized model, and the compression ratio can be up to 70%.
+In the last, We apply gzip to compress the inverse-quantized model, and the compression ratio can be up to 70%.
 
