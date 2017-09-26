@@ -10,7 +10,7 @@ For more details about batch normalization，see [here](https://arxiv.org/abs/15
 
 We demonstrate a demo of [Mobilenet](https://arxiv.org/abs/1704.04861).
 
-### preparation for Merge
+### Preparation for Merge
 
 1. the source model config with batch normalization. see `./demo/mobilenet_with_bn.py`
 2. the source model with batch normalization. see `./demo/models/mobilenet_flowers102.tar.gz`
