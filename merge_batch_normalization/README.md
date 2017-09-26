@@ -1,4 +1,4 @@
-# Merge Batch normarlization to Fc or conv layer based on Paddle
+# Merge Batch Normarlization to fc or conv layer based on PaddlePaddle
 
 
 When the training process is finished, we can merge the batch normalization with the convolution or fully connected layer. Doing so will give us a forward acceleration.
@@ -8,7 +8,7 @@ For more details about batch normalization，see [here](https://arxiv.org/abs/15
 
 ## Demo
 
-We demonstrate a demo of mobilenet.
+We demonstrate a demo of [Mobilenet](https://arxiv.org/abs/1704.04861).
 
 ### preparation for Merge
 
