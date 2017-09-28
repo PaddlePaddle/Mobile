@@ -1,0 +1,122 @@
+# edit-mode: -*- python -*-
+import paddle.v2 as paddle
+
+
+def conv_bn_layer(input, filter_size, num_filters,
+                  stride, padding, channels=None, num_groups=1,
+                  active_type=paddle.activation.Relu()):
+    """
+    A wrapper for conv layer with batch normalization layers.
+    Note:
+    conv layer has no activation.
+    """
+    tmp = paddle.layer.img_conv(
+                         input=input,
+                         filter_size=filter_size,
+                         num_channels=channels,
+                         num_filters=num_filters,
+                         stride=stride,
+                         padding=padding,
+                         groups=num_groups,
+                        # !!! the act in the network with batch norm 
+                        # is paddle.activation.Linear()
+                         act=active_type,
+                        # !!! the bias_attr in origin network is False
+                         bias_attr=True)
+
+    # !!! we have deleted the batch_norm layer here.
+    return tmp
+
+def depthwise_separable(input, num_filters1, num_filters2, num_groups, stride):
+    """
+    """
+    tmp = conv_bn_layer(
+                        input=input,
+                        filter_size=3,
+                        num_filters=num_filters1,
+                        stride=stride,
+                        padding=1,
+                        num_groups=num_groups)
+
+    tmp = conv_bn_layer(
+                        input=tmp,
+                        filter_size=1,
+                        num_filters=num_filters2,
+                        stride=1,
+                        padding=0)
+    return tmp
+
+def mobile_net(img_size, class_num):
+
+    img = paddle.layer.data(
+        name="image", type=paddle.data_type.dense_vector(img_size))
+
+    # conv1: 112x112
+    tmp = conv_bn_layer(img,
+                        filter_size=3,
+                        channels=3,
+                        num_filters=32,
+                        stride=2,
+                        padding=1)
+
+    # 56x56
+    tmp = depthwise_separable(tmp,
+                              num_filters1=32,
+                              num_filters2=64,
+                              num_groups=32,
+                              stride=1)
+    tmp = depthwise_separable(tmp,
+                              num_filters1=64,
+                              num_filters2=128,
+                              num_groups=64,
+                              stride=2)
+    # 28x28
+    tmp = depthwise_separable(tmp,
+                              num_filters1=128,
+                              num_filters2=128,
+                              num_groups=128,
+                              stride=1)
+    tmp = depthwise_separable(tmp,
+                              num_filters1=128,
+                              num_filters2=256,
+                              num_groups=128,
+                              stride=2)
+    # 14x14
+    tmp = depthwise_separable(tmp,
+                              num_filters1=256,
+                              num_filters2=256,
+                              num_groups=256,
+                              stride=1)
+    tmp = depthwise_separable(tmp,
+                              num_filters1=256,
+                              num_filters2=512,
+                              num_groups=256,
+                              stride=2)
+    # 14x14
+    for i in range(5):
+        tmp = depthwise_separable(tmp,
+                                  num_filters1=512,
+                                  num_filters2=512,
+                                  num_groups=512,
+                                  stride=1)
+    # 7x7
+    tmp = depthwise_separable(tmp,
+                              num_filters1=512,
+                              num_filters2=1024,
+                              num_groups=512,
+                              stride=2)
+    tmp = depthwise_separable(tmp,
+                              num_filters1=1024,
+                              num_filters2=1024,
+                              num_groups=1024,
+                              stride=1)
+
+    tmp = paddle.layer.img_pool(
+                         input=tmp,
+                         pool_size=7,
+                         stride=1,
+                         pool_type=paddle.pooling.Avg())
+    out = paddle.layer.fc(
+        input=tmp, size=class_num, act=paddle.activation.Softmax())
+
+    return out
