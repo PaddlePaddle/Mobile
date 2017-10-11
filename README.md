@@ -11,10 +11,11 @@ Here mainly describes how to deploy PaddlePaddle to the mobile end, as well as s
 ## Deployment optimization methods
 - [Merge batch normalization before deploying the model to the mobile.](https://github.com/hedaoyuan/Mobile/tree/master/merge_batch_normalization)
 - [Compress the model before deploying the model to the mobile.](https://github.com/hedaoyuan/Mobile/tree/master/model_compression/rounding)
+- Merge multiple model parameter files into one file.
 
 ## Model compression
 - Pruning
 
 ## PaddlePaddle mobile benchmark
 - Mobilenet
-
+- ENet
