@@ -9,13 +9,13 @@ Here mainly describes how to deploy PaddlePaddle to the mobile end, as well as s
 - Build PaddlePaddle for PX2
 
 ## Deployment optimization methods
-- [Merge batch normalization before deploying the model to the mobile.](https://github.com/hedaoyuan/Mobile/tree/master/merge_batch_normalization)
-- [Compress the model before deploying the model to the mobile.](https://github.com/hedaoyuan/Mobile/tree/master/model_compression/rounding)
+- [Merge batch normalization before deploying the model to the mobile.](./tool/merge_batch_normalization/README.md)
+- [Compress the model before deploying the model to the mobile.](./tool/rounding/README.md)
 - Merge multiple model parameter files into one file.
 
 ## Model compression
-- Pruning
+- [Pruning](./model_compression/flowers102/README.md)
 
 ## PaddlePaddle mobile benchmark
-- Mobilenet
+- [Mobilenet](./benchmark/README.md)
 - ENet

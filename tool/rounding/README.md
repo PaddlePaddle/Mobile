@@ -19,10 +19,10 @@ Given floating parameters `V`, first our goal is to represent `V` as 8-bit integ
 
 ### Process
 - First, we use UInt8 quantization, that is, the parameters are sacled to [0, 255]    
- ![](../source/rounding1.png)
+ ![](./source/rounding1.png)
 
 - Second, we inverse the quantization.      
-	 ![](../source/rounding2.png)
+	 ![](./source/rounding2.png)
 
 In the last, We apply gzip to compress the inverse-quantized model, and the compression ratio can be up to 70%.
 
