@@ -1,28 +1,21 @@
 # Mobile
 
-## MobileNet and Resnet18 test on oxford flowers 102 dataset
+Here mainly describes how to deploy PaddlePaddle to the mobile end, as well as some deployment optimization methods and some benchmark.
 
-### we did four tests on mobilenet and resnet18，they are:
+## How to build PaddlePaddle for mobile
+- [Build PaddlePaddle for Android](https://github.com/PaddlePaddle/Paddle/blob/develop/doc/howto/cross_compiling/cross_compiling_for_android_cn.md)
+- Build PaddlePaddle for IOS
+- [Build PaddlePaddle for Raspberry Pi3](https://github.com/PaddlePaddle/Paddle/blob/develop/doc/howto/cross_compiling/cross_compiling_for_raspberry_cn.md)
+- Build PaddlePaddle for PX2
 
- - train the mobilenet model on flowers102 using pretrained imagenet model.  
- - train the resnet18 model on flower102 using pretrained imagenet model.
- - fine-tune the mobilenet model trained on flower102 using dynamic pruning.
- - fine-tune the resnet18 model trained on flower102 using dynamic pruning. 
+## Deployment optimization methods
+- [Merge batch normalization before deploying the model to the mobile.](./tool/merge_batch_normalization/README.md)
+- [Compress the model before deploying the model to the mobile.](./tool/rounding/README.md)
+- Merge multiple model parameter files into one file.
 
+## Model compression
+- [Pruning](./model_compression/flowers102/README.md)
 
-### result
-we evaluated the model in accuracy and modle size.
-
-|| mobilenet | resnet18|mobilenet pruning| resnet18 pruning|
-|---| ------------- |:-------------:|:--:|:--:|
-|accuracy|  0.9716    | 0.97353 |0.970 |0.9735|
-|model size| 12M | 40M |  4.4M |28M|
-
-
-
-
-You can find more deatils of these models in     
-`./flower102/mobilenet`  
-`./flowers102/resnet18`    
-`./flowers102/mobilenet_pruning`  
-`./flowers102/resnet18_pruning`
+## PaddlePaddle mobile benchmark
+- [Mobilenet](./benchmark/README.md)
+- ENet
