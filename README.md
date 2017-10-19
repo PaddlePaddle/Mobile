@@ -17,9 +17,9 @@ Here mainly describes how to deploy PaddlePaddle to the mobile end, as well as s
 
 ## Model compression
 - How to use pruning to train smaller model.
-- [Pruning](./model_compression/flowers102/README.md)
+  - [Example of flowers102](./model_compression/flowers102/README.md)
 
 ## PaddlePaddle mobile benchmark
 - [Benchmark of Mobilenet](./benchmark/README.md)
 - Benchmark of ENet
-- Benchmark of DepthwiseConvolution in PaddlePaddle
+- [Benchmark of DepthwiseConvolution in PaddlePaddle](https://github.com/hedaoyuan/Function/blob/master/src/conv/README.md)
