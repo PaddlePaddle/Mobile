@@ -8,7 +8,6 @@ Here mainly describes how to deploy PaddlePaddle to the mobile end, as well as s
 - [Build PaddlePaddle for Raspberry Pi3](https://github.com/PaddlePaddle/Paddle/blob/develop/doc/howto/cross_compiling/cross_compiling_for_raspberry_cn.md)
 - Build PaddlePaddle for PX2
 - How to build PaddlePaddle mobile inference library with minimum size.
-- How to build PaddlePaddle with NNPACK.
 
 ## Deployment optimization methods
 - [Merge batch normalization before deploying the model to the mobile.](./tool/merge_batch_normalization/README.md)
