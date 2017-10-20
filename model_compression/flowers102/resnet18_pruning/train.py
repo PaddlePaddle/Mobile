@@ -14,13 +14,10 @@
 
 import sys
 import gzip
+
 from paddle.trainer_config_helpers import *
-
 import paddle.v2 as paddle
-
 from resnet_pruning import resnet18
-from paddle.v2.attr import Hook
-from paddle.v2.attr import ParamAttr
 
 
 BATCH = 40
@@ -40,27 +37,7 @@ def main():
         #learning_rate_decay_b=50000 * 50,
         learning_rate_schedule='constant')
 
-    image = paddle.layer.data(
-        name="image", type=paddle.data_type.dense_vector(datadim))
-
-    #net = mobile_net(image)
-    # option 2. vgg
-    #net = vgg_bn_drop(image)
-    net = resnet18(image, 102)
-
-
-    out = paddle.layer.fc(name='resnetfc',
-        input=net, size=classdim, act=paddle.activation.Softmax(),
-         param_attr = ParamAttr(update_hooks=Hook('dynamic_pruning',
-                                 sparsity_upper_bound=0.9)))
-    '''
-    out = paddle.layer.img_conv(
-                         input=net,
-                         filter_size=1,
-                         num_filters=classdim,
-                         stride=1,
-                         act=paddle.activation.Linear())
-    '''
+    out = resnet18(datadim, classdim)
 
     lbl = paddle.layer.data(
         name="label", type=paddle.data_type.integer_value(classdim))

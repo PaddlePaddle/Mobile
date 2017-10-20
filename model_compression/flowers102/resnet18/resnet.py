@@ -1,7 +1,5 @@
 import paddle.v2 as paddle
 
-__all__ = ['resnet_imagenet', 'resnet_cifar10']
-
 def conv_bn_layer(input,
                   ch_out,
                   filter_size,
@@ -40,7 +38,9 @@ def layer_warp(block_func, input, ch_in, ch_out, count, stride):
         conv = block_func(conv, ch_out, ch_out, 1)
     return conv
 
-def resnet18(input, class_dim, depth=18):
+def resnet18(data_dim, class_dim, depth=18):
+    input = paddle.layer.data(
+        name="image", type=paddle.data_type.dense_vector(data_dim))
     cfg = {
         18: ([2, 2, 2, 2], basicblock),
     }
@@ -54,6 +54,11 @@ def resnet18(input, class_dim, depth=18):
     res4 = layer_warp(block_func, res3, 256, 512, stages[3], 2)
     pool2 = paddle.layer.img_pool(
         input=res4, pool_size=7, stride=1, pool_type=paddle.pooling.Avg())
-    #out = paddle.layer.fc(
-    #    input=pool2, size=class_dim, act=paddle.activation.Softmax())
-    return pool2
+    out = paddle.layer.fc(name='resnetfc',
+        input=pool2, size=class_dim, act=paddle.activation.Softmax())
+    return out
+
+if __name__ == '__main__':
+    data_dim = 3 * 224 * 224
+    class_dim = 102
+    resnet18(data_dim, class_dim)

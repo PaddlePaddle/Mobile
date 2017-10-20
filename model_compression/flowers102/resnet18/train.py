@@ -14,18 +14,15 @@
 
 import sys
 import gzip
+
 from paddle.trainer_config_helpers import *
-
 import paddle.v2 as paddle
-
 from resnet import resnet18
-
 
 BATCH = 40
 def main():
     datadim = 3 * 224 * 224 
     classdim = 102
-
 	
     # PaddlePaddle init
     paddle.init(use_gpu=True, trainer_count=1, gpu_id = 3)
@@ -34,29 +31,12 @@ def main():
         momentum=0.9,
         regularization=paddle.optimizer.L2Regularization(rate=0.0005 * BATCH),
         learning_rate=0.005/ BATCH,
-        #learning_rate_decay_a=0.1,
-        #learning_rate_decay_b=50000 * 50,
         learning_rate_schedule='constant')
 
-    image = paddle.layer.data(
-        name="image", type=paddle.data_type.dense_vector(datadim))
-
-    #net = mobile_net(image)
-    # option 2. vgg
-    #net = vgg_bn_drop(image)
-    net = resnet18(image, 102)
-
+    net = resnet18(datadim, classdim)
 
     out = paddle.layer.fc(name='resnetfc',
         input=net, size=classdim, act=paddle.activation.Softmax())
-    '''
-    out = paddle.layer.img_conv(
-                         input=net,
-                         filter_size=1,
-                         num_filters=classdim,
-                         stride=1,
-                         act=paddle.activation.Linear())
-    '''
 
     lbl = paddle.layer.data(
         name="label", type=paddle.data_type.integer_value(classdim))
@@ -65,7 +45,6 @@ def main():
     # Create parameters
     parameters = paddle.parameters.create(cost)
     with gzip.open('imagenet_pretrained_resnet18.tar.gz', 'r') as f:
-    #with gzip.open('resnet18_params_pass_32.tar.gz', 'r') as f:
         fparameters = paddle.parameters.Parameters.from_tar(f)
     for param_name in fparameters.names():
         if param_name in parameters.names():
@@ -104,7 +83,6 @@ def main():
         event_handler=event_handler,
         feeding={'image': 0,
                  'label': 1})
-
 
 if __name__ == '__main__':
     main()
