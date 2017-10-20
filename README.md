@@ -9,6 +9,9 @@ Here mainly describes how to deploy PaddlePaddle to the mobile end, as well as s
 - Build PaddlePaddle for PX2
 - How to build PaddlePaddle mobile inference library with minimum size.
 
+## Demo
+- [An inference demo program based on the Paddle C API.](./benchmark/tool/C/README.md)
+
 ## Deployment optimization methods
 - [Merge batch normalization before deploying the model to the mobile.](./tool/merge_batch_normalization/README.md)
 - [Compress the model before deploying the model to the mobile.](./tool/rounding/README.md)
