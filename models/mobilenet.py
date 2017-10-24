@@ -1,13 +1,10 @@
 # edit-mode: -*- python -*-
 import paddle.v2 as paddle
 
-from paddle.v2.attr import  Hook
-from paddle.v2.attr import  ParamAttr
-
 def conv_bn_layer(input, filter_size, num_filters,
                   stride, padding, channels=None, num_groups=1,
-                  active_type=paddle.activation.Relu(), param_attr=None,
-                 layer_type=None):
+                  active_type=paddle.activation.Relu(),
+                  layer_type=None):
     """
     A wrapper for conv layer with batch normalization layers.
     Note:
@@ -21,11 +18,9 @@ def conv_bn_layer(input, filter_size, num_filters,
                          stride=stride,
                          padding=padding,
                          groups=num_groups,
-                         param_attr=param_attr,
                          act=paddle.activation.Linear(),
                          bias_attr=False,
                          layer_type=layer_type)
-
     return paddle.layer.batch_norm(
                             input=tmp,
                             act=active_type)
@@ -39,17 +34,14 @@ def depthwise_separable(input, num_filters1, num_filters2, num_groups, stride, s
                         num_filters=int(num_filters1*scale),
                         stride=stride,
                         padding=1,
-                        num_groups=int(num_groups*scale),
-                        layer_type='exconv')
+                        num_groups=int(num_groups*scale), layer_type='exconv')
 
-    pa0 = ParamAttr(update_hooks = Hook('dynamic_pruning', sparsity_upper_bound=0.75))
     tmp = conv_bn_layer(
                         input=tmp,
                         filter_size=1,
                         num_filters=int(num_filters2*scale),
                         stride=1,
-                        padding=0,
-						param_attr = pa0)
+                        padding=0)
     return tmp
 
 def mobile_net(img_size, class_num, scale = 1.0):
@@ -122,14 +114,12 @@ def mobile_net(img_size, class_num, scale = 1.0):
                          pool_size=7,
                          stride=1,
                          pool_type=paddle.pooling.Avg())
-
     out = paddle.layer.fc(
-        input=tmp, size=class_num, act=paddle.activation.Softmax(),
-		param_attr = ParamAttr(update_hooks=Hook('dynamic_pruning', sparsity_upper_bound=0.8)))
+        input=tmp, size=class_num, act=paddle.activation.Softmax())
 
     return out
 
 if __name__ == '__main__':
     img_size = 3 * 224 * 224
-    data_dim = 102
+    data_dim = 1000
     out = mobile_net(img_size, data_dim, 1.0)
