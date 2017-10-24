@@ -61,8 +61,8 @@ python ./demo/train.py
   
 we evaluated the result in accuracy and modle size.
 
-|| mobilenet |mobilenet pruning| 
-|---| --- | --- | --- |
-|accuracy|  0.9716    |0.970 |
+|--| mobilenet |mobilenet pruning| 
+|---| --- | --- |
+|accuracy|  0.9716 |0.970 |
 |model size| 12M |  4.3M |
 |Download|[Download from BaiduCloud](https://pan.baidu.com/s/1geHkrw3)|[Download from BaiduCloud](https://pan.baidu.com/s/1ge8wOp1)|
