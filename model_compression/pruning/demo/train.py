@@ -14,53 +14,26 @@
 
 import sys
 import gzip
+
 from paddle.trainer_config_helpers import *
-
 import paddle.v2 as paddle
-
-from resnet_pruning import resnet18
-from paddle.v2.attr import Hook
-from paddle.v2.attr import ParamAttr
-
+from mobilenet_pruning import mobile_net
 
 BATCH = 40
 def main():
     datadim = 3 * 224 * 224 
     classdim = 102
 
-	
     # PaddlePaddle init
-    paddle.init(use_gpu=True, trainer_count=1, gpu_id = 3)
+    paddle.init(use_gpu=True, trainer_count=1, gpu_id = 0)
 
     momentum_optimizer = paddle.optimizer.Momentum(
         momentum=0.9,
         regularization=paddle.optimizer.L2Regularization(rate=0.0005 * BATCH),
-        learning_rate=0.005/ BATCH,
-        #learning_rate_decay_a=0.1,
-        #learning_rate_decay_b=50000 * 50,
+        learning_rate=0.001/ BATCH,
         learning_rate_schedule='constant')
 
-    image = paddle.layer.data(
-        name="image", type=paddle.data_type.dense_vector(datadim))
-
-    #net = mobile_net(image)
-    # option 2. vgg
-    #net = vgg_bn_drop(image)
-    net = resnet18(image, 102)
-
-
-    out = paddle.layer.fc(name='resnetfc',
-        input=net, size=classdim, act=paddle.activation.Softmax(),
-         param_attr = ParamAttr(update_hooks=Hook('dynamic_pruning',
-                                 sparsity_upper_bound=0.9)))
-    '''
-    out = paddle.layer.img_conv(
-                         input=net,
-                         filter_size=1,
-                         num_filters=classdim,
-                         stride=1,
-                         act=paddle.activation.Linear())
-    '''
+    out = mobile_net(datadim, classdim, 1.0)
 
     lbl = paddle.layer.data(
         name="label", type=paddle.data_type.integer_value(classdim))
@@ -68,8 +41,7 @@ def main():
 
     # Create parameters
     parameters = paddle.parameters.create(cost)
-    with gzip.open('resnet18_flowers102.tar.gz', 'r') as f:
-    #with gzip.open('resnet18_params_pass_32.tar.gz', 'r') as f:
+    with gzip.open('mobilenet_flowers102.tar.gz', 'r') as f:
         fparameters = paddle.parameters.Parameters.from_tar(f)
     for param_name in fparameters.names():
         if param_name in parameters.names():
@@ -86,7 +58,7 @@ def main():
                 sys.stdout.flush()
         if isinstance(event, paddle.event.EndPass):
             # save parameters
-            with gzip.open('pruning_resnet18_params_pass_%d.tar.gz' % event.pass_id, 'w') as f:
+            with gzip.open('pruning_mobilenet_params_pass_%d.tar.gz' % event.pass_id, 'w') as f:
                 parameters.to_tar(f)
 
             result = trainer.test(
@@ -108,7 +80,6 @@ def main():
         event_handler=event_handler,
         feeding={'image': 0,
                  'label': 1})
-
 
 if __name__ == '__main__':
     main()

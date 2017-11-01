@@ -19,8 +19,7 @@ Here mainly describes how to deploy PaddlePaddle to the mobile end, as well as s
 - How to deploy int8 model in mobile inference with PaddlePaddle.
 
 ## Model compression
-- How to use pruning to train smaller model.
-  - [Example of flowers102](./model_compression/flowers102/README.md)
+- [How to use pruning to train smaller model](./model_compression/pruning/)
 
 ## PaddlePaddle mobile benchmark
 - [Benchmark of Mobilenet](./benchmark/README.md)
