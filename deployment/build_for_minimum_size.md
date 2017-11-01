@@ -3,16 +3,17 @@
 In many mobile applications, the size of the executable program will have some requirements.
 Here we explore how to compile the inference library with minimum size.
 
-Note:
+**Note:**  
 In the original PaddlePaddle, all computationally relevant code is implemented in Matrix.cpp and BaseMatrix.cu, 
 this causes the compiled Matrix.o and BaseMatrix.o files to be large and can not be split.
 The module of Layer can be split, but the Layer forward and backward computing is included in the same file.
-The configuration definition in proto has some redundancy. These will lead to the size of inference library larger.
+The configuration definition in proto has some redundancy. These all will lead to the size of inference library larger.
 
 The new PaddlePaddle is being refactored, the calculation is based on Operator, the configuration description in proto is simplified.
 These will bring a good optimization to the inference library size.
 
-Here we mainly introduce some optimization in the compilation process to reduce the size of the inference library.
+## How to build with minimum size
+Here we mainly introduce some optimization in the compilation process to reduce the size of the inference library. These methods are also used in the refactored PaddlePaddle.
 
 - MinSizeRel: By specify the build type(CMAKE_BUILD_TYPE) as MinSizeRel, the -Os option is used by the compiler during the build for minimum size code.
 - protobuf-lite: With the `--cpp_out lite` option, the generated proto configuration rely on MessageLite instead of Message,
