@@ -1,0 +1,29 @@
+language: cpp
+cache: ccache
+sudo: required
+dist: trusty
+
+os:
+  - linux
+
+addons:
+  apt:
+    packages:
+      - git
+      - python
+      - python-pip
+      - python2.7-dev
+  ssh_known_hosts: 52.76.173.135
+
+script:
+  - |
+    if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then exit 0; fi;
+    if [[ "$TRAVIS_BRANCH" != "develop"  && ! "$TRAVIS_BRANCH" =~ ^v[[:digit:]]+\.[[:digit:]]+(\.[[:digit:]]+)?(-\S*)?$ ]]; then echo "not develop branch, no deploy"; exit 0; fi;
+    export DEPLOY_DOCS_SH=https://raw.githubusercontent.com/PaddlePaddle/PaddlePaddle.org/master/scripts/deploy/deploy_docs.sh
+    export MOBILE_DIR=`pwd`
+    cd ..
+    curl $DEPLOY_DOCS_SH | bash -s $CONTENT_DEC_PASSWD $TRAVIS_BRANCH $MOBILE_DIR
+notifications:
+  email:
+    on_success: change
+    on_failure: always
