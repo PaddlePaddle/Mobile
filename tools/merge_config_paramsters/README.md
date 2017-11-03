@@ -18,7 +18,7 @@ This applies to all PaddlePaddle v2 models, we show a demo of mobilenet.
 Run the following code
 
 ```
-from paddle.util.merge_model import merge_v2_model
+from paddle.utils.merge_model import merge_v2_model
 
 # import your network configuration
 from mobilenet import mobile_net
