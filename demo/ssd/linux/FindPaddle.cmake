@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License
 
-## PaddlePaddle
 set(PADDLE_ROOT $ENV{PADDLE_ROOT} CACHE PATH "Paddle Path")
 if(NOT PADDLE_ROOT)
   message(FATAL_ERROR "Set PADDLE_ROOT as your root directory installed PaddlePaddle")

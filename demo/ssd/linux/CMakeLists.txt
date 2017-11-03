@@ -16,10 +16,11 @@ cmake_minimum_required(VERSION 3.0)
 project(vgg_ssd_demo CXX C)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/")
-include(FindPaddle)
+find_package(Paddle)
+find_package(OpenCV)
 
-aux_source_directory(. SRC_LIST)
-add_executable(${PROJECT_NAME} ${SRC_LIST})
+set(SRC_FILES main.cpp image_reader.cpp)
+add_executable(${PROJECT_NAME} ${SRC_FILES})
 
 set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS)
 set(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS)
@@ -31,4 +32,7 @@ target_link_libraries(${PROJECT_NAME}
                       ${PADDLE_THIRD_PARTY_LIBRARIES})
 if(NOT ANDROID_ABI)
   target_link_libraries(${PROJECT_NAME} -lrt -ldl -lpthread)
+endif()
+if(OPENCV_FOUND)
+  target_link_libraries(${PROJECT_NAME} ${OPENCV_LIBRARIES})
 endif()
