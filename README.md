@@ -13,9 +13,9 @@ Here mainly describes how to deploy PaddlePaddle to the mobile end, as well as s
 - [An inference demo program based on the Paddle C API.](./benchmark/tool/C/README.md)
 
 ## Deployment optimization methods
-- [Merge batch normalization before deploying the model to the mobile.](./tool/merge_batch_normalization/README.md)
-- [Compress the model before deploying the model to the mobile.](./tool/rounding/README.md)
-- Merge multiple model parameter files into one file.
+- [Merge batch normalization before deploying the model to the mobile.](./tools/merge_batch_normalization/README.md)
+- [Compress the model before deploying the model to the mobile.](./tools/rounding/README.md)
+- [Merge model config and parameter files into one file.](./tools/merge_config_paramsters/README.md)
 - How to deploy int8 model in mobile inference with PaddlePaddle.
 
 ## Model compression

@@ -1,6 +1,11 @@
 ## Pruning
 
-### Principle:
+### Contents
+1. [Principle](#Principle)
+2. [Usage](#Usage)
+3. [Demo of Mobilenet pruning](#Demo-of-Mobilenet-pruning)
+
+### Principle
 
 The trained model has a large number of parameters redundancy, and these redundant parameter's value are very small, so we can cut them off.
 
@@ -41,7 +46,7 @@ out = paddle.layer.fc(input=input,
                       param_attr = pa)
 ```
 
-### Demo (Mobilenet pruning on flowers102 dataset):
+### Demo of Mobilenet pruning
  
 Mobilenet is based on depthwise separable convolution that consists a `depthwise convolution` followed by a 1*1 convolution called `pointwise convolution`. About 99% parameters are from `pointwise convolution` and last `fully-connected layer`, so we only prune those two type layers in Mobilenet.
 
