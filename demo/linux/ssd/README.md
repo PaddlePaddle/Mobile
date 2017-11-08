@@ -117,3 +117,25 @@
           xmax, 1
           ymax, 0.972674
   ```
+
+- Profiled result (threshold = 0.3)
+  ```text
+  Object 1
+      image: 0
+      type: dog
+      score: 0.530176
+      rectangle information:
+          xmin, 0.0782789
+          ymin, 0.640581
+          xmax, 0.721344
+          ymax, 0.995839
+  Object 3
+      image: 0
+      type: person
+      score: 0.998061
+      rectangle information:
+          xmin, 0.091996
+          ymin, 0
+          xmax, 0.995694
+          ymax, 1
+  ```
