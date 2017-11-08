@@ -2,17 +2,17 @@
 
 - A simple CMake command to build C-API library of PaddlePaddle on linux
   ```
-    cmake -DCMAKE_INSTALL_PREFIX=$DEST_ROOT \
-          -DCMAKE_BUILD_TYPE=Release \
-          -DWITH_C_API=ON \
-          -DWITH_PYTHON=OFF \
-          -DWITH_MKLML=OFF \
-          -DWITH_MKLDNN=OFF \
-          -DWITH_GPU=OFF \
-          -DWITH_SWIG_PY=OFF \
-          -DWITH_GOLANG=OFF \
-          -DWITH_STYLE_CHECK=OFF \
-          ..
+  cmake -DCMAKE_INSTALL_PREFIX=$DEST_ROOT \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DWITH_C_API=ON \
+        -DWITH_PYTHON=OFF \
+        -DWITH_MKLML=OFF \
+        -DWITH_MKLDNN=OFF \
+        -DWITH_GPU=OFF \
+        -DWITH_SWIG_PY=OFF \
+        -DWITH_GOLANG=OFF \
+        -DWITH_STYLE_CHECK=OFF \
+        ..
   ```
 
 - Use virtual data as the input
@@ -57,7 +57,7 @@
       image: 0
       type: bottle
       score: 0.0102905
-      rectangle information
+      rectangle information:
           xmin, 0.60527
           ymin, 0.749781
           xmax, 0.668338
@@ -66,7 +66,7 @@
       image: 0
       type: dog
       score: 0.530176
-      rectangle information
+      rectangle information:
           xmin, 0.0782789
           ymin, 0.640581
           xmax, 0.721344
@@ -75,7 +75,7 @@
       image: 0
       type: dog
       score: 0.017214
-      rectangle information
+      rectangle information:
           xmin, 0.0692175
           ymin, 0
           xmax, 1
@@ -84,7 +84,7 @@
       image: 0
       type: person
       score: 0.998061
-      rectangle information
+      rectangle information:
           xmin, 0.091996
           ymin, 0
           xmax, 0.995694
@@ -93,7 +93,7 @@
       image: 0
       type: person
       score: 0.0404764
-      rectangle information
+      rectangle information:
           xmin, 0.835338
           ymin, 0.014217
           xmax, 1
@@ -102,7 +102,7 @@
       image: 0
       type: person
       score: 0.0102714
-      rectangle information
+      rectangle information:
           xmin, 0.718238
           ymin, 0.00674325
           xmax, 0.993035
@@ -111,7 +111,7 @@
       image: 0
       type: sofa
       score: 0.0122269
-      rectangle information
+      rectangle information:
           xmin, 0.0692175
           ymin, 0
           xmax, 1

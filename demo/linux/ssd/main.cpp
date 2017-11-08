@@ -69,7 +69,7 @@ int main() {
                 << std::endl;
       std::cout << "\tscore: " << result.data[i * result.width + 2]
                 << std::endl;
-      std::cout << "\trectangle information" << std::endl;
+      std::cout << "\trectangle information:" << std::endl;
       std::cout << "\t\txmin, " << result.data[i * result.width + 3]
                 << std::endl;
       std::cout << "\t\tymin, " << result.data[i * result.width + 4]
