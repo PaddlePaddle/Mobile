@@ -19,7 +19,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/")
 find_package(Paddle)
 find_package(OpenCV)
 
-set(SRC_FILES main.cpp image_reader.cpp)
+set(SRC_FILES main.cpp image_reader.cpp paddle_image_recognizer.cpp)
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 
 set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS)
