@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License */
 
-#include <stdio.h>
+#include <iostream>
 #include <vector>
 #include "image_reader.h"
 #include "paddle_image_recognizer.h"
@@ -42,13 +42,43 @@ int main() {
   ImageRecognizer::Result result;
   recognizer.infer(pixels, kImageHeight, kImageWidth, kImageChannel, result);
 
-  printf("Prob: %lld x %lld\n", result.height, result.width);
+  std::cout << "Result: " << result.height << " x " << result.width
+            << std::endl;
   for (uint64_t i = 0; i < result.height; i++) {
-    printf("row %d: ", i);
+    std::cout << "row " << i << ":";
     for (uint64_t j = 0; j < result.width; j++) {
-      printf("%f ", result.data[i * result.width + j]);
+      std::cout << " " << result.data[i * result.width + j];
     }
-    printf("\n");
+    std::cout << std::endl;
+  }
+
+  std::string labels[21] = {
+      "background", "aeroplane",   "bicycle", "bird",  "boat",
+      "bottle",     "bus",         "car",     "cat",   "chair",
+      "cow",        "diningtable", "dog",     "horse", "motorbike",
+      "person",     "pottedplant", "sheep",   "sofa",  "train",
+      "tvmonitor"};
+  for (uint64_t i = 0; i < result.height; i++) {
+    std::cout << "Object " << i << std::endl;
+    if (result.width == 7UL) {
+      std::cout << "\timage: "
+                << static_cast<int>(result.data[i * result.width + 0])
+                << std::endl;
+      std::cout << "\ttype: "
+                << labels[static_cast<int>(result.data[i * result.width + 1])]
+                << std::endl;
+      std::cout << "\tscore: " << result.data[i * result.width + 2]
+                << std::endl;
+      std::cout << "\trectangle information" << std::endl;
+      std::cout << "\t\txmin, " << result.data[i * result.width + 3]
+                << std::endl;
+      std::cout << "\t\tymin, " << result.data[i * result.width + 4]
+                << std::endl;
+      std::cout << "\t\txmax, " << result.data[i * result.width + 5]
+                << std::endl;
+      std::cout << "\t\tymax, " << result.data[i * result.width + 6]
+                << std::endl;
+    }
   }
 
   recognizer.release();
