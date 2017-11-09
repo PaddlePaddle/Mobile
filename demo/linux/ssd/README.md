@@ -34,6 +34,20 @@
   make
   ```
 
+# Download merged models for test
+  - Use the `model_download.sh` script file
+    ```bash
+    $ cd models
+    $ sh model_download.sh vgg_ssd_net
+    ```
+
+  - Download the models manually
+    - [vgg_ssd_net.paddle](http://cloud.dlnel.org/filepub/?uuid=1116a5f3-7762-44b5-82bb-9954159cb5d4), input size `300 x 300`, means `[104, 117, 124]`
+      ```bash
+      $ cd models
+      $ wget -c http://cloud.dlnel.org/filepub/?uuid=1116a5f3-7762-44b5-82bb-9954159cb5d4 -O vgg_ssd_net.paddle
+      ```
+
 # Result Profile
 - Input
 
