@@ -1,20 +1,21 @@
 //
 //  ImageRecognizerPaddleWrapper.h
-//  SSDDemo
+//  AICamera
 //
-//  Created by Nicky Chan on 11/7/17.
+//  Created by Nicky Chan on 11/9/17.
 //  Copyright © 2017 PaddlePaddle. All rights reserved.
 //
 
+#ifndef ImageRecognizerPaddleWrapper_h
+#define ImageRecognizerPaddleWrapper_h
 
 #import <Foundation/Foundation.h>
 
 @interface ImageRecognizerPaddleWrapper : NSObject
 
-- (void)initialize;
 - (void)inference;
-- (void)unbind;
+- (void)destroy;
 
 @end
 
-
+#endif /* ImageRecognizerPaddleWrapper_h */

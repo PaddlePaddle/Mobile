@@ -6,24 +6,37 @@
 //  Copyright © 2017 PaddlePaddle. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+#import "ImageRecognizerPaddleWrapper.h"
 #include "paddle_image_recognizer.h"
-#include "ImageRecognizerPaddleWrapper.h"
+
+@interface ImageRecognizerPaddleWrapper () {
+    ImageRecognizer recognizer;
+}
+@end
 
 @implementation ImageRecognizerPaddleWrapper
 
+
 - (id)init {
+    self = [super init];
+    if (self)
+    {
+        NSBundle* bundle = [NSBundle mainBundle];
+        NSString* resourceDirectoryPath = [bundle bundlePath];
+        NSString* path = [resourceDirectoryPath stringByAppendingString: @"/vgg_ssd_net.paddle"];
+        self->recognizer.init([path UTF8String]);
+    }
     return self;
 }
 
-- (void)initialize {
-    ImageRecognizer recognizer;
-    recognizer.init("../models/vgg_ssd_net.paddle");
-}
 - (void)inference {
     
 }
 
-- (void)unbind {
-    
+- (void)destroy {
+    self->recognizer.release();
 }
+
+
 @end

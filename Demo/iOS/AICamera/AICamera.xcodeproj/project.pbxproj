@@ -21,6 +21,7 @@
 		480C6D091FB262BF0009876E /* ImageRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480C6D081FB262BF0009876E /* ImageRecognizer.swift */; };
 		480C6D0D1FB264E60009876E /* SSDData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480C6D0C1FB264E60009876E /* SSDData.swift */; };
 		48540B771FB3AD8E00C05A0F /* paddle_image_recognizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 48540B751FB3AD8E00C05A0F /* paddle_image_recognizer.cpp */; };
+		4883B2381FB50D9B00F9204A /* vgg_ssd_net.paddle in Resources */ = {isa = PBXBuildFile; fileRef = 480520B31FB3DAEF008482C5 /* vgg_ssd_net.paddle */; };
 		488E78C91FB290580075A8E3 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 488E78C81FB290580075A8E3 /* Accelerate.framework */; };
 		488E78CC1FB290AE0075A8E3 /* libpaddle_capi_engine.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 488E78CA1FB290AE0075A8E3 /* libpaddle_capi_engine.a */; };
 		488E78CD1FB290AE0075A8E3 /* libpaddle_capi_layers.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 488E78CB1FB290AE0075A8E3 /* libpaddle_capi_layers.a */; };
@@ -51,6 +52,7 @@
 		480C6D0C1FB264E60009876E /* SSDData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSDData.swift; sourceTree = "<group>"; };
 		48540B751FB3AD8E00C05A0F /* paddle_image_recognizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = paddle_image_recognizer.cpp; sourceTree = "<group>"; };
 		48540B761FB3AD8E00C05A0F /* paddle_image_recognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = paddle_image_recognizer.h; sourceTree = "<group>"; };
+		4883B2371FB4E7FE00F9204A /* ImageRecognizerPaddleWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageRecognizerPaddleWrapper.h; sourceTree = "<group>"; };
 		488E78C81FB290580075A8E3 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		488E78CA1FB290AE0075A8E3 /* libpaddle_capi_engine.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpaddle_capi_engine.a; path = "paddle-ios/lib/libpaddle_capi_engine.a"; sourceTree = "<group>"; };
 		488E78CB1FB290AE0075A8E3 /* libpaddle_capi_layers.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpaddle_capi_layers.a; path = "paddle-ios/lib/libpaddle_capi_layers.a"; sourceTree = "<group>"; };
@@ -59,7 +61,6 @@
 		488E78D21FB290FA0075A8E3 /* libprotobuf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libprotobuf.a; path = "paddle-ios/third_party/protobuf/lib/libprotobuf.a"; sourceTree = "<group>"; };
 		488E78D41FB291030075A8E3 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = "paddle-ios/third_party/zlib/lib/libz.a"; sourceTree = "<group>"; };
 		48CAD13E1FB29318009A0523 /* AICamera-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AICamera-Bridging-Header.h"; sourceTree = "<group>"; };
-		48CAD1421FB29E06009A0523 /* ImageRecognizerPaddleWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageRecognizerPaddleWrapper.h; sourceTree = "<group>"; };
 		48CAD1431FB2B3B3009A0523 /* ImageRecognizerPaddleWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ImageRecognizerPaddleWrapper.mm; sourceTree = "<group>"; };
 		D09B082A1FB280CD0014EF43 /* SSDMultiboxLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSDMultiboxLayer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -132,7 +133,7 @@
 				48540B751FB3AD8E00C05A0F /* paddle_image_recognizer.cpp */,
 				48540B761FB3AD8E00C05A0F /* paddle_image_recognizer.h */,
 				48CAD1431FB2B3B3009A0523 /* ImageRecognizerPaddleWrapper.mm */,
-				48CAD1421FB29E06009A0523 /* ImageRecognizerPaddleWrapper.h */,
+				4883B2371FB4E7FE00F9204A /* ImageRecognizerPaddleWrapper.h */,
 				480C6CF81FB16CD80009876E /* Main.storyboard */,
 				480C6CFB1FB16CD80009876E /* Assets.xcassets */,
 				480C6CFD1FB16CD80009876E /* LaunchScreen.storyboard */,
@@ -218,6 +219,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4883B2381FB50D9B00F9204A /* vgg_ssd_net.paddle in Resources */,
 				480520B21FB3DA19008482C5 /* vgg_ssd_net.py in Resources */,
 				480520AF1FB3DA19008482C5 /* pascal_voc_conf.py in Resources */,
 				480C6CFF1FB16CD80009876E /* LaunchScreen.storyboard in Resources */,
@@ -405,7 +407,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "AICamera/AICamera-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 3.0;
 				VALID_ARCHS = arm64;
 			};
 			name = Debug;
@@ -436,7 +438,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "AICamera/AICamera-Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 3.0;
 				VALID_ARCHS = arm64;
 			};
 			name = Release;

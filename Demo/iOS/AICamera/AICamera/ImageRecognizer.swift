@@ -15,12 +15,18 @@ protocol ImageRecognizerDelegate {
 
 class ImageRecognizer {
     
-    func startRecognizing() {
-        
+    var imageRecognizer: ImageRecognizerPaddleWrapper?
+    
+    init() {
+        imageRecognizer = ImageRecognizerPaddleWrapper()
     }
     
-    func stopRecognizing() {
-        
+    func inference() {
+        imageRecognizer?.inference()
+    }
+    
+    func release() {
+        imageRecognizer?.destroy()
     }
     
 }

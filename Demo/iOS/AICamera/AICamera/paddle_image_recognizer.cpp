@@ -14,8 +14,10 @@ limitations under the License */
 
 #include "paddle_image_recognizer.h"
 #include <string.h>
+#include <iostream>
 
 static void* read_config(const char* filename, long* size) {
+  std::cout << "filname = " << filename << std::endl;
   FILE* file = fopen(filename, "rb");
   if (file == NULL) {
     fprintf(stderr, "Open %s error\n", filename);

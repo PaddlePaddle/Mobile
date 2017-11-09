@@ -20,22 +20,21 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var captureDevice : AVCaptureDevice?
     
     var imageBufferHandler: ImageBufferHandler?
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let imageRecognizer = ImageRecognizerPaddleWrapper()
-        imageRecognizer.initialize()
+        let imageRecognizer = ImageRecognizer()
         
-        captureSession.sessionPreset = AVCaptureSession.Preset.high //high means high definition of video
+        captureSession.sessionPreset = AVCaptureSessionPresetHigh //high means high definition of video
         
-        captureDevice = AVCaptureDevice.DiscoverySession(deviceTypes: [AVCaptureDevice.DeviceType.builtInWideAngleCamera], mediaType: AVMediaType.video, position: AVCaptureDevice.Position.back).devices.first
+        captureDevice = AVCaptureDeviceDiscoverySession(deviceTypes: [AVCaptureDeviceType.builtInWideAngleCamera], mediaType: AVMediaTypeVideo, position: AVCaptureDevicePosition.back).devices.first
         
         // setup video device input
         do {
             let videoDeviceInput: AVCaptureDeviceInput
             do {
-                videoDeviceInput = try AVCaptureDeviceInput(device: captureDevice!)
+                videoDeviceInput = try AVCaptureDeviceInput(device: captureDevice)
             }
             catch {
                 fatalError("Could not create AVCaptureDeviceInput instance with error: \(error).")
@@ -50,10 +49,10 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         // setup preview
         let previewContainer = self.view.layer
-        let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)!
         previewLayer.frame = previewContainer.bounds
         previewLayer.contentsGravity = kCAGravityResizeAspectFill
-        previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+        previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
         previewContainer.insertSublayer(previewLayer, at: 0)
         self.previewLayer = previewLayer
         
@@ -76,7 +75,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             let queue = DispatchQueue(label: "com.paddlepaddle.SSDDemo")
             videoDataOutput.setSampleBufferDelegate(self, queue: queue)
             
-            videoDataOutput.connection(with: AVMediaType.video)
+            videoDataOutput.connection(withMediaType: AVMediaTypeVideo)
             
             
             captureSession.startRunning()
@@ -87,7 +86,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         print("didDrop")
     }
     
-    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+    func captureOutput(_ output: AVCaptureOutput, didOutputSampleBuffer sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         print("didOutput")
         if connection.videoOrientation != .portrait {
             connection.videoOrientation = .portrait
@@ -121,12 +120,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         print("viewWillDisappear");
     }
     
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
     func fakeData() -> Array<SSDData> {
         let obj1 = SSDData.init(with: "Car", accuracy: 0.2, xmin: 0.1, ymin: 0.1, xmax: 0.5, ymax: 0.5, rectSize: self.view.frame.size)
         
@@ -135,4 +134,3 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         return [obj1, obj2]
     }
 }
-
