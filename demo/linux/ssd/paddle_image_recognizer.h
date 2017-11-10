@@ -17,6 +17,7 @@ limitations under the License */
 #include <paddle/capi.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <vector>
 
 static const char* paddle_error_string(paddle_error status) {
   switch (status) {
@@ -43,6 +44,26 @@ static const char* paddle_error_string(paddle_error status) {
     }                                                          \
   } while (0)
 
+namespace image {
+// enum Order {
+//   kCHW = 0,
+//   kHWC = 1
+// };
+//
+// enum Format {
+//   kRGBA = 0,
+//   kARGB = 1
+// };
+
+void resize_hwc(const unsigned char* raw_data,
+                unsigned char* resized_data,
+                const size_t height,
+                const size_t width,
+                const size_t channel,
+                const size_t resized_height,
+                const size_t resized_width);
+}  // namespace image
+
 class ImageRecognizer {
 public:
   struct Result {
@@ -54,14 +75,27 @@ public:
   };
 
 public:
-  ImageRecognizer() : gradient_machine_(nullptr) {
+  ImageRecognizer()
+      : gradient_machine_(nullptr),
+        normed_height_(0),
+        normed_width_(0),
+        normed_channel_(0) {
     // Initalize Paddle
     char* argv[] = {const_cast<char*>("--use_gpu=False")};
     CHECK(paddle_init(1, (char**)argv));
   }
 
-  void init(const char* merged_model_path);
-  void infer(const float* pixels,
+  void init(const char* merged_model_path,
+            const size_t normed_height,
+            const size_t normed_width,
+            const size_t normed_channel,
+            const std::vector<float>& means);
+  void preprocess(const unsigned char* pixels,
+                  float* normed_pixels,
+                  const size_t height,
+                  const size_t width,
+                  const size_t channel);
+  void infer(const unsigned char* pixels,
              const size_t height,
              const size_t width,
              const size_t channel,
@@ -71,4 +105,9 @@ public:
 private:
   paddle_gradient_machine gradient_machine_;
   paddle_error error_;
+
+  size_t normed_height_;
+  size_t normed_width_;
+  size_t normed_channel_;
+  std::vector<float> means_;
 };

@@ -24,15 +24,20 @@ enum Order {
 
 class ImageReader {
 public:
-  ImageReader(const std::vector<float>& means) : means_(means) {}
-
   bool operator()(const std::string& image_path,
-                  float* data,
+                  unsigned char* data,
                   const size_t height,
                   const size_t width,
                   const size_t channel,
                   const Order order);
+};
 
-private:
-  std::vector<float> means_;
+class ImageWriter {
+public:
+  bool operator()(const std::string& image_path,
+                  const unsigned char* data,
+                  const size_t height,
+                  const size_t width,
+                  const size_t channel,
+                  const Order order);
 };

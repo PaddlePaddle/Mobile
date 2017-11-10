@@ -14,7 +14,7 @@ limitations under the License */
 
 #include <iostream>
 #include <vector>
-#include "image_reader.h"
+#include "image_utils.h"
 #include "paddle_image_recognizer.h"
 
 void profile(ImageRecognizer::Result& result, float threshold) {
@@ -50,32 +50,82 @@ void profile(ImageRecognizer::Result& result, float threshold) {
   std::cout << std::endl;
 }
 
-int main() {
-  const char* merged_model_path = "models/vgg_ssd_net.paddle";
+void draw_rectangles(const float* raw_pixels,
+                     float* rected_pixels,
+                     const size_t height,
+                     const size_t width,
+                     const size_t channel) {}
 
-  ImageRecognizer recognizer;
-  recognizer.init(merged_model_path);
-
-  const size_t kImageHeight = 300;
-  const size_t kImageWidth = 300;
-  const size_t kImageChannel = 3;
-
-  float* pixels = (float*)malloc(kImageHeight * kImageWidth * kImageChannel *
-                                 sizeof(float));
-
-  std::vector<float> means({104, 117, 124});
-  ImageReader reader(means);
-  reader("images/example.jpg",
-         pixels,
+void test_noresize() {
+#if 0
+  // Read RGB data from image
+  unsigned char* raw_pixels = (unsigned char*)malloc(kImageHeight * kImageWidth * kImageChannel *
+                                 sizeof(unsigned char));
+  ImageReader()("images/example.jpg",
+         raw_pixels,
          kImageHeight,
          kImageWidth,
          kImageChannel,
          kCHW);
 
-  ImageRecognizer::Result result;
-  recognizer.infer(pixels, kImageHeight, kImageWidth, kImageChannel, result);
+  free(raw_pixels);
+  raw_pixels = nullptr;
 
-  std::cout << "Result: " << result.height << " x " << result.width
+#endif
+}
+
+void test_resize(ImageRecognizer& recognizer,
+                 const size_t kImageHeight,
+                 const size_t kImageWidth,
+                 const size_t kImageChannel,
+                 ImageRecognizer::Result& result) {
+  const size_t height = 500;
+  const size_t width = 353;
+  const size_t channel = 3;
+
+  // Read RGB data from image
+  unsigned char* raw_pixels =
+      (unsigned char*)malloc(height * width * channel * sizeof(unsigned char));
+  ImageReader()("images/origin.jpg", raw_pixels, height, width, channel, kHWC);
+
+  // Padding to RGBA, for testing
+  // Only RGB is needed
+  const size_t channel_rgba = 4;
+  unsigned char* pixels = (unsigned char*)malloc(height * width * channel_rgba *
+                                                 sizeof(unsigned char));
+  for (size_t i = 0; i < height * width; ++i) {
+    pixels[i * channel_rgba + 0] = raw_pixels[i * channel + 0];
+    pixels[i * channel_rgba + 1] = raw_pixels[i * channel + 1];
+    pixels[i * channel_rgba + 2] = raw_pixels[i * channel + 2];
+    pixels[i * channel_rgba + 3] = 0;  // alpha
+  }
+
+  recognizer.infer(pixels, height, width, channel_rgba, result);
+
+  free(raw_pixels);
+  raw_pixels = nullptr;
+  free(pixels);
+  pixels = nullptr;
+}
+
+int main() {
+  const char* merged_model_path = "models/vgg_ssd_net.paddle";
+
+  const size_t kImageHeight = 300;
+  const size_t kImageWidth = 300;
+  const size_t kImageChannel = 3;
+
+  const std::vector<float> means({104, 117, 124});
+
+  ImageRecognizer recognizer;
+  recognizer.init(
+      merged_model_path, kImageHeight, kImageWidth, kImageChannel, means);
+
+  ImageRecognizer::Result result;
+  test_resize(recognizer, kImageHeight, kImageWidth, kImageChannel, result);
+
+  // Print the direct result
+  std::cout << "Direct Result: " << result.height << " x " << result.width
             << std::endl;
   for (uint64_t i = 0; i < result.height; i++) {
     std::cout << "row " << i << ":";
@@ -86,6 +136,7 @@ int main() {
   }
   std::cout << std::endl;
 
+  // Print the profiled result
   std::cout << "Profiled result" << std::endl;
   profile(result, /* threshold */ 0);
 
@@ -93,10 +144,14 @@ int main() {
   std::cout << "Profiled result (threshold = 0.3)" << std::endl;
   profile(result, /* threshold */ 0.3);
 
-  recognizer.release();
+  // Draw rectangles
+  // float* rected_pixels = (float*)malloc(kImageHeight * kImageWidth *
+  // kImageChannel *
+  //                                sizeof(float));
+  // ImageWriter()("images/result.jpg", raw_pixels, kImageHeight, kImageWidth,
+  // kImageChannel, kCHW);
 
-  free(pixels);
-  pixels = nullptr;
+  recognizer.release();
 
   return 0;
 }

@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License */
 
-#include "image_reader.h"
+#include "image_utils.h"
 #include <iostream>
 #include <vector>
 
@@ -20,20 +20,20 @@ limitations under the License */
 #include <opencv2/opencv.hpp>
 
 bool ImageReader::operator()(const std::string& image_path,
-                             float* data,
+                             unsigned char* data,
                              const size_t height,
                              const size_t width,
                              const size_t channel,
                              const Order order) {
-  if (data == NULL || image_path.empty() || channel != means_.size()) {
+  if (data == NULL || image_path.empty()) {
     std::cerr << "invalid arguments." << std::endl;
     return false;
   }
 
   cv::Mat image;
-  if (1) {
+  if (channel == 3) {
     image = cv::imread(image_path, CV_LOAD_IMAGE_COLOR);
-  } else {
+  } else /* channel == 1 */ {
     image = cv::imread(image_path, CV_LOAD_IMAGE_GRAYSCALE);
   }
 
@@ -55,23 +55,23 @@ bool ImageReader::operator()(const std::string& image_path,
   if (channel == 3) {
     size_t index = 0;
     if (order == kCHW) {
-      // Store the pixels in CHW, BGR order
+      // Read the pixels in CHW, BGR order
       for (size_t c = 0; c < channel; c++) {
         for (size_t y = 0; y < height; y++) {
           for (size_t x = 0; x < width; x++) {
             data[index] =
-                static_cast<float>(image.at<cv::Vec3b>(y, x)[c]) - means_[c];
+                static_cast<unsigned char>(image.at<cv::Vec3b>(y, x)[c]);
             index++;
           }
         }
       }
     } else /* kHWC */ {
-      // Store the pixels in HWC, BGR order
+      // Read the pixels in HWC, BGR order
       for (size_t y = 0; y < height; y++) {
         for (size_t x = 0; x < width; x++) {
           for (size_t c = 0; c < channel; c++) {
             data[index] =
-                static_cast<float>(image.at<cv::Vec3b>(y, x)[c]) - means_[c];
+                static_cast<unsigned char>(image.at<cv::Vec3b>(y, x)[c]);
             index++;
           }
         }
@@ -81,17 +81,57 @@ bool ImageReader::operator()(const std::string& image_path,
     size_t index = 0;
     for (size_t y = 0; y < height; y++) {
       for (size_t x = 0; x < width; x++) {
-        data[index] =
-            static_cast<float>(image.at<unsigned char>(y, x)) - means_[0];
+        data[index] = static_cast<unsigned char>(image.at<unsigned char>(y, x));
         index++;
       }
     }
   }
   return true;
 }
+
+bool ImageWriter::operator()(const std::string& image_path,
+                             const unsigned char* data,
+                             const size_t height,
+                             const size_t width,
+                             const size_t channel,
+                             const Order order) {
+  cv::Mat image(height, width, CV_8UC3);
+
+  if (channel == 3) {
+    size_t index = 0;
+    if (order == kCHW) {
+      // Store the pixels in CHW, BGR order
+      for (size_t c = 0; c < channel; c++) {
+        for (size_t y = 0; y < height; y++) {
+          for (size_t x = 0; x < width; x++) {
+            image.at<cv::Vec3b>(y, x)[c] = data[index];
+            index++;
+          }
+        }
+      }
+    } else /* kHWC */ {
+      // Store the pixels in HWC, BGR order
+      for (size_t y = 0; y < height; y++) {
+        for (size_t x = 0; x < width; x++) {
+          for (size_t c = 0; c < channel; c++) {
+            image.at<cv::Vec3b>(y, x)[c] = data[index];
+            index++;
+          }
+        }
+      }
+    }
+  }
+
+  std::vector<int> compression_params;
+  compression_params.push_back(CV_IMWRITE_JPEG_QUALITY);
+  compression_params.push_back(100);
+  cv::imwrite(image_path, image, compression_params);
+
+  return true;
+}
 #else
 bool ImageReader::operator()(const std::string& image_path,
-                             float* data,
+                             unsigned char* data,
                              const size_t height,
                              const size_t width,
                              const size_t channel,
@@ -121,6 +161,15 @@ bool ImageReader::operator()(const std::string& image_path,
       }
     }
   }
+  return true;
+}
+
+bool ImageWriter::operator()(const std::string& image_path,
+                             const unsigned char* data,
+                             const size_t height,
+                             const size_t width,
+                             const size_t channel,
+                             const Order order) {
   return true;
 }
 #endif
