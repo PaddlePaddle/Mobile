@@ -10,7 +10,6 @@ import UIKit
 import AVFoundation
 import Foundation
 
-typealias ImageBufferHandler = ((_ imageBuffer: CVPixelBuffer, _ timestamp: CMTime, _ outputBuffer: CVPixelBuffer?) -> ())
 
 class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     
@@ -19,14 +18,14 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var videoConnection: AVCaptureConnection!
     var captureDevice : AVCaptureDevice?
     
-    var imageBufferHandler: ImageBufferHandler?
+    let imageRecognizer = ImageRecognizer()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let imageRecognizer = ImageRecognizer()
         
-        captureSession.sessionPreset = AVCaptureSessionPresetHigh //high means high definition of video
+        captureSession.sessionPreset = AVCaptureSessionPresetHigh //use high will cause memory issue
         
         captureDevice = AVCaptureDeviceDiscoverySession(deviceTypes: [AVCaptureDeviceType.builtInWideAngleCamera], mediaType: AVMediaTypeVideo, position: AVCaptureDevicePosition.back).devices.first
         
@@ -87,42 +86,45 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
     
     func captureOutput(_ output: AVCaptureOutput, didOutputSampleBuffer sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        print("didOutput")
-        if connection.videoOrientation != .portrait {
-            connection.videoOrientation = .portrait
-            return
+        
+        NSLog("didOutput")
+        
+        if let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) {
+            CVPixelBufferLockBaseAddress(imageBuffer, CVPixelBufferLockFlags(rawValue: 0))
+        
+            let bytesPerRow = CVPixelBufferGetBytesPerRow(imageBuffer)
+            let width = CVPixelBufferGetWidth(imageBuffer)
+            let height = CVPixelBufferGetHeight(imageBuffer)
+            let baseAddress = CVPixelBufferGetBaseAddress(imageBuffer)
+            
+            let intBuffer = unsafeBitCast(baseAddress, to: UnsafeMutablePointer<UInt8>.self)
+            
+            let bufferSize = bytesPerRow * height
+            print("bufferSize = \(bufferSize)")
+            
+            CVPixelBufferUnlockBaseAddress(imageBuffer, CVPixelBufferLockFlags(rawValue: 0))
+            
+            let x = 100
+            let y = 100;
+//
+//            
+            let b = intBuffer[(x*4)+(y*bytesPerRow)];
+            let g = intBuffer[((x*4)+(y*bytesPerRow))+1];
+            let r = intBuffer[((x*4)+(y*bytesPerRow))+2];
+            
+            print("r = \(r), g = \(g), b = \(b)")
+            print("width = \(width), height = \(height), bytesPerRow = \(bytesPerRow)")
+            
+            imageRecognizer.inference(imageBuffer: intBuffer, width: Int32(height), height: Int32(width))
         }
         
-        if let imageBufferHandler = imageBufferHandler, let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) , connection == videoConnection
-        {
-            let timestamp = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
-            imageBufferHandler(imageBuffer, timestamp, nil)
-        }
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        
-        print("viewDidAppear");
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        
-        print("viewDidDisappear");
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        
-        print("viewWillAppear");
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        
-        print("viewWillDisappear");
     }
     
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+        
+        print("didReceiveMemoryWarning")
         // Dispose of any resources that can be recreated.
     }
     
