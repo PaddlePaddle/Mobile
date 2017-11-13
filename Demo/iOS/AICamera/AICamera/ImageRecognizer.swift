@@ -21,9 +21,9 @@ class ImageRecognizer {
         imageRecognizer = ImageRecognizerPaddleWrapper()
     }
     
-    func inference(imageBuffer: UnsafeMutablePointer<UInt8>!, width: Int32, height: Int32) {
+    func inference(imageBuffer: UnsafeMutablePointer<UInt8>!, width: Int32, height: Int32) -> NSMutableArray! {
         
-        imageRecognizer?.inference(imageBuffer, withHeight: height, withWidth: width)
+        return imageRecognizer?.inference(imageBuffer, withHeight: height, withWidth: width)
     }
     
     func release() {

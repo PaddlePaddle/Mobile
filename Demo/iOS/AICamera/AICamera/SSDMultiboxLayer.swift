@@ -9,17 +9,15 @@
 import UIKit
 
 class SSDMultiboxLayer: CALayer {
-    var boxLayers = Array<SSDDrawLayer>()
-    var allDatas = Array<SSDData>()
     
-    func displayBoxs(with datas: Array<SSDData>){
+    func displayBoxs(with ssdDataList: NSMutableArray){
         self.sublayers?.forEach({ (layer) in
             layer.removeFromSuperlayer()
         })
         
-        for data: SSDData in datas {
+        for ssdData in ssdDataList {
             let boxLayer = SSDDrawLayer.init()
-            boxLayer.render(data)
+            boxLayer.render(ssdData as! SSDData, rectSize: self.visibleRect)
             
             self.addSublayer(boxLayer)
         }

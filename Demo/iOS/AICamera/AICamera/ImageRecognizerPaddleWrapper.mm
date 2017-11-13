@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "ImageRecognizerPaddleWrapper.h"
 #include "paddle_image_recognizer.h"
+#include "SSDData.h"
 
 @interface ImageRecognizerPaddleWrapper () {
     ImageRecognizer recognizer;
@@ -17,6 +18,15 @@
 
 @implementation ImageRecognizerPaddleWrapper
 
+static NSString * kLabels [21] = {
+    @"background", @"aeroplane",   @"bicycle", @"background", @"boat",
+    @"bottle",     @"bus",         @"car",     @"cat",        @"chair",
+    @"cow",        @"diningtable", @"dog",     @"horse",      @"motorbike",
+    @"person",     @"pottedplant", @"sheep",   @"sofa",       @"train",
+    @"tvmonitor"
+};
+
+static float kFilterScore = 0.3;
 
 - (instancetype)init {
     self = [super init];
@@ -37,12 +47,34 @@
     return self;
 }
 
-- (void)inference:(unsigned char *)pixels withHeight:(int)height withWidth:(int)width {
+- (NSMutableArray*)inference:(unsigned char *)pixels withHeight:(int)height withWidth:(int)width {
     ImageRecognizer::Result result;
     int channel = 4;
     self->recognizer.infer(pixels, height, width, channel, result);
-    NSLog(@"height = %llu", result.height);
     
+    NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:result.height];
+    int w = result.width;
+    
+    NSLog(@"result height = %d", result.height);
+    
+    for (int i = 0; i < result.height; i++) {
+        float score = result.data[i * w + 2];
+        if (score < kFilterScore) continue;
+        
+        SSDData *ssdData = [[SSDData alloc] init];
+        ssdData.label = kLabels[(int) result.data[i * w + 1]];
+        ssdData.accuracy = score;
+        ssdData.xmin = result.data[i * w + 3];
+        ssdData.ymin = result.data[i * w + 4];
+        ssdData.xmax = result.data[i * w + 5];
+        ssdData.ymax = result.data[i * w + 6];
+        
+//        NSLog(@"label = %@, acc = %f, xmin = %f, xmax = %f, ymin = %f, ymax = %f", ssdData.label, ssdData.accuracy, ssdData.xmin, ssdData.xmax, ssdData.ymin, ssdData.ymax);
+        
+        [array addObject:ssdData];
+    }
+    
+    return array;
 }
 
 - (void)destroy {

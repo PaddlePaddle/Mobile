@@ -13,7 +13,7 @@
 
 @interface ImageRecognizerPaddleWrapper : NSObject
 
-- (void)inference:(unsigned char *)pixels withHeight:(int)height withWidth:(int)width;
+- (NSMutableArray*)inference:(unsigned char *)pixels withHeight:(int)height withWidth:(int)width;
 - (void)destroy;
 
 @end

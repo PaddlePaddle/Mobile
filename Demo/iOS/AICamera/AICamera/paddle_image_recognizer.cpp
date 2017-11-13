@@ -260,16 +260,16 @@ void ImageRecognizer::infer(const unsigned char* pixels,
                             const size_t width,
                             const size_t channel,
                             Result& result) {
-//    if (height < normed_height_ || width < normed_width_) {
-//        fprintf(stderr,
-//                "Image size should be no less than the normed size (%u vs %u, %u "
-//                "vs %u).\n",
-//                height,
-//                normed_height_,
-//                width,
-//                normed_width_);
-//        return;
-//    }
+    if (height < normed_height_ || width < normed_width_) {
+        fprintf(stderr,
+                "Image size should be no less than the normed size (%u vs %u, %u "
+                "vs %u).\n",
+                height,
+                normed_height_,
+                width,
+                normed_width_);
+        return;
+    }
     
     // Step 3: Prepare input Arguments
     paddle_arguments in_args = paddle_arguments_create_none();

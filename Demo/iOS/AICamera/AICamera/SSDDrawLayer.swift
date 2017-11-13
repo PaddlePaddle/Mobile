@@ -13,27 +13,39 @@ class SSDDrawLayer: CAShapeLayer {
     
     required override init() {
         super.init()
-
-        labelLayer.fontSize = 18
-        labelLayer.contentsScale = UIScreen.main.scale
-        labelLayer.foregroundColor = UIColor.blue.cgColor
-        addSublayer(labelLayer)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func render(_ data: SSDData) {
+    func render(_ data: SSDData, rectSize : CGRect) {
         
-        self.path = UIBezierPath(roundedRect: CGRect(x: data.x, y: data.y, width: data.width, height: data.height), cornerRadius: 10).cgPath
-        self.strokeColor = UIColor.blue.cgColor
+        let screenWidth = UIScreen.main.bounds.size.width
+        let screenHeight = UIScreen.main.bounds.size.height
+//
+//        print("ymax=\(data.ymax)
+        
+        
+        
+        //have to swap height and width because the x, y is swapped
+        let x = CGFloat(data.xmin) * screenHeight
+        let y = CGFloat(1 - data.ymax) * screenWidth // 1 - ymax because its y is opposite
+        let width = CGFloat(data.xmax - data.xmin) * screenHeight
+        let height = CGFloat(data.ymax - data.ymin) * screenWidth
+        
+        
+        self.path = UIBezierPath(roundedRect: CGRect(x: y, y: x, width: height, height: width), cornerRadius: 10).cgPath
+        self.strokeColor = UIColor.cyan.cgColor
         self.lineWidth = 3.0
         self.fillColor = nil
         self.lineJoin = kCALineJoinBevel
     
-        labelLayer.string = String.init(format: "%@: %@", data.label, String(data.accuracy))
-        labelLayer.fontSize = 18
-        labelLayer.frame = CGRect.init(x: data.x, y: data.y + data.height, width: 100, height: 20)
+        labelLayer.string = String.init(format: "%@: %.02f", data.label, data.accuracy)
+        labelLayer.fontSize = 17
+        labelLayer.contentsScale = UIScreen.main.scale
+        labelLayer.foregroundColor = UIColor.cyan.cgColor
+        labelLayer.frame = CGRect.init(x: y + 4, y: x + width - 22, width: 1000, height: 30)
+        addSublayer(labelLayer)
     }
 }

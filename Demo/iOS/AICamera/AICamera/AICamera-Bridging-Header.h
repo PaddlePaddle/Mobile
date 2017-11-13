@@ -3,3 +3,4 @@
 //
 
 #import "ImageRecognizerPaddleWrapper.h"
+#import "SSDData.h"
