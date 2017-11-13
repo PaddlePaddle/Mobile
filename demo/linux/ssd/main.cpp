@@ -56,22 +56,30 @@ void draw_rectangles(const float* raw_pixels,
                      const size_t width,
                      const size_t channel) {}
 
-void test_noresize() {
-#if 0
+void test_noresize(ImageRecognizer& recognizer,
+                   const size_t kImageHeight,
+                   const size_t kImageWidth,
+                   const size_t kImageChannel,
+                   ImageRecognizer::Result& result) {
   // Read RGB data from image
-  unsigned char* raw_pixels = (unsigned char*)malloc(kImageHeight * kImageWidth * kImageChannel *
-                                 sizeof(unsigned char));
-  ImageReader()("images/example.jpg",
-         raw_pixels,
-         kImageHeight,
-         kImageWidth,
-         kImageChannel,
-         kCHW);
+  unsigned char* raw_pixels = (unsigned char*)malloc(
+      kImageHeight * kImageWidth * kImageChannel * sizeof(unsigned char));
+  ImageReader()("images/resized.jpg",
+                raw_pixels,
+                kImageHeight,
+                kImageWidth,
+                kImageChannel,
+                kHWC);
+
+  recognizer.infer(raw_pixels,
+                   kImageHeight,
+                   kImageWidth,
+                   kImageChannel,
+                   image::NO_ROTATE,
+                   result);
 
   free(raw_pixels);
   raw_pixels = nullptr;
-
-#endif
 }
 
 void test_resize(ImageRecognizer& recognizer,
@@ -79,6 +87,27 @@ void test_resize(ImageRecognizer& recognizer,
                  const size_t kImageWidth,
                  const size_t kImageChannel,
                  ImageRecognizer::Result& result) {
+  const size_t height = 500;
+  const size_t width = 353;
+  const size_t channel = 3;
+
+  // Read RGB data from image
+  unsigned char* raw_pixels =
+      (unsigned char*)malloc(height * width * channel * sizeof(unsigned char));
+  ImageReader()("images/origin.jpg", raw_pixels, height, width, channel, kHWC);
+
+  recognizer.infer(
+      raw_pixels, height, width, channel, image::NO_ROTATE, result);
+
+  free(raw_pixels);
+  raw_pixels = nullptr;
+}
+
+void test_rgba(ImageRecognizer& recognizer,
+               const size_t kImageHeight,
+               const size_t kImageWidth,
+               const size_t kImageChannel,
+               ImageRecognizer::Result& result) {
   const size_t height = 500;
   const size_t width = 353;
   const size_t channel = 3;
@@ -100,7 +129,8 @@ void test_resize(ImageRecognizer& recognizer,
     pixels[i * channel_rgba + 3] = 0;  // alpha
   }
 
-  recognizer.infer(pixels, height, width, channel_rgba, result);
+  recognizer.infer(
+      pixels, height, width, channel_rgba, image::NO_ROTATE, result);
 
   free(raw_pixels);
   raw_pixels = nullptr;
@@ -108,7 +138,30 @@ void test_resize(ImageRecognizer& recognizer,
   pixels = nullptr;
 }
 
+void test_rotate(ImageRecognizer& recognizer,
+                 const size_t kImageHeight,
+                 const size_t kImageWidth,
+                 const size_t kImageChannel,
+                 ImageRecognizer::Result& result) {
+  const size_t height = 353;
+  const size_t width = 500;
+  const size_t channel = 3;
+
+  // Read RGB data from image
+  unsigned char* raw_pixels =
+      (unsigned char*)malloc(height * width * channel * sizeof(unsigned char));
+  ImageReader()("images/rotated.jpg", raw_pixels, height, width, channel, kHWC);
+
+  recognizer.infer(
+      raw_pixels, height, width, channel, image::CLOCKWISE_R90, result);
+
+  free(raw_pixels);
+  raw_pixels = nullptr;
+}
+
 int main() {
+  ImageRecognizer::init_paddle();
+
 #if 1
   const char* merged_model_path = "models/vgg_ssd_net.paddle";
 
@@ -130,7 +183,7 @@ int main() {
       merged_model_path, kImageHeight, kImageWidth, kImageChannel, means);
 
   ImageRecognizer::Result result;
-  test_resize(recognizer, kImageHeight, kImageWidth, kImageChannel, result);
+  test_rotate(recognizer, kImageHeight, kImageWidth, kImageChannel, result);
 
   // Print the direct result
   std::cout << "Direct Result: " << result.height << " x " << result.width

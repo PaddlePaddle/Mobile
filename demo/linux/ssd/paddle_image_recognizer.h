@@ -70,7 +70,7 @@ enum RotateOption {
   CLOCKWISE_R270 = 3
 };
 
-void retate_hwc(const unsigned char* pixels,
+void rotate_hwc(const unsigned char* pixels,
                 unsigned char* rotated_pixels,
                 const size_t height,
                 const size_t width,
@@ -94,7 +94,9 @@ public:
       : gradient_machine_(nullptr),
         normed_height_(0),
         normed_width_(0),
-        normed_channel_(0) {
+        normed_channel_(0) {}
+
+  static void init_paddle() {
     // Initalize Paddle
     char* argv[] = {const_cast<char*>("--use_gpu=False")};
     CHECK(paddle_init(1, (char**)argv));
@@ -109,11 +111,13 @@ public:
                   float* normed_pixels,
                   const size_t height,
                   const size_t width,
-                  const size_t channel);
+                  const size_t channel,
+                  const image::RotateOption option);
   void infer(const unsigned char* pixels,
              const size_t height,
              const size_t width,
              const size_t channel,
+             const image::RotateOption option,
              Result& result);
   void release();
 
