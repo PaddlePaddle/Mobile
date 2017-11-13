@@ -57,13 +57,28 @@ namespace image {
     //   kARGB = 1
     // };
     
-    void resize_hwc(const unsigned char* raw_data,
-                    unsigned char* resized_data,
+    void resize_hwc(const unsigned char* pixels,
+                    unsigned char* resized_pixels,
                     const size_t height,
                     const size_t width,
                     const size_t channel,
                     const size_t resized_height,
                     const size_t resized_width);
+    
+    enum RotateOption {
+        NO_ROTATE = 0,
+        CLOCKWISE_R90 = 1,
+        CLOCKWISE_R180 = 2,
+        CLOCKWISE_R270 = 3
+    };
+    
+    void rotate_hwc(const unsigned char* pixels,
+                    unsigned char* rotated_pixels,
+                    const size_t height,
+                    const size_t width,
+                    const size_t channel,
+                    const RotateOption option);
+    
 }  // namespace image
 
 class ImageRecognizer {
@@ -81,7 +96,9 @@ public:
     : gradient_machine_(nullptr),
     normed_height_(0),
     normed_width_(0),
-    normed_channel_(0) {
+    normed_channel_(0) {}
+    
+    static void init_paddle() {
         // Initalize Paddle
         char* argv[] = {const_cast<char*>("--use_gpu=False")};
         CHECK(paddle_init(1, (char**)argv));
@@ -96,11 +113,13 @@ public:
                     float* normed_pixels,
                     const size_t height,
                     const size_t width,
-                    const size_t channel);
+                    const size_t channel,
+                    const image::RotateOption option);
     void infer(const unsigned char* pixels,
                const size_t height,
                const size_t width,
                const size_t channel,
+               const image::RotateOption option,
                Result& result);
     void release();
     

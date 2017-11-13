@@ -7,11 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		480520AE1FB3DA19008482C5 /* __init__.py in Resources */ = {isa = PBXBuildFile; fileRef = 480520A91FB3DA18008482C5 /* __init__.py */; };
-		480520AF1FB3DA19008482C5 /* pascal_voc_conf.py in Resources */ = {isa = PBXBuildFile; fileRef = 480520AA1FB3DA18008482C5 /* pascal_voc_conf.py */; };
-		480520B01FB3DA19008482C5 /* label_list in Resources */ = {isa = PBXBuildFile; fileRef = 480520AB1FB3DA18008482C5 /* label_list */; };
-		480520B11FB3DA19008482C5 /* merge_model.py in Resources */ = {isa = PBXBuildFile; fileRef = 480520AC1FB3DA18008482C5 /* merge_model.py */; };
-		480520B21FB3DA19008482C5 /* vgg_ssd_net.py in Resources */ = {isa = PBXBuildFile; fileRef = 480520AD1FB3DA18008482C5 /* vgg_ssd_net.py */; };
 		480C6CF51FB16CD80009876E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480C6CF41FB16CD80009876E /* AppDelegate.swift */; };
 		480C6CF71FB16CD80009876E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480C6CF61FB16CD80009876E /* ViewController.swift */; };
 		480C6CFA1FB16CD80009876E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 480C6CF81FB16CD80009876E /* Main.storyboard */; };
@@ -30,16 +25,12 @@
 		488E78D51FB291030075A8E3 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 488E78D41FB291030075A8E3 /* libz.a */; };
 		48B524F21FB69CC800F7388E /* output.paddle in Resources */ = {isa = PBXBuildFile; fileRef = 48B524F11FB69C8100F7388E /* output.paddle */; };
 		48C36BFB1FB8320C009CDE05 /* SSDData.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C36BFA1FB8320C009CDE05 /* SSDData.m */; };
+		48C36C001FBA529C009CDE05 /* PaddleHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 48C36BFF1FBA529B009CDE05 /* PaddleHelper.mm */; };
 		48CAD1441FB2B3B3009A0523 /* ImageRecognizerPaddleWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 48CAD1431FB2B3B3009A0523 /* ImageRecognizerPaddleWrapper.mm */; };
 		D09B082B1FB280CD0014EF43 /* SSDMultiboxLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09B082A1FB280CD0014EF43 /* SSDMultiboxLayer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		480520A91FB3DA18008482C5 /* __init__.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = __init__.py; sourceTree = "<group>"; };
-		480520AA1FB3DA18008482C5 /* pascal_voc_conf.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = pascal_voc_conf.py; sourceTree = "<group>"; };
-		480520AB1FB3DA18008482C5 /* label_list */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = label_list; sourceTree = "<group>"; };
-		480520AC1FB3DA18008482C5 /* merge_model.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = merge_model.py; sourceTree = "<group>"; };
-		480520AD1FB3DA18008482C5 /* vgg_ssd_net.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = vgg_ssd_net.py; sourceTree = "<group>"; };
 		480520B31FB3DAEF008482C5 /* vgg_ssd_net.paddle */ = {isa = PBXFileReference; lastKnownFileType = file; path = vgg_ssd_net.paddle; sourceTree = "<group>"; };
 		480C6CF11FB16CD80009876E /* AICamera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AICamera.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		480C6CF41FB16CD80009876E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -63,6 +54,8 @@
 		48B524F11FB69C8100F7388E /* output.paddle */ = {isa = PBXFileReference; lastKnownFileType = file; path = output.paddle; sourceTree = "<group>"; };
 		48C36BFA1FB8320C009CDE05 /* SSDData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SSDData.m; sourceTree = "<group>"; };
 		48C36BFE1FB83241009CDE05 /* SSDData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSDData.h; sourceTree = "<group>"; };
+		48C36BFF1FBA529B009CDE05 /* PaddleHelper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = PaddleHelper.mm; sourceTree = "<group>"; };
+		48C36C011FBA544C009CDE05 /* PaddleHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PaddleHelper.h; sourceTree = "<group>"; };
 		48CAD13E1FB29318009A0523 /* AICamera-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AICamera-Bridging-Header.h"; sourceTree = "<group>"; };
 		48CAD1431FB2B3B3009A0523 /* ImageRecognizerPaddleWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ImageRecognizerPaddleWrapper.mm; sourceTree = "<group>"; };
 		D09B082A1FB280CD0014EF43 /* SSDMultiboxLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSDMultiboxLayer.swift; sourceTree = "<group>"; };
@@ -91,21 +84,8 @@
 			children = (
 				480520B31FB3DAEF008482C5 /* vgg_ssd_net.paddle */,
 				48B524F11FB69C8100F7388E /* output.paddle */,
-				480520A81FB3DA18008482C5 /* config */,
-				480520AB1FB3DA18008482C5 /* label_list */,
-				480520AC1FB3DA18008482C5 /* merge_model.py */,
-				480520AD1FB3DA18008482C5 /* vgg_ssd_net.py */,
 			);
 			path = models;
-			sourceTree = "<group>";
-		};
-		480520A81FB3DA18008482C5 /* config */ = {
-			isa = PBXGroup;
-			children = (
-				480520A91FB3DA18008482C5 /* __init__.py */,
-				480520AA1FB3DA18008482C5 /* pascal_voc_conf.py */,
-			);
-			path = config;
 			sourceTree = "<group>";
 		};
 		480C6CE81FB16CD80009876E = {
@@ -136,6 +116,8 @@
 				D09B082A1FB280CD0014EF43 /* SSDMultiboxLayer.swift */,
 				48540B751FB3AD8E00C05A0F /* paddle_image_recognizer.cpp */,
 				48540B761FB3AD8E00C05A0F /* paddle_image_recognizer.h */,
+				48C36BFF1FBA529B009CDE05 /* PaddleHelper.mm */,
+				48C36C011FBA544C009CDE05 /* PaddleHelper.h */,
 				48CAD1431FB2B3B3009A0523 /* ImageRecognizerPaddleWrapper.mm */,
 				4883B2371FB4E7FE00F9204A /* ImageRecognizerPaddleWrapper.h */,
 				48C36BFA1FB8320C009CDE05 /* SSDData.m */,
@@ -226,14 +208,9 @@
 			files = (
 				48B524F21FB69CC800F7388E /* output.paddle in Resources */,
 				4883B2381FB50D9B00F9204A /* vgg_ssd_net.paddle in Resources */,
-				480520B21FB3DA19008482C5 /* vgg_ssd_net.py in Resources */,
-				480520AF1FB3DA19008482C5 /* pascal_voc_conf.py in Resources */,
 				480C6CFF1FB16CD80009876E /* LaunchScreen.storyboard in Resources */,
-				480520B11FB3DA19008482C5 /* merge_model.py in Resources */,
 				480C6CFC1FB16CD80009876E /* Assets.xcassets in Resources */,
-				480520AE1FB3DA19008482C5 /* __init__.py in Resources */,
 				480C6CFA1FB16CD80009876E /* Main.storyboard in Resources */,
-				480520B01FB3DA19008482C5 /* label_list in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,6 +226,7 @@
 				D09B082B1FB280CD0014EF43 /* SSDMultiboxLayer.swift in Sources */,
 				48CAD1441FB2B3B3009A0523 /* ImageRecognizerPaddleWrapper.mm in Sources */,
 				480C6D071FB242CA0009876E /* SSDDrawLayer.swift in Sources */,
+				48C36C001FBA529C009CDE05 /* PaddleHelper.mm in Sources */,
 				480C6D091FB262BF0009876E /* ImageRecognizer.swift in Sources */,
 				48C36BFB1FB8320C009CDE05 /* SSDData.m in Sources */,
 				48540B771FB3AD8E00C05A0F /* paddle_image_recognizer.cpp in Sources */,

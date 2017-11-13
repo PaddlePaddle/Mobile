@@ -26,7 +26,7 @@ static NSString * kLabels [21] = {
     @"tvmonitor"
 };
 
-static float kFilterScore = 0.3;
+static float kFilterScore = 0.5;
 
 - (instancetype)init {
     self = [super init];
@@ -50,12 +50,10 @@ static float kFilterScore = 0.3;
 - (NSMutableArray*)inference:(unsigned char *)pixels withHeight:(int)height withWidth:(int)width {
     ImageRecognizer::Result result;
     int channel = 4;
-    self->recognizer.infer(pixels, height, width, channel, result);
+    self->recognizer.infer(pixels, height, width, channel, image::CLOCKWISE_R90, result);
     
     NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:result.height];
     int w = result.width;
-    
-    NSLog(@"result height = %d", result.height);
     
     for (int i = 0; i < result.height; i++) {
         float score = result.data[i * w + 2];
@@ -68,8 +66,6 @@ static float kFilterScore = 0.3;
         ssdData.ymin = result.data[i * w + 4];
         ssdData.xmax = result.data[i * w + 5];
         ssdData.ymax = result.data[i * w + 6];
-        
-//        NSLog(@"label = %@, acc = %f, xmin = %f, xmax = %f, ymin = %f, ymax = %f", ssdData.label, ssdData.accuracy, ssdData.xmin, ssdData.xmax, ssdData.ymin, ssdData.ymax);
         
         [array addObject:ssdData];
     }

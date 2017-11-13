@@ -19,23 +19,19 @@ class SSDDrawLayer: CAShapeLayer {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func render(_ data: SSDData, rectSize : CGRect) {
+    func render(_ data: SSDData) {
         
         let screenWidth = UIScreen.main.bounds.size.width
         let screenHeight = UIScreen.main.bounds.size.height
-//
-//        print("ymax=\(data.ymax)
+        
+//        //have to swap height and width because the x, y is swapped
+        let x = CGFloat(data.xmin) * screenWidth
+        let y = CGFloat(data.ymin) * screenHeight // 1 - ymax because its y is opposite
+        let width = CGFloat(data.xmax - data.xmin) * screenWidth
+        let height = CGFloat(data.ymax - data.ymin) * screenHeight
         
         
-        
-        //have to swap height and width because the x, y is swapped
-        let x = CGFloat(data.xmin) * screenHeight
-        let y = CGFloat(1 - data.ymax) * screenWidth // 1 - ymax because its y is opposite
-        let width = CGFloat(data.xmax - data.xmin) * screenHeight
-        let height = CGFloat(data.ymax - data.ymin) * screenWidth
-        
-        
-        self.path = UIBezierPath(roundedRect: CGRect(x: y, y: x, width: height, height: width), cornerRadius: 10).cgPath
+        self.path = UIBezierPath(roundedRect: CGRect(x: x, y: y, width: width, height: height), cornerRadius: 10).cgPath
         self.strokeColor = UIColor.cyan.cgColor
         self.lineWidth = 3.0
         self.fillColor = nil
@@ -45,7 +41,7 @@ class SSDDrawLayer: CAShapeLayer {
         labelLayer.fontSize = 17
         labelLayer.contentsScale = UIScreen.main.scale
         labelLayer.foregroundColor = UIColor.cyan.cgColor
-        labelLayer.frame = CGRect.init(x: y + 4, y: x + width - 22, width: 1000, height: 30)
+        labelLayer.frame = CGRect.init(x: x + 4, y: y + height - 22, width: 1000, height: 30)
         addSublayer(labelLayer)
     }
 }

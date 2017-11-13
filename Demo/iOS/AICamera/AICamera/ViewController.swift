@@ -19,7 +19,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var videoConnection: AVCaptureConnection!
     var captureDevice : AVCaptureDevice?
     
-    let imageRecognizer = ImageRecognizer()
+    var imageRecognizer : ImageRecognizer?
     
     var index = 0
     
@@ -27,6 +27,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        imageRecognizer = ImageRecognizer()
         
         captureSession.sessionPreset = AVCaptureSessionPresetHigh
         
@@ -52,7 +53,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         // setup preview
         let previewContainer = self.view.layer
         let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)!
-//        previewLayer.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.width)
         previewLayer.frame = previewContainer.bounds
         previewLayer.contentsGravity = kCAGravityResizeAspect
         previewLayer.videoGravity = AVLayerVideoGravityResizeAspect
@@ -80,8 +80,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             
             if let connection = videoDataOutput.connection(withMediaType: AVMediaTypeVideo) {
                 if connection.isVideoOrientationSupported {
-                    print("orientation support")
                     // Force recording to portrait
+                    // use portrait does not work for some reason, try to rotate in c++ code instead
 //                    connection.videoOrientation = .portrait
                 }
                 self.videoConnection = connection
@@ -91,7 +91,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
     
     func captureOutput(_ output: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-//        print("didDrop")
+        print("didDrop")
     }
     
     func captureOutput(_ output: AVCaptureOutput, didOutputSampleBuffer sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
@@ -108,9 +108,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             
             let intBuffer = unsafeBitCast(baseAddress, to: UnsafeMutablePointer<UInt8>.self)
             
-//            CVPixelBufferUnlockBaseAddress(imageBuffer, CVPixelBufferLockFlags(rawValue: 0))
+            CVPixelBufferUnlockBaseAddress(imageBuffer, CVPixelBufferLockFlags(rawValue: 0))
             
-            let ssdDataList = imageRecognizer.inference(imageBuffer: intBuffer, width: Int32(width), height: Int32(height))
+            let ssdDataList = imageRecognizer?.inference(imageBuffer: intBuffer, width: Int32(width), height: Int32(height))
             print("width = \(width) height =\(height) count =\(ssdDataList!.count)")
             
             DispatchQueue.main.async {

@@ -14,138 +14,134 @@
 
 #include "paddle_image_recognizer.h"
 #include <string.h>
-#include <algorithm>
-#include <cmath>
 
 namespace image {
     
-#if 0
-    void resize_hwc(const unsigned char* raw_data, unsigned char* resized_data, const size_t height, const size_t width, const size_t channel, const size_t resized_height, const size_t resized_width) {
-        int iWidthSrc = width;
-        int iHeightSrc = height;
-        int stepDst = resized_width * channel;
-        int stepSrc = width * channel;
-        float scale_x = static_cast<float>(width) / resized_width;
-        float scale_y = static_cast<float>(height) / resized_height;
+    void resize_hwc(const unsigned char* pixels,
+                    unsigned char* resized_pixels,
+                    const size_t height,
+                    const size_t width,
+                    const size_t channel,
+                    const size_t resized_height,
+                    const size_t resized_width) {
+        float ratio_x = static_cast<float>(width) / static_cast<float>(resized_width);
+        float ratio_y =
+        static_cast<float>(height) / static_cast<float>(resized_height);
         
-        for (int j = 0; j < resized_height; j++) {
-            float fy = (float)((j + 0.5) * scale_y - 0.5);
-            int sy = std::floor(fy);
-            fy -= sy;
-            sy = std::min(sy, iHeightSrc - 2);
-            sy = std::max(0, sy);
+        for (size_t i = 0; i < resized_height; i++) {
+            float new_y = i * ratio_y;
             
-            short cbufy[2];
-            if ((1.f - fy) * 2048 < 0) {
-                cbufy[0] = 0;
-            } else if ((1.f - fy) * 2048 > 32767) {
-                cbufy[0] = 32767;
-            } else {
-                cbufy[0] = short((1.f - fy) * 2048);
-            }
-            cbufy[1] = 2048 - cbufy[0];
+            size_t y1 = (static_cast<size_t>(new_y) > (height - 1))
+            ? (height - 1)
+            : static_cast<size_t>(new_y);
+            size_t y2 = y1 + 1;
             
-            for (int i = 0; i < resized_width; ++i) {
-                float fx = (float)((i + 0.5) * scale_x - 0.5);
-                int sx = floor(fx);
-                fx -= sx;
+            float b1 = y2 - new_y;
+            float b2 = new_y - y1;
+            
+            for (size_t j = 0; j < resized_width; j++) {
+                float new_x = j * ratio_x;
                 
-                if (sx < 0) {
-                    fx = 0, sx = 0;
-                }
-                if (sx >= iWidthSrc - 1) {
-                    fx = 0, sx = iWidthSrc - 2;
-                }
-                
-                short cbufx[2];
-                if ((1.f - fx) * 2048 < 0) {
-                    cbufx[0] = 0;
-                } else if ((1.f - fx) * 2048 > 32767) {
-                    cbufx[0] = 32767;
-                } else {
-                    cbufx[0] = short((1.f - fx) * 2048);
-                }
-                cbufx[1] = 2048 - cbufx[0];
-                for (int k = 0; k < channel; ++k) {
-                    resized_data[j * stepDst + 3 * i + k] =
-                    (unsigned int)((char(raw_data[sy*stepSrc + 3*sx + k]) * cbufx[0] * cbufy[0] +
-                                    char(raw_data[(sy+1)*stepSrc + 3*sx + k]) * cbufx[0] * cbufy[1] +
-                                    char(raw_data[sy*stepSrc + 3*(sx+1) + k]) * cbufx[1] * cbufy[0] +
-                                    char(raw_data[(sy+1)*stepSrc + 3*(sx+1) + k]) * cbufx[1] * cbufy[1]) >> 22);
-                }
-            }
-        }
-    }
-#else
-    void resize_hwc(const unsigned char* inputImage,
-                    unsigned char* outputImage,
-                    const size_t srcHeight,
-                    const size_t srcWidth,
-                    const size_t nChannels,
-                    const size_t dstHeight,
-                    const size_t dstWidth) {
-        float ratioX = srcWidth * 1.0 / dstWidth;
-        float ratioY = srcHeight * 1.0 / dstHeight;
-        
-        for (int i = 0; i < dstHeight; i++) {
-            float newY = i * ratioY;
-            
-            int y1 = ((int)newY > (srcHeight - 1)) ? (srcHeight - 1) : (int)newY;
-            int y2 = y1 + 1;
-            
-            float b1 = y2 - newY;
-            float b2 = newY - y1;
-            
-            for (int j = 0; j < dstWidth; j++) {
-                float newX = j * ratioX;
-                int x1 = ((int)newX > (srcWidth - 1)) ? (srcWidth - 1) : (int)newX;
+                size_t x1 = (static_cast<size_t>(new_x) > (width - 1))
+                ? (width - 1)
+                : static_cast<size_t>(new_x);
                 int x2 = x1 + 1;
                 
-                float a1 = x2 - newX;
-                float a2 = newX - x1;
+                float a1 = x2 - new_x;
+                float a2 = new_x - x1;
                 
-                unsigned char* ptDst = outputImage + (i * dstWidth + j) * nChannels;
-                unsigned char* ptSrc = const_cast<unsigned char*>(inputImage) +
-                (y1 * srcWidth + x1) * nChannels;
-                int p1 = srcWidth * nChannels;
-                int p2 = p1 + nChannels;
+                unsigned char* pt_dst =
+                resized_pixels + (i * resized_width + j) * channel;
+                const unsigned char* pt_src = pixels + (y1 * width + x1) * channel;
+                int p1 = width * channel;
+                int p2 = p1 + channel;
                 
-                if (x1 == srcWidth - 1 && y1 == srcHeight - 1) {
-                    memcpy(ptDst, ptSrc, nChannels * sizeof(unsigned char));
-                } else if (x1 == srcWidth - 1) {
-                    for (int k = 0; k < nChannels; k++) {
-                        *ptDst = (unsigned char)((*(ptSrc)) * b1 + (*(ptSrc + p1)) * b2);
-                        ptDst++;
-                        ptSrc++;
+                if (x1 == width - 1 && y1 == height - 1) {
+                    memcpy(pt_dst, pt_src, channel * sizeof(unsigned char));
+                } else if (x1 == width - 1) {
+                    for (size_t k = 0; k < channel; k++) {
+                        float pixel_00 = static_cast<float>(pt_src[k]);
+                        float pixel_10 = static_cast<float>(pt_src[p1 + k]);
+                        
+                        pt_dst[k] = static_cast<unsigned char>(pixel_00 * b1 + pixel_10 * b2);
                     }
-                } else if (y1 == srcHeight - 1) {
-                    for (int k = 0; k < nChannels; k++) {
-                        *ptDst = (unsigned char)((*ptSrc) * a1 + (*(ptSrc + nChannels)) * a2);
-                        ptDst++;
-                        ptSrc++;
+                } else if (y1 == height - 1) {
+                    for (size_t k = 0; k < channel; k++) {
+                        float pixel_00 = static_cast<float>(pt_src[k]);
+                        float pixel_01 = static_cast<float>(pt_src[channel + k]);
+                        
+                        pt_dst[k] = static_cast<unsigned char>(pixel_00 * a1 + pixel_01 * a2);
                     }
                 } else {
-                    // x1=srcWidth-1或者y1=srcHeight-1，则下述公式中指针访问会越界，因此将三种情况分拆出来各自处理
-                    for (int k = 0; k < nChannels; k++) {
-#if 0
-                        *ptDst = (unsigned char) (
-                                                  ((*ptSrc       ) * a1 + (*(ptSrc + nChannels)) * a2) * b1
-                                                  + ((*(ptSrc + p1)) * a1 + (*(ptSrc + p2       )) * a2) * b2);
-#else
-                        float pixel_00 = (float)ptSrc[0 + k];
-                        float pixel_01 = (float)ptSrc[nChannels + k];
-                        float pixel_10 = (float)ptSrc[p1 + k];
-                        float pixel_11 = (float)ptSrc[p2 + k];
+                    // If x1 = width - 1 or y1 = height - 1, the memory accesses may be out
+                    // of range.
+                    for (size_t k = 0; k < channel; k++) {
+                        float pixel_00 = static_cast<float>(pt_src[k]);
+                        float pixel_01 = static_cast<float>(pt_src[channel + k]);
+                        float pixel_10 = static_cast<float>(pt_src[p1 + k]);
+                        float pixel_11 = static_cast<float>(pt_src[p2 + k]);
                         
-                        ptDst[k] = (unsigned char)((pixel_00 * a1 + pixel_01 * a2) * b1 +
+                        pt_dst[k] =
+                        static_cast<unsigned char>((pixel_00 * a1 + pixel_01 * a2) * b1 +
                                                    (pixel_10 * a1 + pixel_11 * a2) * b2);
-#endif
                     }
                 }
-            }  // for j
-        }    // for i
+            }  // j-loop
+        }    // i-loop
     }
-#endif
+    
+    void rotate_hwc(const unsigned char* pixels,
+                    unsigned char* rotated_pixels,
+                    const size_t height,
+                    const size_t width,
+                    const size_t channel,
+                    const RotateOption option) {
+        switch (option) {
+            case NO_ROTATE:
+                memcpy(rotated_pixels,
+                       pixels,
+                       height * width * channel * sizeof(unsigned char));
+                break;
+            case CLOCKWISE_R90:
+                for (size_t i = 0; i < height; ++i) {
+                    for (size_t j = 0; j < width; ++j) {
+                        // (i, j) -> (j, height - 1 - i)
+                        for (size_t k = 0; k < channel; ++k) {
+                            rotated_pixels[(j * height + height - 1 - i) * channel + k] =
+                            pixels[(i * width + j) * channel + k];
+                        }
+                    }
+                }
+                break;
+            case CLOCKWISE_R180:
+                for (size_t i = 0; i < height; ++i) {
+                    for (size_t j = 0; j < width; ++j) {
+                        // (i, j) -> (height - 1 - i, width - 1 - j)
+                        for (size_t k = 0; k < channel; ++k) {
+                            rotated_pixels[((height - 1 - i) * width + width - 1 - j) *
+                                           channel +
+                                           k] = pixels[(i * width + j) * channel + k];
+                        }
+                    }
+                }
+                break;
+            case CLOCKWISE_R270:
+                for (size_t i = 0; i < height; ++i) {
+                    for (size_t j = 0; j < width; ++j) {
+                        // (i, j) -> (width - 1 - j, i)
+                        for (size_t k = 0; k < channel; ++k) {
+                            rotated_pixels[((width - 1 - j) * height + i) * channel + k] =
+                            pixels[(i * width + j) * channel + k];
+                        }
+                    }
+                }
+                break;
+            default:
+                fprintf(stderr,
+                        "Illegal rotate option, please specify among [NO_ROTATE, "
+                        "CLOCKWISE_R90, CLOCKWISE_R180, CLOCKWISE_R270].\n");
+        }
+    }
     
 }  // namespace image
 
@@ -201,41 +197,57 @@ void ImageRecognizer::preprocess(const unsigned char* pixels,
                                  float* normed_pixels,
                                  const size_t height,
                                  const size_t width,
-                                 const size_t channel) {
-    // if (height == normed_height && width == normed_width && channel ==
-    // normed_channel) {
-    // } else {
-    // }
-    
-#if 0
+                                 const size_t channel,
+                                 const image::RotateOption option) {
+    bool need_resize = true;
     size_t resized_height = 0;
     size_t resized_width = 0;
-    if (height > width) {
-        resized_width = normed_width;
-        resized_height = normed_height * height / width;
-    } else /* height <= width */ {
-        resized_width = normed_width * width / height;
-        resized_height = normed_height;
+    if (option == image::NO_ROTATE || option == image::CLOCKWISE_R180) {
+        if (height == normed_height_ && width == normed_width_) {
+            need_resize = false;
+        }
+        resized_height = normed_height_;
+        resized_width = normed_width_;
+    } else if (option == image::CLOCKWISE_R90 ||
+               option == image::CLOCKWISE_R270) {
+        if (height == normed_width_ && width == normed_height_) {
+            need_resize = false;
+        }
+        resized_height = normed_width_;
+        resized_width = normed_height_;
     }
-#else
-    size_t resized_height = normed_height_;
-    size_t resized_width = normed_width_;
-#endif
     
-    // Bilinear Interpolation Resize
-    unsigned char* resized_pixels = (unsigned char*)malloc(
-                                                           resized_height * resized_width * channel * sizeof(unsigned char));
-    image::resize_hwc(pixels,
-                      resized_pixels,
-                      height,
-                      width,
-                      channel,
-                      resized_height,
-                      resized_width);
-    // ImageWriter()("images/resized.jpg", resized_pixels, resized_height,
-    // resized_width, channel, kHWC);
+    unsigned char* resized_pixels = nullptr;
+    if (!need_resize) {
+        resized_pixels = const_cast<unsigned char*>(pixels);
+    } else {
+        // Bilinear Interpolation Resize
+        resized_pixels = static_cast<unsigned char*>(malloc(
+                                                            resized_height * resized_width * channel * sizeof(unsigned char)));
+        image::resize_hwc(pixels,
+                          resized_pixels,
+                          height,
+                          width,
+                          channel,
+                          resized_height,
+                          resized_width);
+    }
     
-    if (resized_height == normed_height_ && resized_width == normed_width_) {
+    unsigned char* rotated_pixels = nullptr;
+    if (option == image::NO_ROTATE) {
+        rotated_pixels = resized_pixels;
+    } else {
+        rotated_pixels = static_cast<unsigned char*>(malloc(
+                                                            normed_height_ * normed_width_ * channel * sizeof(unsigned char)));
+        image::rotate_hwc(resized_pixels,
+                          rotated_pixels,
+                          resized_height,
+                          resized_width,
+                          channel,
+                          option);
+    }
+    
+    if (true) {
         // HWC -> CHW, RGBA -> RGB
         size_t index = 0;
         for (size_t c = 0; c < normed_channel_; ++c) {
@@ -243,7 +255,7 @@ void ImageRecognizer::preprocess(const unsigned char* pixels,
                 for (size_t w = 0; w < normed_width_; ++w) {
                     normed_pixels[index] =
                     static_cast<float>(
-                                       resized_pixels[(h * resized_width + w) * channel + c]) -
+                                       rotated_pixels[(h * normed_width_ + w) * channel + c]) -
                     means_[c];
                     index++;
                 }
@@ -251,14 +263,21 @@ void ImageRecognizer::preprocess(const unsigned char* pixels,
         }
     }
     
-    free(resized_pixels);
-    resized_pixels = nullptr;
+    if (rotated_pixels != nullptr && rotated_pixels != resized_pixels) {
+        free(rotated_pixels);
+        rotated_pixels = nullptr;
+    }
+    if (resized_pixels != nullptr && resized_pixels != pixels) {
+        free(resized_pixels);
+        resized_pixels = nullptr;
+    }
 }
 
 void ImageRecognizer::infer(const unsigned char* pixels,
                             const size_t height,
                             const size_t width,
                             const size_t channel,
+                            const image::RotateOption option,
                             Result& result) {
     if (height < normed_height_ || width < normed_width_) {
         fprintf(stderr,
@@ -289,7 +308,7 @@ void ImageRecognizer::infer(const unsigned char* pixels,
     paddle_real* array;
     CHECK(paddle_matrix_get_row(mat, 0, &array));
     
-    preprocess(pixels, array, height, width, channel);
+    preprocess(pixels, array, height, width, channel, option);
     
     // Step 4: Do inference.
     paddle_arguments out_args = paddle_arguments_create_none();

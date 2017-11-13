@@ -17,7 +17,7 @@ class SSDMultiboxLayer: CALayer {
         
         for ssdData in ssdDataList {
             let boxLayer = SSDDrawLayer.init()
-            boxLayer.render(ssdData as! SSDData, rectSize: self.visibleRect)
+            boxLayer.render(ssdData as! SSDData)
             
             self.addSublayer(boxLayer)
         }
