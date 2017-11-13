@@ -13,7 +13,7 @@
 # limitations under the License
 
 cmake_minimum_required(VERSION 3.0)
-project(vgg_ssd_demo CXX C)
+project(ssd_demo CXX C)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/")
 find_package(Paddle)

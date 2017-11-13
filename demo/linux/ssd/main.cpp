@@ -109,11 +109,19 @@ void test_resize(ImageRecognizer& recognizer,
 }
 
 int main() {
+#if 1
   const char* merged_model_path = "models/vgg_ssd_net.paddle";
 
   const size_t kImageHeight = 300;
   const size_t kImageWidth = 300;
   const size_t kImageChannel = 3;
+#else
+  const char* merged_model_path = "models/mobilenet_ssd_160.paddle";
+
+  const size_t kImageHeight = 160;
+  const size_t kImageWidth = 160;
+  const size_t kImageChannel = 3;
+#endif
 
   const std::vector<float> means({104, 117, 124});
 

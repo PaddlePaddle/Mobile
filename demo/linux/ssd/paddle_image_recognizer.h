@@ -55,13 +55,28 @@ namespace image {
 //   kARGB = 1
 // };
 
-void resize_hwc(const unsigned char* raw_data,
-                unsigned char* resized_data,
+void resize_hwc(const unsigned char* pixels,
+                unsigned char* resized_pixels,
                 const size_t height,
                 const size_t width,
                 const size_t channel,
                 const size_t resized_height,
                 const size_t resized_width);
+
+enum RotateOption {
+  NO_ROTATE = 0,
+  CLOCKWISE_R90 = 1,
+  CLOCKWISE_R180 = 2,
+  CLOCKWISE_R270 = 3
+};
+
+void retate_hwc(const unsigned char* pixels,
+                unsigned char* rotated_pixels,
+                const size_t height,
+                const size_t width,
+                const size_t channel,
+                const RotateOption option);
+
 }  // namespace image
 
 class ImageRecognizer {
