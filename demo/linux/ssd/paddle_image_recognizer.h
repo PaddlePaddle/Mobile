@@ -98,7 +98,8 @@ public:
 
   static void init_paddle() {
     // Initalize Paddle
-    char* argv[] = {const_cast<char*>("--use_gpu=False")};
+    char* argv[] = {const_cast<char*>("--use_gpu=False"),
+                    const_cast<char*>("--pool_limit_size=0")};
     CHECK(paddle_init(1, (char**)argv));
   }
 

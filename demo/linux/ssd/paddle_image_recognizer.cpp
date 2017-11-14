@@ -323,8 +323,10 @@ void ImageRecognizer::infer(const unsigned char* pixels,
   paddle_matrix probs = paddle_matrix_create_none();
   CHECK(paddle_arguments_get_value(out_args, 0, probs));
 
-  CHECK(paddle_matrix_get_shape(probs, &result.height, &result.width));
-  CHECK(paddle_matrix_get_row(probs, 0, &result.data));
+  paddle_error err = paddle_matrix_get_row(probs, 0, &result.data);
+  if (err == kPD_NO_ERROR) {
+    CHECK(paddle_matrix_get_shape(probs, &result.height, &result.width));
+  }
 
   // Step 6: Release the resources.
   CHECK(paddle_arguments_destroy(in_args));
