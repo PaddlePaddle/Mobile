@@ -49,11 +49,25 @@ namespace image {
 //   kCHW = 0,
 //   kHWC = 1
 // };
-//
-// enum Format {
-//   kRGBA = 0,
-//   kARGB = 1
-// };
+
+enum Format {
+  kRGB = 0x1,  // support RGB, RGBA
+  kBGR = 0x2   // support BGR, BGRA
+};
+
+enum RotateOption {
+  NO_ROTATE = 0,
+  CLOCKWISE_R90 = 1,
+  CLOCKWISE_R180 = 2,
+  CLOCKWISE_R270 = 3
+};
+
+struct Config {
+  Config() : format(kRGB), option(NO_ROTATE) {}
+  Config(Format f, RotateOption o) : format(f), option(o) {}
+  Format format;
+  RotateOption option;
+};
 
 void resize_hwc(const unsigned char* pixels,
                 unsigned char* resized_pixels,
@@ -62,13 +76,6 @@ void resize_hwc(const unsigned char* pixels,
                 const size_t channel,
                 const size_t resized_height,
                 const size_t resized_width);
-
-enum RotateOption {
-  NO_ROTATE = 0,
-  CLOCKWISE_R90 = 1,
-  CLOCKWISE_R180 = 2,
-  CLOCKWISE_R270 = 3
-};
 
 void rotate_hwc(const unsigned char* pixels,
                 unsigned char* rotated_pixels,
@@ -113,12 +120,12 @@ public:
                   const size_t height,
                   const size_t width,
                   const size_t channel,
-                  const image::RotateOption option);
+                  const image::Config& config);
   void infer(const unsigned char* pixels,
              const size_t height,
              const size_t width,
              const size_t channel,
-             const image::RotateOption option,
+             const image::Config& config,
              Result& result);
   void release();
 

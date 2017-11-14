@@ -61,7 +61,7 @@ void test_noresize(ImageRecognizer& recognizer,
                    const size_t kImageWidth,
                    const size_t kImageChannel,
                    ImageRecognizer::Result& result) {
-  // Read RGB data from image
+  // Read BGR data from image
   unsigned char* raw_pixels = (unsigned char*)malloc(
       kImageHeight * kImageWidth * kImageChannel * sizeof(unsigned char));
   ImageReader()("images/resized.jpg",
@@ -71,12 +71,9 @@ void test_noresize(ImageRecognizer& recognizer,
                 kImageChannel,
                 kHWC);
 
-  recognizer.infer(raw_pixels,
-                   kImageHeight,
-                   kImageWidth,
-                   kImageChannel,
-                   image::NO_ROTATE,
-                   result);
+  image::Config config(image::kBGR, image::NO_ROTATE);
+  recognizer.infer(
+      raw_pixels, kImageHeight, kImageWidth, kImageChannel, config, result);
 
   free(raw_pixels);
   raw_pixels = nullptr;
@@ -91,13 +88,13 @@ void test_resize(ImageRecognizer& recognizer,
   const size_t width = 353;
   const size_t channel = 3;
 
-  // Read RGB data from image
+  // Read BGR data from image
   unsigned char* raw_pixels =
       (unsigned char*)malloc(height * width * channel * sizeof(unsigned char));
   ImageReader()("images/origin.jpg", raw_pixels, height, width, channel, kHWC);
 
-  recognizer.infer(
-      raw_pixels, height, width, channel, image::NO_ROTATE, result);
+  image::Config config(image::kBGR, image::NO_ROTATE);
+  recognizer.infer(raw_pixels, height, width, channel, config, result);
 
   free(raw_pixels);
   raw_pixels = nullptr;
@@ -112,13 +109,13 @@ void test_rgba(ImageRecognizer& recognizer,
   const size_t width = 353;
   const size_t channel = 3;
 
-  // Read RGB data from image
+  // Read BGR data from image
   unsigned char* raw_pixels =
       (unsigned char*)malloc(height * width * channel * sizeof(unsigned char));
   ImageReader()("images/origin.jpg", raw_pixels, height, width, channel, kHWC);
 
-  // Padding to RGBA, for testing
-  // Only RGB is needed
+  // Padding to BGRA, for testing
+  // Only BGR is needed
   const size_t channel_rgba = 4;
   unsigned char* pixels = (unsigned char*)malloc(height * width * channel_rgba *
                                                  sizeof(unsigned char));
@@ -129,8 +126,8 @@ void test_rgba(ImageRecognizer& recognizer,
     pixels[i * channel_rgba + 3] = 0;  // alpha
   }
 
-  recognizer.infer(
-      pixels, height, width, channel_rgba, image::NO_ROTATE, result);
+  image::Config config(image::kBGR, image::NO_ROTATE);
+  recognizer.infer(pixels, height, width, channel_rgba, config, result);
 
   free(raw_pixels);
   raw_pixels = nullptr;
@@ -147,13 +144,13 @@ void test_rotate(ImageRecognizer& recognizer,
   const size_t width = 500;
   const size_t channel = 3;
 
-  // Read RGB data from image
+  // Read BGR data from image
   unsigned char* raw_pixels =
       (unsigned char*)malloc(height * width * channel * sizeof(unsigned char));
   ImageReader()("images/rotated.jpg", raw_pixels, height, width, channel, kHWC);
 
-  recognizer.infer(
-      raw_pixels, height, width, channel, image::CLOCKWISE_R90, result);
+  image::Config config(image::kBGR, image::CLOCKWISE_R90);
+  recognizer.infer(raw_pixels, height, width, channel, config, result);
 
   free(raw_pixels);
   raw_pixels = nullptr;
@@ -164,12 +161,14 @@ int main() {
 
 #if 1
   const char* merged_model_path = "models/vgg_ssd_net.paddle";
+  // const char* merged_model_path = "models/pascal_mobilenet_300_66.paddle";
 
   const size_t kImageHeight = 300;
   const size_t kImageWidth = 300;
   const size_t kImageChannel = 3;
 #else
-  const char* merged_model_path = "models/mobilenet_ssd_160.paddle";
+  // const char* merged_model_path = "models/pascal_mobilenet_160_55.paddle";
+  const char* merged_model_path = "models/face_mobilenet_160_90.paddle";
 
   const size_t kImageHeight = 160;
   const size_t kImageWidth = 160;
