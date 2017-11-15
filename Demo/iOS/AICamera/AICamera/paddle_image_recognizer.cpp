@@ -198,18 +198,19 @@ void ImageRecognizer::preprocess(const unsigned char* pixels,
                                  const size_t height,
                                  const size_t width,
                                  const size_t channel,
-                                 const image::RotateOption option) {
+                                 const image::Config& config) {
     bool need_resize = true;
     size_t resized_height = 0;
     size_t resized_width = 0;
-    if (option == image::NO_ROTATE || option == image::CLOCKWISE_R180) {
+    if (config.option == image::NO_ROTATE ||
+        config.option == image::CLOCKWISE_R180) {
         if (height == normed_height_ && width == normed_width_) {
             need_resize = false;
         }
         resized_height = normed_height_;
         resized_width = normed_width_;
-    } else if (option == image::CLOCKWISE_R90 ||
-               option == image::CLOCKWISE_R270) {
+    } else if (config.option == image::CLOCKWISE_R90 ||
+               config.option == image::CLOCKWISE_R270) {
         if (height == normed_width_ && width == normed_height_) {
             need_resize = false;
         }
@@ -234,7 +235,7 @@ void ImageRecognizer::preprocess(const unsigned char* pixels,
     }
     
     unsigned char* rotated_pixels = nullptr;
-    if (option == image::NO_ROTATE) {
+    if (config.option == image::NO_ROTATE) {
         rotated_pixels = resized_pixels;
     } else {
         rotated_pixels = static_cast<unsigned char*>(malloc(
@@ -244,20 +245,37 @@ void ImageRecognizer::preprocess(const unsigned char* pixels,
                           resized_height,
                           resized_width,
                           channel,
-                          option);
+                          config.option);
     }
     
     if (true) {
-        // HWC -> CHW, RGBA -> RGB
+        // HWC -> CHW
         size_t index = 0;
-        for (size_t c = 0; c < normed_channel_; ++c) {
-            for (size_t h = 0; h < normed_height_; ++h) {
-                for (size_t w = 0; w < normed_width_; ++w) {
-                    normed_pixels[index] =
-                    static_cast<float>(
-                                       rotated_pixels[(h * normed_width_ + w) * channel + c]) -
-                    means_[c];
-                    index++;
+        if (config.format == image::kRGB) {
+            // RGB/RGBA -> RGB
+            for (size_t c = 0; c < normed_channel_; ++c) {
+                for (size_t h = 0; h < normed_height_; ++h) {
+                    for (size_t w = 0; w < normed_width_; ++w) {
+                        normed_pixels[index] =
+                        static_cast<float>(
+                                           rotated_pixels[(h * normed_width_ + w) * channel + c]) -
+                        means_[c];
+                        index++;
+                    }
+                }
+            }
+        } else if (config.format == image::kBGR) {
+            // BGR/BGRA -> RGB
+            for (size_t c = 0; c < normed_channel_; ++c) {
+                for (size_t h = 0; h < normed_height_; ++h) {
+                    for (size_t w = 0; w < normed_width_; ++w) {
+                        normed_pixels[index] =
+                        static_cast<float>(
+                                           rotated_pixels[(h * normed_width_ + w) * channel +
+                                                          (normed_channel_ - 1 - c)]) -
+                        means_[c];
+                        index++;
+                    }
                 }
             }
         }
@@ -277,7 +295,7 @@ void ImageRecognizer::infer(const unsigned char* pixels,
                             const size_t height,
                             const size_t width,
                             const size_t channel,
-                            const image::RotateOption option,
+                            const image::Config& config,
                             Result& result) {
     if (height < normed_height_ || width < normed_width_) {
         fprintf(stderr,
@@ -308,7 +326,7 @@ void ImageRecognizer::infer(const unsigned char* pixels,
     paddle_real* array;
     CHECK(paddle_matrix_get_row(mat, 0, &array));
     
-    preprocess(pixels, array, height, width, channel, option);
+    preprocess(pixels, array, height, width, channel, config);
     
     // Step 4: Do inference.
     paddle_arguments out_args = paddle_arguments_create_none();
@@ -323,8 +341,10 @@ void ImageRecognizer::infer(const unsigned char* pixels,
     paddle_matrix probs = paddle_matrix_create_none();
     CHECK(paddle_arguments_get_value(out_args, 0, probs));
     
-    CHECK(paddle_matrix_get_shape(probs, &result.height, &result.width));
-    CHECK(paddle_matrix_get_row(probs, 0, &result.data));
+    paddle_error err = paddle_matrix_get_row(probs, 0, &result.data);
+    if (err == kPD_NO_ERROR) {
+        CHECK(paddle_matrix_get_shape(probs, &result.height, &result.width));
+    }
     
     // Step 6: Release the resources.
     CHECK(paddle_arguments_destroy(in_args));

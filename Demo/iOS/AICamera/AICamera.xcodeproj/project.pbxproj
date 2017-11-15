@@ -23,9 +23,12 @@
 		488E78D11FB290EF0075A8E3 /* libglog.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 488E78D01FB290EF0075A8E3 /* libglog.a */; };
 		488E78D31FB290FA0075A8E3 /* libprotobuf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 488E78D21FB290FA0075A8E3 /* libprotobuf.a */; };
 		488E78D51FB291030075A8E3 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 488E78D41FB291030075A8E3 /* libz.a */; };
-		48B524F21FB69CC800F7388E /* output.paddle in Resources */ = {isa = PBXBuildFile; fileRef = 48B524F11FB69C8100F7388E /* output.paddle */; };
 		48C36BFB1FB8320C009CDE05 /* SSDData.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C36BFA1FB8320C009CDE05 /* SSDData.m */; };
 		48C36C001FBA529C009CDE05 /* PaddleHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 48C36BFF1FBA529B009CDE05 /* PaddleHelper.mm */; };
+		48C36C031FBAA1D3009CDE05 /* mobilenet_ssd_160.paddle in Resources */ = {isa = PBXBuildFile; fileRef = 48C36C021FBAA1B7009CDE05 /* mobilenet_ssd_160.paddle */; };
+		48C36C051FBAD309009CDE05 /* pascal_mobilenet_300_66.paddle in Resources */ = {isa = PBXBuildFile; fileRef = 48C36C041FBAC702009CDE05 /* pascal_mobilenet_300_66.paddle */; };
+		48C36C081FBBA721009CDE05 /* SSDModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C36C071FBBA721009CDE05 /* SSDModel.swift */; };
+		48C36C091FBBAEF5009CDE05 /* face_mobilenet_160_91.paddle in Resources */ = {isa = PBXBuildFile; fileRef = 48C36C061FBBA690009CDE05 /* face_mobilenet_160_91.paddle */; };
 		48CAD1441FB2B3B3009A0523 /* ImageRecognizerPaddleWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 48CAD1431FB2B3B3009A0523 /* ImageRecognizerPaddleWrapper.mm */; };
 		D09B082B1FB280CD0014EF43 /* SSDMultiboxLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09B082A1FB280CD0014EF43 /* SSDMultiboxLayer.swift */; };
 /* End PBXBuildFile section */
@@ -51,11 +54,14 @@
 		488E78D01FB290EF0075A8E3 /* libglog.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglog.a; path = "paddle-ios/third_party/glog/lib/libglog.a"; sourceTree = "<group>"; };
 		488E78D21FB290FA0075A8E3 /* libprotobuf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libprotobuf.a; path = "paddle-ios/third_party/protobuf/lib/libprotobuf.a"; sourceTree = "<group>"; };
 		488E78D41FB291030075A8E3 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = "paddle-ios/third_party/zlib/lib/libz.a"; sourceTree = "<group>"; };
-		48B524F11FB69C8100F7388E /* output.paddle */ = {isa = PBXFileReference; lastKnownFileType = file; path = output.paddle; sourceTree = "<group>"; };
 		48C36BFA1FB8320C009CDE05 /* SSDData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SSDData.m; sourceTree = "<group>"; };
 		48C36BFE1FB83241009CDE05 /* SSDData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSDData.h; sourceTree = "<group>"; };
 		48C36BFF1FBA529B009CDE05 /* PaddleHelper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = PaddleHelper.mm; sourceTree = "<group>"; };
 		48C36C011FBA544C009CDE05 /* PaddleHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PaddleHelper.h; sourceTree = "<group>"; };
+		48C36C021FBAA1B7009CDE05 /* mobilenet_ssd_160.paddle */ = {isa = PBXFileReference; lastKnownFileType = file; path = mobilenet_ssd_160.paddle; sourceTree = "<group>"; };
+		48C36C041FBAC702009CDE05 /* pascal_mobilenet_300_66.paddle */ = {isa = PBXFileReference; lastKnownFileType = file; path = pascal_mobilenet_300_66.paddle; sourceTree = "<group>"; };
+		48C36C061FBBA690009CDE05 /* face_mobilenet_160_91.paddle */ = {isa = PBXFileReference; lastKnownFileType = file; path = face_mobilenet_160_91.paddle; sourceTree = "<group>"; };
+		48C36C071FBBA721009CDE05 /* SSDModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSDModel.swift; sourceTree = "<group>"; };
 		48CAD13E1FB29318009A0523 /* AICamera-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AICamera-Bridging-Header.h"; sourceTree = "<group>"; };
 		48CAD1431FB2B3B3009A0523 /* ImageRecognizerPaddleWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ImageRecognizerPaddleWrapper.mm; sourceTree = "<group>"; };
 		D09B082A1FB280CD0014EF43 /* SSDMultiboxLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSDMultiboxLayer.swift; sourceTree = "<group>"; };
@@ -82,8 +88,10 @@
 		480520A71FB3DA18008482C5 /* models */ = {
 			isa = PBXGroup;
 			children = (
+				48C36C061FBBA690009CDE05 /* face_mobilenet_160_91.paddle */,
+				48C36C041FBAC702009CDE05 /* pascal_mobilenet_300_66.paddle */,
+				48C36C021FBAA1B7009CDE05 /* mobilenet_ssd_160.paddle */,
 				480520B31FB3DAEF008482C5 /* vgg_ssd_net.paddle */,
-				48B524F11FB69C8100F7388E /* output.paddle */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -120,6 +128,7 @@
 				48C36C011FBA544C009CDE05 /* PaddleHelper.h */,
 				48CAD1431FB2B3B3009A0523 /* ImageRecognizerPaddleWrapper.mm */,
 				4883B2371FB4E7FE00F9204A /* ImageRecognizerPaddleWrapper.h */,
+				48C36C071FBBA721009CDE05 /* SSDModel.swift */,
 				48C36BFA1FB8320C009CDE05 /* SSDData.m */,
 				48C36BFE1FB83241009CDE05 /* SSDData.h */,
 				480C6CF81FB16CD80009876E /* Main.storyboard */,
@@ -161,7 +170,7 @@
 			dependencies = (
 			);
 			name = AICamera;
-			productName = SSDDemo;
+			productName = AICamera;
 			productReference = 480C6CF11FB16CD80009876E /* AICamera.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -177,7 +186,7 @@
 				TargetAttributes = {
 					480C6CF01FB16CD80009876E = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = 7A6HFXUZXL;
+						DevelopmentTeam = H8UUXRDF6H;
 						LastSwiftMigration = 0910;
 						ProvisioningStyle = Automatic;
 					};
@@ -206,7 +215,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				48B524F21FB69CC800F7388E /* output.paddle in Resources */,
+				48C36C091FBBAEF5009CDE05 /* face_mobilenet_160_91.paddle in Resources */,
+				48C36C051FBAD309009CDE05 /* pascal_mobilenet_300_66.paddle in Resources */,
+				48C36C031FBAA1D3009CDE05 /* mobilenet_ssd_160.paddle in Resources */,
 				4883B2381FB50D9B00F9204A /* vgg_ssd_net.paddle in Resources */,
 				480C6CFF1FB16CD80009876E /* LaunchScreen.storyboard in Resources */,
 				480C6CFC1FB16CD80009876E /* Assets.xcassets in Resources */,
@@ -225,6 +236,7 @@
 				480C6CF51FB16CD80009876E /* AppDelegate.swift in Sources */,
 				D09B082B1FB280CD0014EF43 /* SSDMultiboxLayer.swift in Sources */,
 				48CAD1441FB2B3B3009A0523 /* ImageRecognizerPaddleWrapper.mm in Sources */,
+				48C36C081FBBA721009CDE05 /* SSDModel.swift in Sources */,
 				480C6D071FB242CA0009876E /* SSDDrawLayer.swift in Sources */,
 				48C36C001FBA529C009CDE05 /* PaddleHelper.mm in Sources */,
 				480C6D091FB262BF0009876E /* ImageRecognizer.swift in Sources */,
@@ -371,7 +383,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = 7A6HFXUZXL;
+				DEVELOPMENT_TEAM = H8UUXRDF6H;
 				HEADER_SEARCH_PATHS = "${PROJECT_DIR}/paddle-ios/include/**";
 				INFOPLIST_FILE = AICamera/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -403,7 +415,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = 7A6HFXUZXL;
+				DEVELOPMENT_TEAM = H8UUXRDF6H;
 				HEADER_SEARCH_PATHS = "${PROJECT_DIR}/paddle-ios/include/**";
 				INFOPLIST_FILE = AICamera/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

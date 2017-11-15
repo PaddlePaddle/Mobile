@@ -26,38 +26,35 @@ static NSString * kLabels [21] = {
     @"tvmonitor"
 };
 
-static float kFilterScore = 0.5;
-
-- (instancetype)init {
+- (instancetype)initWithModel:(NSString*)modelFileName withNormHeight:(int)height withNormWidth:(int)width {
     self = [super init];
     if (self)
     {
-        int normedHeight = 300;
-        int normedWidth  = 300;
         int channel = 3;
         const std::vector<float> means({104, 117, 124});
         
         NSBundle* bundle = [NSBundle mainBundle];
         NSString* resourceDirectoryPath = [bundle bundlePath];
-        NSString* path = [resourceDirectoryPath stringByAppendingString: @"/vgg_ssd_net.paddle"];
+        NSString* path = [[resourceDirectoryPath stringByAppendingString:@"/"] stringByAppendingString:modelFileName];
         
-        self->recognizer.init([path UTF8String], normedHeight, normedWidth, channel, means);
+        self->recognizer.init([path UTF8String], height, width, channel, means);
         
     }
     return self;
 }
 
-- (NSMutableArray*)inference:(unsigned char *)pixels withHeight:(int)height withWidth:(int)width {
+- (NSMutableArray*)inference:(unsigned char *)pixels withHeight:(int)height withWidth:(int)width withFilterScore:(float) filterScore{
     ImageRecognizer::Result result;
     int channel = 4;
-    self->recognizer.infer(pixels, height, width, channel, image::CLOCKWISE_R90, result);
+    image::Config config(image::kBGR, image::CLOCKWISE_R90);
+    self->recognizer.infer(pixels, height, width, channel, config, result);
     
     NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:result.height];
     int w = result.width;
     
     for (int i = 0; i < result.height; i++) {
         float score = result.data[i * w + 2];
-        if (score < kFilterScore) continue;
+        if (score < filterScore) continue;
         
         SSDData *ssdData = [[SSDData alloc] init];
         ssdData.label = kLabels[(int) result.data[i * w + 1]];

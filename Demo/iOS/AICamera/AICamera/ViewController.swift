@@ -13,25 +13,193 @@ import Foundation
 
 class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     
-    let captureSession = AVCaptureSession()
+    var captureSession : AVCaptureSession?
     var multiboxLayer : SSDMultiboxLayer?
     var previewLayer : AVCaptureVideoPreviewLayer?
-    var videoConnection: AVCaptureConnection!
     var captureDevice : AVCaptureDevice?
+    
+    var isRestarting = false;
     
     var imageRecognizer : ImageRecognizer?
     
+    var timeStamp : TimeInterval?
+    
     var index = 0
     
+    //default settings
+    var ssdModel : SSDModel = SSDModel.PascalMobileNet300
+    var accuracyThreshold : Float = 0.5
+    var minTimeInterval : Float = 0.3
+    var backCamera = true
+    
+    @IBOutlet weak var settingsView: UIView!
+    
+    @IBOutlet weak var accuracyLabel: UILabel!
+    @IBOutlet weak var timeRefreshLabel: UILabel!
+    @IBOutlet weak var pascalMobileNetBtn: UIButton!
+    @IBOutlet weak var pascalVgg300Btn: UIButton!
+    @IBOutlet weak var pascalMobileNet160Btn: UIButton!
+    @IBOutlet weak var faceMobileNetBtn: UIButton!
+    @IBOutlet weak var backCameraBtn: UIButton!
+    @IBOutlet weak var frontCameraBtn: UIButton!
+    
+    
+    @IBAction func pascalMobileNet300Click(_ sender: UIButton) {
+        pendingRestartWithNewModel(newModel: SSDModel.PascalMobileNet300)
+    }
+    
+    @IBAction func faceMobileNet300Click(_ sender: UIButton) {
+        pendingRestartWithNewModel(newModel: SSDModel.FaceMobileNet160)
+    }
+    
+    @IBAction func pascalMobileNet160Click(_ sender: UIButton) {
+        pendingRestartWithNewModel(newModel: SSDModel.PascalMobileNet160)
+    }
+    
+    @IBAction func pascalVgg300Click(_ sender: UIButton) {
+        pendingRestartWithNewModel(newModel: SSDModel.PascalVGG300)
+    }
+    
+    @IBAction func backCameraClick(_ sender: UIButton) {
+        pendingRestartWithCamera(backCamera: true)
+    }
+    
+    @IBAction func frontCameraClick(_ sender: UIButton) {
+        pendingRestartWithCamera(backCamera: false)
+    }
+    
+    @IBAction func accurcyThresholdChanged(_ sender: UISlider) {
+        
+        accuracyThreshold = sender.value
+        accuracyLabel.text = String(accuracyThreshold)
+        let defaults = UserDefaults.standard
+        defaults.set(accuracyThreshold, forKey: "accuracyThreshold")
+    }
+    
+    @IBAction func timeRefreshChanged(_ sender: UISlider) {
+        
+        minTimeInterval = sender.value
+        timeRefreshLabel.text = String(minTimeInterval)
+        let defaults = UserDefaults.standard
+        defaults.set(minTimeInterval, forKey: "timeRefresh")
+    }
+    
+    func pendingRestartWithNewModel(newModel: SSDModel) {
+        
+        if ssdModel == newModel {
+            return;
+        }
+        
+        let defaults = UserDefaults.standard
+        defaults.set(newModel.rawValue , forKey: "model")
+        
+        isRestarting = true
+        ssdModel = newModel
+    }
+    
+    
+    func pendingRestartWithCamera(backCamera: Bool) {
+        
+        if self.backCamera == backCamera {
+            return;
+        }
+        
+        let defaults = UserDefaults.standard
+        defaults.set(backCamera , forKey: "backCamera")
+        
+        isRestarting = true
+        self.backCamera = backCamera
+    }
+    
+    func restart() {
+        //hack: just make it crash so that we can restart
+        exit(0)
+        DispatchQueue.main.async {
+        self.timeStamp = nil
+        self.index = 0;
+        
+        self.imageRecognizer?.release()
+        self.imageRecognizer = ImageRecognizer(model: self.ssdModel)
+        
+        self.captureSession?.stopRunning()
+        
+        self.previewLayer?.removeFromSuperlayer()
+        self.multiboxLayer?.removeFromSuperlayer()
+        self.setupVideoCaptureAndStart()
+        
+        self.isRestarting = false
+        }
+    }
+    
+    func toggleSettings(_ sender:UITapGestureRecognizer){
+        settingsView.isHidden = !settingsView.isHidden
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        imageRecognizer = ImageRecognizer()
+        self.settingsView.isHidden = true
         
+        populateInitialSettings()
+        
+        let gesture = UITapGestureRecognizer(target: self, action:  #selector (self.toggleSettings (_:)))
+        self.view.addGestureRecognizer(gesture)
+        
+        imageRecognizer = ImageRecognizer(model: ssdModel)
+        
+        setupVideoCaptureAndStart()
+    }
+    
+    func populateInitialSettings() {
+        
+        let defaults = UserDefaults.standard
+        
+        if let modelStr = defaults.string(forKey:"model") {
+            self.ssdModel = SSDModel(rawValue: modelStr)!
+        }
+        var highlightBtn : UIButton?
+        if ssdModel == SSDModel.FaceMobileNet160 {
+            highlightBtn = faceMobileNetBtn;
+        } else if ssdModel == SSDModel.PascalMobileNet160 {
+            highlightBtn = pascalMobileNet160Btn;
+        } else if ssdModel == SSDModel.PascalMobileNet300 {
+            highlightBtn = pascalMobileNetBtn;
+        } else if ssdModel == SSDModel.PascalVGG300 {
+            highlightBtn = pascalVgg300Btn;
+        }
+        highlightBtn?.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        highlightBtn?.setTitleColor(self.view.tintColor, for: .normal)
+        
+        self.backCamera = defaults.bool(forKey:"backCamera")
+        
+        if self.backCamera {
+            backCameraBtn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+            backCameraBtn.setTitleColor(self.view.tintColor, for: .normal)
+        } else {
+            frontCameraBtn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+            frontCameraBtn.setTitleColor(self.view.tintColor, for: .normal)
+        }
+        
+        if let accuracyThreshold = defaults.object(forKey: "accuracyThreshold") {
+            self.accuracyThreshold = accuracyThreshold as! Float
+        }
+        
+        if let timeRefresh = defaults.object(forKey: "timeRefresh") {
+            self.accuracyThreshold = minTimeInterval as! Float
+        }
+        
+        accuracyLabel.text = String(accuracyThreshold)
+        timeRefreshLabel.text = String(minTimeInterval)
+        
+    }
+    
+    func setupVideoCaptureAndStart() {
+        
+        captureSession = AVCaptureSession()
+        if let captureSession = captureSession {
         captureSession.sessionPreset = AVCaptureSessionPresetHigh
         
-        captureDevice = AVCaptureDeviceDiscoverySession(deviceTypes: [AVCaptureDeviceType.builtInWideAngleCamera], mediaType: AVMediaTypeVideo, position: AVCaptureDevicePosition.back).devices.first
+            captureDevice = AVCaptureDeviceDiscoverySession(deviceTypes: [AVCaptureDeviceType.builtInWideAngleCamera], mediaType: AVMediaTypeVideo, position: backCamera ? AVCaptureDevicePosition.back : AVCaptureDevicePosition.front).devices.first
         
         // setup video device input
         do {
@@ -56,7 +224,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         previewLayer.frame = previewContainer.bounds
         previewLayer.contentsGravity = kCAGravityResizeAspect
         previewLayer.videoGravity = AVLayerVideoGravityResizeAspect
-//        previewLayer.connection.videoOrientation = .portrait
+        //        previewLayer.connection.videoOrientation = .portrait
         previewContainer.insertSublayer(previewLayer, at: 0)
         self.previewLayer = previewLayer
         
@@ -82,11 +250,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 if connection.isVideoOrientationSupported {
                     // Force recording to portrait
                     // use portrait does not work for some reason, try to rotate in c++ code instead
-//                    connection.videoOrientation = .portrait
+                    //                    connection.videoOrientation = .portrait
                 }
-                self.videoConnection = connection
+//                self.videoConnection = connection
             }
             captureSession.startRunning()
+        }
         }
     }
     
@@ -95,6 +264,29 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
     
     func captureOutput(_ output: AVCaptureOutput, didOutputSampleBuffer sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        
+//        if (isRestarting) {
+//            restart()
+//            return;
+//        }
+        
+//        let timeStampNow = NSDate().timeIntervalSince1970
+        if let ts = self.timeStamp {
+//            let timeSinceLastResult = timeStampNow - ts
+//            if (timeSinceLastResult < minTimeInterval) {
+//                Thread.sleep(forTimeInterval: minTimeInterval - timeSinceLastResult)
+//            }
+            
+            while(true) {
+//                if (isRestarting) {
+//                    restart()
+//                    return;
+//                }
+                if (NSDate().timeIntervalSince1970 >= Double(minTimeInterval) + ts) {
+                    break;
+                }
+            }
+        }
         
         NSLog("didOutput \(index)")
         
@@ -110,12 +302,18 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             
             CVPixelBufferUnlockBaseAddress(imageBuffer, CVPixelBufferLockFlags(rawValue: 0))
             
-            let ssdDataList = imageRecognizer?.inference(imageBuffer: intBuffer, width: Int32(width), height: Int32(height))
+            let ssdDataList = imageRecognizer?.inference(imageBuffer: intBuffer, width: Int32(width), height: Int32(height), score: accuracyThreshold)
             print("width = \(width) height =\(height) count =\(ssdDataList!.count)")
             
+            self.timeStamp = NSDate().timeIntervalSince1970
+            
             DispatchQueue.main.async {
-                self.multiboxLayer?.displayBoxs(with: ssdDataList!)
+                self.multiboxLayer?.displayBoxs(with: ssdDataList!, model:self.ssdModel, isBackCamera:self.backCamera)
             }
+        }
+        
+        if (isRestarting) {
+            restart()
         }
     }
     
