@@ -76,8 +76,7 @@ int main(int argc, char* argv[]) {
 
   {
     Timer time("init paddle");
-    char* argv[] = {(char*)"--use_gpu=False"};
-    if (paddle_init(1, (char**)argv) != kPD_NO_ERROR) {
+    if (paddle_init(0, NULL) != kPD_NO_ERROR) {
       std::cout << "paddle init error!" << std::endl;
     }
   }

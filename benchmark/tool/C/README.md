@@ -7,7 +7,7 @@ The demo can be run from the command line and can be used to test the inference 
 ## Android
 To compile and run this demo in an Android environment, please follow the following steps:
 
-1. Refer to [this document](https://github.com/PaddlePaddle/Paddle/blob/develop/doc/howto/cross_compiling/cross_compiling_for_android_cn.md) to compile the Android version of PaddlePaddle. After following the mentioned steps, make install will generate an output directory containing three subdirectories: include, lib, and third_party.
+1. Refer to [this document](https://github.com/PaddlePaddle/Paddle/blob/develop/doc/mobile/cross_compiling_for_android_en.md) to compile the Android version of PaddlePaddle. After following the mentioned steps, make install will generate an output directory containing three subdirectories: include, lib, and third_party.
 2. Compile `inference.cc` to an executable program for the Android environment as follows:
     - For armeabi-v7a
     ```
