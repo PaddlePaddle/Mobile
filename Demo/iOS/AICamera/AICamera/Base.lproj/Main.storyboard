@@ -22,11 +22,11 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yp6-1s-Z8I">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="406"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="383"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Oq-VI-KoV">
-                                        <rect key="frame" x="6" y="47" width="179" height="30"/>
+                                        <rect key="frame" x="7" y="47" width="179" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                         <state key="normal" title="Pascal MobileNet 300">
@@ -109,21 +109,21 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exy-3L-hwK">
-                                        <rect key="frame" x="225" y="209" width="53" height="21"/>
+                                        <rect key="frame" x="225" y="209" width="76" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rVa-5K-epd">
-                                        <rect key="frame" x="225" y="309" width="53" height="21"/>
+                                        <rect key="frame" x="225" y="309" width="76" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="144-7k-RtD">
-                                        <rect key="frame" x="186" y="77" width="145" height="30"/>
+                                        <rect key="frame" x="187" y="77" width="145" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                         <state key="normal" title="Pascal VGG 300">
@@ -141,6 +141,7 @@
                     </view>
                     <connections>
                         <outlet property="accuracyLabel" destination="exy-3L-hwK" id="qbg-Gr-mxr"/>
+                        <outlet property="accuracySlider" destination="U5X-yc-aiX" id="XAX-oT-u9x"/>
                         <outlet property="backCameraBtn" destination="xmr-z0-KPZ" id="1T0-PH-qmf"/>
                         <outlet property="faceMobileNetBtn" destination="wIc-dn-Wkb" id="4dB-n9-ECl"/>
                         <outlet property="frontCameraBtn" destination="otZ-Gd-lVW" id="b9E-Te-Kkj"/>
@@ -149,6 +150,7 @@
                         <outlet property="pascalVgg300Btn" destination="144-7k-RtD" id="3bb-Ap-U3F"/>
                         <outlet property="settingsView" destination="Yp6-1s-Z8I" id="iab-0B-XXj"/>
                         <outlet property="timeRefreshLabel" destination="rVa-5K-epd" id="by3-ox-QNp"/>
+                        <outlet property="timeRefreshSlider" destination="McG-dl-7ci" id="9cQ-j4-Sk8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

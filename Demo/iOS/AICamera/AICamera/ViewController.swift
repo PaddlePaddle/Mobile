@@ -42,6 +42,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     @IBOutlet weak var faceMobileNetBtn: UIButton!
     @IBOutlet weak var backCameraBtn: UIButton!
     @IBOutlet weak var frontCameraBtn: UIButton!
+    @IBOutlet weak var accuracySlider: UISlider!
+    @IBOutlet weak var timeRefreshSlider: UISlider!
     
     
     @IBAction func pascalMobileNet300Click(_ sender: UIButton) {
@@ -71,7 +73,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     @IBAction func accurcyThresholdChanged(_ sender: UISlider) {
         
         accuracyThreshold = sender.value
-        accuracyLabel.text = String(accuracyThreshold)
+        accuracyLabel.text = String.init(format: "%.02f", accuracyThreshold)
         let defaults = UserDefaults.standard
         defaults.set(accuracyThreshold, forKey: "accuracyThreshold")
     }
@@ -79,7 +81,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     @IBAction func timeRefreshChanged(_ sender: UISlider) {
         
         minTimeInterval = sender.value
-        timeRefreshLabel.text = String(minTimeInterval)
+        timeRefreshLabel.text = String.init(format: "%.02f", minTimeInterval)
         let defaults = UserDefaults.standard
         defaults.set(minTimeInterval, forKey: "timeRefresh")
     }
@@ -184,14 +186,16 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         if let accuracyThreshold = defaults.object(forKey: "accuracyThreshold") {
             self.accuracyThreshold = accuracyThreshold as! Float
+            accuracySlider.setValue(self.accuracyThreshold, animated: false)
         }
         
         if let timeRefresh = defaults.object(forKey: "timeRefresh") {
             self.minTimeInterval = timeRefresh as! Float
+            timeRefreshSlider.setValue(self.minTimeInterval, animated: false)
         }
         
-        accuracyLabel.text = String(accuracyThreshold)
-        timeRefreshLabel.text = String(minTimeInterval)
+        accuracyLabel.text = String.init(format: "%.02f", accuracyThreshold)
+        timeRefreshLabel.text = String.init(format: "%.02f", minTimeInterval)
         
     }
     
