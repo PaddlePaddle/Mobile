@@ -187,7 +187,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
         
         if let timeRefresh = defaults.object(forKey: "timeRefresh") {
-            self.accuracyThreshold = minTimeInterval as! Float
+            self.minTimeInterval = timeRefresh as! Float
         }
         
         accuracyLabel.text = String(accuracyThreshold)

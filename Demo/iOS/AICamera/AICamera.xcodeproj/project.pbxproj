@@ -28,7 +28,7 @@
 		48C36C031FBAA1D3009CDE05 /* mobilenet_ssd_160.paddle in Resources */ = {isa = PBXBuildFile; fileRef = 48C36C021FBAA1B7009CDE05 /* mobilenet_ssd_160.paddle */; };
 		48C36C051FBAD309009CDE05 /* pascal_mobilenet_300_66.paddle in Resources */ = {isa = PBXBuildFile; fileRef = 48C36C041FBAC702009CDE05 /* pascal_mobilenet_300_66.paddle */; };
 		48C36C081FBBA721009CDE05 /* SSDModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C36C071FBBA721009CDE05 /* SSDModel.swift */; };
-		48C36C091FBBAEF5009CDE05 /* face_mobilenet_160_91.paddle in Resources */ = {isa = PBXBuildFile; fileRef = 48C36C061FBBA690009CDE05 /* face_mobilenet_160_91.paddle */; };
+		48C36C0B1FBC18D5009CDE05 /* face_mobilenet_160_91.paddle in Resources */ = {isa = PBXBuildFile; fileRef = 48C36C0A1FBC18C6009CDE05 /* face_mobilenet_160_91.paddle */; };
 		48CAD1441FB2B3B3009A0523 /* ImageRecognizerPaddleWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 48CAD1431FB2B3B3009A0523 /* ImageRecognizerPaddleWrapper.mm */; };
 		D09B082B1FB280CD0014EF43 /* SSDMultiboxLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09B082A1FB280CD0014EF43 /* SSDMultiboxLayer.swift */; };
 /* End PBXBuildFile section */
@@ -60,8 +60,8 @@
 		48C36C011FBA544C009CDE05 /* PaddleHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PaddleHelper.h; sourceTree = "<group>"; };
 		48C36C021FBAA1B7009CDE05 /* mobilenet_ssd_160.paddle */ = {isa = PBXFileReference; lastKnownFileType = file; path = mobilenet_ssd_160.paddle; sourceTree = "<group>"; };
 		48C36C041FBAC702009CDE05 /* pascal_mobilenet_300_66.paddle */ = {isa = PBXFileReference; lastKnownFileType = file; path = pascal_mobilenet_300_66.paddle; sourceTree = "<group>"; };
-		48C36C061FBBA690009CDE05 /* face_mobilenet_160_91.paddle */ = {isa = PBXFileReference; lastKnownFileType = file; path = face_mobilenet_160_91.paddle; sourceTree = "<group>"; };
 		48C36C071FBBA721009CDE05 /* SSDModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSDModel.swift; sourceTree = "<group>"; };
+		48C36C0A1FBC18C6009CDE05 /* face_mobilenet_160_91.paddle */ = {isa = PBXFileReference; lastKnownFileType = file; path = face_mobilenet_160_91.paddle; sourceTree = "<group>"; };
 		48CAD13E1FB29318009A0523 /* AICamera-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AICamera-Bridging-Header.h"; sourceTree = "<group>"; };
 		48CAD1431FB2B3B3009A0523 /* ImageRecognizerPaddleWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ImageRecognizerPaddleWrapper.mm; sourceTree = "<group>"; };
 		D09B082A1FB280CD0014EF43 /* SSDMultiboxLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSDMultiboxLayer.swift; sourceTree = "<group>"; };
@@ -88,7 +88,7 @@
 		480520A71FB3DA18008482C5 /* models */ = {
 			isa = PBXGroup;
 			children = (
-				48C36C061FBBA690009CDE05 /* face_mobilenet_160_91.paddle */,
+				48C36C0A1FBC18C6009CDE05 /* face_mobilenet_160_91.paddle */,
 				48C36C041FBAC702009CDE05 /* pascal_mobilenet_300_66.paddle */,
 				48C36C021FBAA1B7009CDE05 /* mobilenet_ssd_160.paddle */,
 				480520B31FB3DAEF008482C5 /* vgg_ssd_net.paddle */,
@@ -215,7 +215,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				48C36C091FBBAEF5009CDE05 /* face_mobilenet_160_91.paddle in Resources */,
+				48C36C0B1FBC18D5009CDE05 /* face_mobilenet_160_91.paddle in Resources */,
 				48C36C051FBAD309009CDE05 /* pascal_mobilenet_300_66.paddle in Resources */,
 				48C36C031FBAA1D3009CDE05 /* mobilenet_ssd_160.paddle in Resources */,
 				4883B2381FB50D9B00F9204A /* vgg_ssd_net.paddle in Resources */,
