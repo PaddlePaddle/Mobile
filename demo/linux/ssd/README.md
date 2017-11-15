@@ -57,9 +57,13 @@
 All the test cases have the same output.
 
 # Result Profile
-- Input
+- Input image
 
-  ![image](./images/resized.jpg)
+  ![image](./images/origin.jpg)
+
+- Result image
+
+  ![image](./images/origin_result.jpg)
 
 - Direct result
   ```text

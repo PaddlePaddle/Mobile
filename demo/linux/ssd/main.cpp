@@ -12,6 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License */
 
+#include <string.h>
 #include <iostream>
 #include <vector>
 #include "image_utils.h"
@@ -50,11 +51,43 @@ void profile(ImageRecognizer::Result& result, float threshold) {
   std::cout << std::endl;
 }
 
-void draw_rectangles(const float* raw_pixels,
-                     float* rected_pixels,
+void draw_rectangles(const unsigned char* raw_pixels,
+                     unsigned char* rected_pixels,
                      const size_t height,
                      const size_t width,
-                     const size_t channel) {}
+                     const size_t channel,
+                     const float threshold,
+                     ImageRecognizer::Result& result) {
+  if (rected_pixels != raw_pixels) {
+    memcpy(rected_pixels,
+           raw_pixels,
+           height * width * channel * sizeof(unsigned char));
+  }
+  for (uint64_t i = 0; i < result.height; i++) {
+    if (result.width == 7UL && result.data[i * result.width + 2] >= threshold) {
+      size_t xmin = result.data[i * result.width + 3] * width;
+      size_t ymin = result.data[i * result.width + 4] * height;
+      size_t xmax = result.data[i * result.width + 5] * width;
+      size_t ymax = result.data[i * result.width + 6] * height;
+      size_t channel_of_red = 2;
+      // y = ymin
+      for (size_t x = xmin; x < xmax; ++x) {
+        rected_pixels[(ymin * width + x) * channel + channel_of_red] = 255;
+      }
+      for (size_t y = ymin + 1; y < ymax - 1; ++y) {
+        // x = xmin
+        rected_pixels[(y * width + xmin) * channel + channel_of_red] = 255;
+        // x = xmax - 1
+        rected_pixels[(y * width + xmax - 1) * channel + channel_of_red] = 255;
+      }
+      // y = ymax - 1
+      for (size_t x = xmin; x < xmax; ++x) {
+        rected_pixels[((ymax - 1) * width + x) * channel + channel_of_red] =
+            255;
+      }
+    }
+  }
+}
 
 void test_noresize(ImageRecognizer& recognizer,
                    const size_t kImageHeight,
@@ -96,7 +129,17 @@ void test_resize(ImageRecognizer& recognizer,
   image::Config config(image::kBGR, image::NO_ROTATE);
   recognizer.infer(raw_pixels, height, width, channel, config, result);
 
+  // Draw rectangles
+  unsigned char* rected_pixels =
+      (unsigned char*)malloc(height * width * channel * sizeof(unsigned char));
+  draw_rectangles(
+      raw_pixels, rected_pixels, height, width, channel, 0.3, result);
+  ImageWriter()(
+      "images/origin_result.jpg", rected_pixels, height, width, channel, kHWC);
+
   free(raw_pixels);
+  raw_pixels = nullptr;
+  free(rected_pixels);
   raw_pixels = nullptr;
 }
 
@@ -182,7 +225,7 @@ int main() {
       merged_model_path, kImageHeight, kImageWidth, kImageChannel, means);
 
   ImageRecognizer::Result result;
-  test_rotate(recognizer, kImageHeight, kImageWidth, kImageChannel, result);
+  test_resize(recognizer, kImageHeight, kImageWidth, kImageChannel, result);
 
   // Print the direct result
   std::cout << "Direct Result: " << result.height << " x " << result.width
@@ -203,13 +246,6 @@ int main() {
   // You may need to use a threshold to filter out objects with low score
   std::cout << "Profiled result (threshold = 0.3)" << std::endl;
   profile(result, /* threshold */ 0.3);
-
-  // Draw rectangles
-  // float* rected_pixels = (float*)malloc(kImageHeight * kImageWidth *
-  // kImageChannel *
-  //                                sizeof(float));
-  // ImageWriter()("images/result.jpg", raw_pixels, kImageHeight, kImageWidth,
-  // kImageChannel, kCHW);
 
   recognizer.release();
 
