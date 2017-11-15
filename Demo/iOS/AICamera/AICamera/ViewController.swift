@@ -170,7 +170,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         highlightBtn?.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         highlightBtn?.setTitleColor(self.view.tintColor, for: .normal)
         
-        self.backCamera = defaults.bool(forKey:"backCamera")
+        if let backCamera = defaults.object(forKey: "backCamera") {
+            self.backCamera = backCamera as! Bool
+        }
         
         if self.backCamera {
             backCameraBtn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
