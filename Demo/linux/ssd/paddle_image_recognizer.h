@@ -31,6 +31,8 @@ static const char* paddle_error_string(paddle_error status) {
       return "not supported error";
     case kPD_UNDEFINED_ERROR:
       return "undefined error";
+    default:
+      return "";
   };
 }
 
@@ -107,7 +109,7 @@ public:
     // Initalize Paddle
     char* argv[] = {const_cast<char*>("--use_gpu=False"),
                     const_cast<char*>("--pool_limit_size=0")};
-    CHECK(paddle_init(1, (char**)argv));
+    CHECK(paddle_init(2, (char**)argv));
   }
 
   void init(const char* merged_model_path,
@@ -115,12 +117,6 @@ public:
             const size_t normed_width,
             const size_t normed_channel,
             const std::vector<float>& means);
-  void preprocess(const unsigned char* pixels,
-                  float* normed_pixels,
-                  const size_t height,
-                  const size_t width,
-                  const size_t channel,
-                  const image::Config& config);
   void infer(const unsigned char* pixels,
              const size_t height,
              const size_t width,
@@ -129,9 +125,16 @@ public:
              Result& result);
   void release();
 
+protected:
+  void preprocess(const unsigned char* pixels,
+                  float* normed_pixels,
+                  const size_t height,
+                  const size_t width,
+                  const size_t channel,
+                  const image::Config& config);
+
 private:
   paddle_gradient_machine gradient_machine_;
-  paddle_error error_;
 
   size_t normed_height_;
   size_t normed_width_;

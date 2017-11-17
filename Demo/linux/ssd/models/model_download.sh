@@ -1,13 +1,33 @@
 #! /usr/bin/env bash
 
+function check_md5() {
+    TARGET=$1
+    MD5=$2
+
+    SYS_OS=`uname -s`
+    if [ $SYS_OS == "Darwin" ];then
+        md5_result=`MD5 $TARGET | awk -F[' '] '{print $4}'`
+    elif [ $SYS_OS == "Linux" ];then
+        md5_result=`md5sum $TARGET | awk -F[' '] '{print $1}'`
+    else
+        echo "Unsupported OS."
+        exit 1
+    fi
+    if [ $MD5 == $md5_result ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 function download() {
     URL=$1
     MD5=$2
     TARGET=$3
 
     if [ -e $TARGET ]; then
-        md5_result=`md5sum $TARGET | awk -F[' '] '{print $1}'`
-        if [ $MD5 == $md5_result ]; then
+        check_md5 $TARGET $MD5
+        if [ $? -eq 0 ]; then
             echo "$TARGET already exists, download skipped."
             return 0
         fi
@@ -18,8 +38,8 @@ function download() {
         return 1
     fi
 
-    md5_result=`md5sum $TARGET | awk -F[' '] '{print $1}'`
-    if [ ! $MD5 == $md5_result ]; then
+    check_md5 $TARGET $MD5
+    if [ $? -ne 0 ]; then
         return 1
     fi
 }
