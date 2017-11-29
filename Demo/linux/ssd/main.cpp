@@ -97,7 +97,7 @@ void test_noresize(ImageRecognizer& recognizer,
   // Read BGR data from image
   unsigned char* raw_pixels = (unsigned char*)malloc(
       kImageHeight * kImageWidth * kImageChannel * sizeof(unsigned char));
-  ImageReader()("images/resized.jpg",
+  ImageReader()("ssd/images/resized.jpg",
                 raw_pixels,
                 kImageHeight,
                 kImageWidth,
@@ -124,7 +124,8 @@ void test_resize(ImageRecognizer& recognizer,
   // Read BGR data from image
   unsigned char* raw_pixels =
       (unsigned char*)malloc(height * width * channel * sizeof(unsigned char));
-  ImageReader()("images/origin.jpg", raw_pixels, height, width, channel, kHWC);
+  ImageReader()(
+      "ssd/images/origin.jpg", raw_pixels, height, width, channel, kHWC);
 
   image::Config config(image::kBGR, image::NO_ROTATE);
   recognizer.infer(raw_pixels, height, width, channel, config, result);
@@ -134,8 +135,12 @@ void test_resize(ImageRecognizer& recognizer,
       (unsigned char*)malloc(height * width * channel * sizeof(unsigned char));
   draw_rectangles(
       raw_pixels, rected_pixels, height, width, channel, 0.3, result);
-  ImageWriter()(
-      "images/origin_result.jpg", rected_pixels, height, width, channel, kHWC);
+  ImageWriter()("ssd/images/origin_result.jpg",
+                rected_pixels,
+                height,
+                width,
+                channel,
+                kHWC);
 
   free(raw_pixels);
   raw_pixels = nullptr;
@@ -155,7 +160,8 @@ void test_rgba(ImageRecognizer& recognizer,
   // Read BGR data from image
   unsigned char* raw_pixels =
       (unsigned char*)malloc(height * width * channel * sizeof(unsigned char));
-  ImageReader()("images/origin.jpg", raw_pixels, height, width, channel, kHWC);
+  ImageReader()(
+      "ssd/images/origin.jpg", raw_pixels, height, width, channel, kHWC);
 
   // Padding to BGRA, for testing
   // Only BGR is needed
@@ -190,7 +196,8 @@ void test_rotate(ImageRecognizer& recognizer,
   // Read BGR data from image
   unsigned char* raw_pixels =
       (unsigned char*)malloc(height * width * channel * sizeof(unsigned char));
-  ImageReader()("images/rotated.jpg", raw_pixels, height, width, channel, kHWC);
+  ImageReader()(
+      "ssd/images/rotated.jpg", raw_pixels, height, width, channel, kHWC);
 
   image::Config config(image::kBGR, image::CLOCKWISE_R90);
   recognizer.infer(raw_pixels, height, width, channel, config, result);
@@ -202,7 +209,7 @@ void test_rotate(ImageRecognizer& recognizer,
 int main() {
   ImageRecognizer::init_paddle();
 
-  const char* merged_model_path = "models/vgg_ssd_net.paddle";
+  const char* merged_model_path = "ssd/models/vgg_ssd_net.paddle";
 
   const size_t kImageHeight = 300;
   const size_t kImageWidth = 300;
