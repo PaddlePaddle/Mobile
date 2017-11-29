@@ -42,10 +42,9 @@ Models config(.py) (eg: [Mobilenet](https://github.com/PaddlePaddle/Mobile/blob/
 
 4. Run the demo program by logging into the Android environment via [adb](https://developer.android.google.cn/studio/command-line/adb.html?hl=zh-cn#Enabling) and specifying the PaddlePaddle model from the command line as follows:
 	```
-	adb push inference libpaddle_capi_shared.so mobilenet.paddle /sdcard/test_mobilenet
+	adb push inference mobilenet.paddle /sdcard/test_mobilenet
 	adb shell
 	cd /sdcard/test_mobilenet
-	export LD_LIBRARY_PATH=./
 	./inference --merged_model ./mobilenet.paddle --input_size 150528
 	```
 
