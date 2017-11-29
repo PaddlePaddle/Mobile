@@ -13,163 +13,137 @@ See the License for the specific language governing permissions and
 limitations under the License */
 
 #include "image_utils.h"
-#include <iostream>
-#include <vector>
+#include <stdlib.h>
+#include <string.h>
 
-#ifdef USE_OPENCV
-#include <opencv2/opencv.hpp>
+namespace image {
+namespace utils {
 
-bool ImageReader::operator()(const std::string& image_path,
-                             unsigned char* data,
-                             const size_t height,
-                             const size_t width,
-                             const size_t channel,
-                             const Order order) {
-  if (data == NULL || image_path.empty()) {
-    std::cerr << "invalid arguments." << std::endl;
-    return false;
-  }
+void resize_hwc(const unsigned char* pixels,
+                unsigned char* resized_pixels,
+                const size_t height,
+                const size_t width,
+                const size_t channel,
+                const size_t resized_height,
+                const size_t resized_width) {
+  float ratio_x = static_cast<float>(width) / static_cast<float>(resized_width);
+  float ratio_y =
+      static_cast<float>(height) / static_cast<float>(resized_height);
 
-  cv::Mat image;
-  if (channel == 3) {
-    image = cv::imread(image_path, CV_LOAD_IMAGE_COLOR);
-  } else /* channel == 1 */ {
-    image = cv::imread(image_path, CV_LOAD_IMAGE_GRAYSCALE);
-  }
+  for (size_t i = 0; i < resized_height; i++) {
+    float new_y = i * ratio_y;
 
-  if (image.empty()) {
-    std::cerr << "image is empty." << std::endl;
-    return false;
-  }
+    size_t y1 = (static_cast<size_t>(new_y) > (height - 1))
+                    ? (height - 1)
+                    : static_cast<size_t>(new_y);
+    size_t y2 = y1 + 1;
 
-  size_t image_width = static_cast<size_t>(image.cols);
-  size_t image_height = static_cast<size_t>(image.rows);
-  size_t image_channel = static_cast<size_t>(image.channels());
-  if (image_width != width || image_height != height) {
-    std::cerr << "the size of image does not match the network: "
-              << image_height << " vs. " << height << ", " << image_width
-              << " vs. " << width << std::endl;
-    return false;
-  }
+    float b1 = y2 - new_y;
+    float b2 = new_y - y1;
 
-  if (channel == 3) {
-    size_t index = 0;
-    if (order == kCHW) {
-      // Read the pixels in CHW, BGR order
-      for (size_t c = 0; c < channel; c++) {
-        for (size_t y = 0; y < height; y++) {
-          for (size_t x = 0; x < width; x++) {
-            data[index] =
-                static_cast<unsigned char>(image.at<cv::Vec3b>(y, x)[c]);
-            index++;
+    for (size_t j = 0; j < resized_width; j++) {
+      float new_x = j * ratio_x;
+
+      size_t x1 = (static_cast<size_t>(new_x) > (width - 1))
+                      ? (width - 1)
+                      : static_cast<size_t>(new_x);
+      int x2 = x1 + 1;
+
+      float a1 = x2 - new_x;
+      float a2 = new_x - x1;
+
+      unsigned char* pt_dst =
+          resized_pixels + (i * resized_width + j) * channel;
+      const unsigned char* pt_src = pixels + (y1 * width + x1) * channel;
+      int p1 = width * channel;
+      int p2 = p1 + channel;
+
+      if (x1 == width - 1 && y1 == height - 1) {
+        memcpy(pt_dst, pt_src, channel * sizeof(unsigned char));
+      } else if (x1 == width - 1) {
+        for (size_t k = 0; k < channel; k++) {
+          float pixel_00 = static_cast<float>(pt_src[k]);
+          float pixel_10 = static_cast<float>(pt_src[p1 + k]);
+
+          pt_dst[k] = static_cast<unsigned char>(pixel_00 * b1 + pixel_10 * b2);
+        }
+      } else if (y1 == height - 1) {
+        for (size_t k = 0; k < channel; k++) {
+          float pixel_00 = static_cast<float>(pt_src[k]);
+          float pixel_01 = static_cast<float>(pt_src[channel + k]);
+
+          pt_dst[k] = static_cast<unsigned char>(pixel_00 * a1 + pixel_01 * a2);
+        }
+      } else {
+        // If x1 = width - 1 or y1 = height - 1, the memory accesses may be out
+        // of range.
+        for (size_t k = 0; k < channel; k++) {
+          float pixel_00 = static_cast<float>(pt_src[k]);
+          float pixel_01 = static_cast<float>(pt_src[channel + k]);
+          float pixel_10 = static_cast<float>(pt_src[p1 + k]);
+          float pixel_11 = static_cast<float>(pt_src[p2 + k]);
+
+          pt_dst[k] =
+              static_cast<unsigned char>((pixel_00 * a1 + pixel_01 * a2) * b1 +
+                                         (pixel_10 * a1 + pixel_11 * a2) * b2);
+        }
+      }
+    }  // j-loop
+  }    // i-loop
+}
+
+void rotate_hwc(const unsigned char* pixels,
+                unsigned char* rotated_pixels,
+                const size_t height,
+                const size_t width,
+                const size_t channel,
+                const RotateOption option) {
+  switch (option) {
+    case NO_ROTATE:
+      memcpy(rotated_pixels,
+             pixels,
+             height * width * channel * sizeof(unsigned char));
+      break;
+    case CLOCKWISE_R90:
+      for (size_t i = 0; i < height; ++i) {
+        for (size_t j = 0; j < width; ++j) {
+          // (i, j) -> (j, height - 1 - i)
+          for (size_t k = 0; k < channel; ++k) {
+            rotated_pixels[(j * height + height - 1 - i) * channel + k] =
+                pixels[(i * width + j) * channel + k];
           }
         }
       }
-    } else /* kHWC */ {
-      // Read the pixels in HWC, BGR order
-      for (size_t y = 0; y < height; y++) {
-        for (size_t x = 0; x < width; x++) {
-          for (size_t c = 0; c < channel; c++) {
-            data[index] =
-                static_cast<unsigned char>(image.at<cv::Vec3b>(y, x)[c]);
-            index++;
+      break;
+    case CLOCKWISE_R180:
+      for (size_t i = 0; i < height; ++i) {
+        for (size_t j = 0; j < width; ++j) {
+          // (i, j) -> (height - 1 - i, width - 1 - j)
+          for (size_t k = 0; k < channel; ++k) {
+            rotated_pixels[((height - 1 - i) * width + width - 1 - j) *
+                               channel +
+                           k] = pixels[(i * width + j) * channel + k];
           }
         }
       }
-    }
-  } else /* gray-scale */ {
-    size_t index = 0;
-    for (size_t y = 0; y < height; y++) {
-      for (size_t x = 0; x < width; x++) {
-        data[index] = static_cast<unsigned char>(image.at<unsigned char>(y, x));
-        index++;
-      }
-    }
-  }
-  return true;
-}
-
-bool ImageWriter::operator()(const std::string& image_path,
-                             const unsigned char* data,
-                             const size_t height,
-                             const size_t width,
-                             const size_t channel,
-                             const Order order) {
-  cv::Mat image(height, width, CV_8UC3);
-
-  if (channel == 3) {
-    size_t index = 0;
-    if (order == kCHW) {
-      // Store the pixels in CHW, BGR order
-      for (size_t c = 0; c < channel; c++) {
-        for (size_t y = 0; y < height; y++) {
-          for (size_t x = 0; x < width; x++) {
-            image.at<cv::Vec3b>(y, x)[c] = data[index];
-            index++;
+      break;
+    case CLOCKWISE_R270:
+      for (size_t i = 0; i < height; ++i) {
+        for (size_t j = 0; j < width; ++j) {
+          // (i, j) -> (width - 1 - j, i)
+          for (size_t k = 0; k < channel; ++k) {
+            rotated_pixels[((width - 1 - j) * height + i) * channel + k] =
+                pixels[(i * width + j) * channel + k];
           }
         }
       }
-    } else /* kHWC */ {
-      // Store the pixels in HWC, BGR order
-      for (size_t y = 0; y < height; y++) {
-        for (size_t x = 0; x < width; x++) {
-          for (size_t c = 0; c < channel; c++) {
-            image.at<cv::Vec3b>(y, x)[c] = data[index];
-            index++;
-          }
-        }
-      }
-    }
+      break;
+    default:
+      fprintf(stderr,
+              "Illegal rotate option, please specify among [NO_ROTATE, "
+              "CLOCKWISE_R90, CLOCKWISE_R180, CLOCKWISE_R270].\n");
   }
-
-  std::vector<int> compression_params;
-  compression_params.push_back(CV_IMWRITE_JPEG_QUALITY);
-  compression_params.push_back(100);
-  cv::imwrite(image_path, image, compression_params);
-
-  return true;
-}
-#else
-bool ImageReader::operator()(const std::string& image_path,
-                             unsigned char* data,
-                             const size_t height,
-                             const size_t width,
-                             const size_t channel,
-                             const Order order) {
-  if (data == NULL || height <= 0 || width <= 0 || channel != means_.size()) {
-    std::cerr << "invalid arguments." << std::endl;
-    return false;
-  }
-
-  size_t index = 0;
-  if (order == kCHW) {
-    for (size_t c = 0; c < channel; ++c) {
-      for (size_t h = 0; h < height; ++h) {
-        for (size_t w = 0; w < width; ++w) {
-          data[index] = index % 255 - means_[c];
-          index++;
-        }
-      }
-    }
-  } else /* kHWC */ {
-    for (size_t h = 0; h < height; ++h) {
-      for (size_t w = 0; w < width; ++w) {
-        for (size_t c = 0; c < channel; ++c) {
-          data[index] = index % 255 - means_[c];
-          index++;
-        }
-      }
-    }
-  }
-  return true;
 }
 
-bool ImageWriter::operator()(const std::string& image_path,
-                             const unsigned char* data,
-                             const size_t height,
-                             const size_t width,
-                             const size_t channel,
-                             const Order order) {
-  return true;
-}
-#endif
+}  // namespace utils
+}  // namespace image

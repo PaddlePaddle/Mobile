@@ -14,26 +14,32 @@ limitations under the License */
 
 #pragma once
 
-#include <stdio.h>
+#include <string>
+#include <vector>
 #include "image.h"
 
 namespace image {
-namespace utils {
+namespace io {
 
-void resize_hwc(const unsigned char* pixels,
-                unsigned char* resized_pixels,
-                const size_t height,
-                const size_t width,
-                const size_t channel,
-                const size_t resized_height,
-                const size_t resized_width);
+class ImageReader {
+public:
+  bool operator()(const std::string& image_path,
+                  unsigned char* data,
+                  const size_t height,
+                  const size_t width,
+                  const size_t channel,
+                  const Order order);
+};
 
-void rotate_hwc(const unsigned char* pixels,
-                unsigned char* rotated_pixels,
-                const size_t height,
-                const size_t width,
-                const size_t channel,
-                const RotateOption option);
+class ImageWriter {
+public:
+  bool operator()(const std::string& image_path,
+                  const unsigned char* data,
+                  const size_t height,
+                  const size_t width,
+                  const size_t channel,
+                  const Order order);
+};
 
-}  // namespace utils
+}  // namespace io
 }  // namespace image

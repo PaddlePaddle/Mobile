@@ -14,26 +14,27 @@ limitations under the License */
 
 #pragma once
 
-#include <stdio.h>
-#include "image.h"
-
 namespace image {
-namespace utils {
 
-void resize_hwc(const unsigned char* pixels,
-                unsigned char* resized_pixels,
-                const size_t height,
-                const size_t width,
-                const size_t channel,
-                const size_t resized_height,
-                const size_t resized_width);
+enum Order { kCHW = 0, kHWC = 1 };
 
-void rotate_hwc(const unsigned char* pixels,
-                unsigned char* rotated_pixels,
-                const size_t height,
-                const size_t width,
-                const size_t channel,
-                const RotateOption option);
+enum Format {
+  kRGB = 0x1,  // support RGB, RGBA
+  kBGR = 0x2   // support BGR, BGRA
+};
 
-}  // namespace utils
+enum RotateOption {
+  NO_ROTATE = 0,
+  CLOCKWISE_R90 = 1,
+  CLOCKWISE_R180 = 2,
+  CLOCKWISE_R270 = 3
+};
+
+struct Config {
+  Config() : format(kRGB), option(NO_ROTATE) {}
+  Config(Format f, RotateOption o) : format(f), option(o) {}
+  Format format;
+  RotateOption option;
+};
+
 }  // namespace image

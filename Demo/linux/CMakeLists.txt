@@ -41,7 +41,7 @@ function(add_paddle_demo TARGET_NAME)
   endif()
 endfunction()
 
-set(COMMON_SRC_FILES image_utils.cpp paddle_image_recognizer.cpp)
+set(COMMON_SRC_FILES image_io.cpp image_utils.cpp paddle_image_recognizer.cpp)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 # ssd
