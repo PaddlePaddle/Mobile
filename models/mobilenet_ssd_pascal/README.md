@@ -1,4 +1,4 @@
-#Mobilenet SSD
+# Mobilenet SSD    
 
 We offer the mobilenet(1.0) ssd model trained on PASCAL VOC0712 dataset. This model can be deployed on embedded system
 and you can modify the network to adapt to your own application.
