@@ -25,7 +25,6 @@
 		488E78D51FB291030075A8E3 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 488E78D41FB291030075A8E3 /* libz.a */; };
 		48C36BFB1FB8320C009CDE05 /* SSDData.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C36BFA1FB8320C009CDE05 /* SSDData.m */; };
 		48C36C001FBA529C009CDE05 /* PaddleHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 48C36BFF1FBA529B009CDE05 /* PaddleHelper.mm */; };
-		48C36C031FBAA1D3009CDE05 /* mobilenet_ssd_160.paddle in Resources */ = {isa = PBXBuildFile; fileRef = 48C36C021FBAA1B7009CDE05 /* mobilenet_ssd_160.paddle */; };
 		48C36C051FBAD309009CDE05 /* pascal_mobilenet_300_66.paddle in Resources */ = {isa = PBXBuildFile; fileRef = 48C36C041FBAC702009CDE05 /* pascal_mobilenet_300_66.paddle */; };
 		48C36C081FBBA721009CDE05 /* SSDModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C36C071FBBA721009CDE05 /* SSDModel.swift */; };
 		48C36C0B1FBC18D5009CDE05 /* face_mobilenet_160_91.paddle in Resources */ = {isa = PBXBuildFile; fileRef = 48C36C0A1FBC18C6009CDE05 /* face_mobilenet_160_91.paddle */; };
@@ -35,7 +34,7 @@
 
 /* Begin PBXFileReference section */
 		480520B31FB3DAEF008482C5 /* vgg_ssd_net.paddle */ = {isa = PBXFileReference; lastKnownFileType = file; path = vgg_ssd_net.paddle; sourceTree = "<group>"; };
-		480C6CF11FB16CD80009876E /* AICamera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AICamera.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		480C6CF11FB16CD80009876E /* PDCamera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PDCamera.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		480C6CF41FB16CD80009876E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		480C6CF61FB16CD80009876E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		480C6CF91FB16CD80009876E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -58,7 +57,6 @@
 		48C36BFE1FB83241009CDE05 /* SSDData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSDData.h; sourceTree = "<group>"; };
 		48C36BFF1FBA529B009CDE05 /* PaddleHelper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = PaddleHelper.mm; sourceTree = "<group>"; };
 		48C36C011FBA544C009CDE05 /* PaddleHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PaddleHelper.h; sourceTree = "<group>"; };
-		48C36C021FBAA1B7009CDE05 /* mobilenet_ssd_160.paddle */ = {isa = PBXFileReference; lastKnownFileType = file; path = mobilenet_ssd_160.paddle; sourceTree = "<group>"; };
 		48C36C041FBAC702009CDE05 /* pascal_mobilenet_300_66.paddle */ = {isa = PBXFileReference; lastKnownFileType = file; path = pascal_mobilenet_300_66.paddle; sourceTree = "<group>"; };
 		48C36C071FBBA721009CDE05 /* SSDModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSDModel.swift; sourceTree = "<group>"; };
 		48C36C0A1FBC18C6009CDE05 /* face_mobilenet_160_91.paddle */ = {isa = PBXFileReference; lastKnownFileType = file; path = face_mobilenet_160_91.paddle; sourceTree = "<group>"; };
@@ -90,7 +88,6 @@
 			children = (
 				48C36C0A1FBC18C6009CDE05 /* face_mobilenet_160_91.paddle */,
 				48C36C041FBAC702009CDE05 /* pascal_mobilenet_300_66.paddle */,
-				48C36C021FBAA1B7009CDE05 /* mobilenet_ssd_160.paddle */,
 				480520B31FB3DAEF008482C5 /* vgg_ssd_net.paddle */,
 			);
 			path = models;
@@ -109,7 +106,7 @@
 		480C6CF21FB16CD80009876E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				480C6CF11FB16CD80009876E /* AICamera.app */,
+				480C6CF11FB16CD80009876E /* PDCamera.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -157,9 +154,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		480C6CF01FB16CD80009876E /* AICamera */ = {
+		480C6CF01FB16CD80009876E /* PDCamera */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 480C6D031FB16CD80009876E /* Build configuration list for PBXNativeTarget "AICamera" */;
+			buildConfigurationList = 480C6D031FB16CD80009876E /* Build configuration list for PBXNativeTarget "PDCamera" */;
 			buildPhases = (
 				480C6CED1FB16CD80009876E /* Sources */,
 				480C6CEE1FB16CD80009876E /* Frameworks */,
@@ -169,9 +166,9 @@
 			);
 			dependencies = (
 			);
-			name = AICamera;
+			name = PDCamera;
 			productName = AICamera;
-			productReference = 480C6CF11FB16CD80009876E /* AICamera.app */;
+			productReference = 480C6CF11FB16CD80009876E /* PDCamera.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -192,7 +189,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 480C6CEC1FB16CD80009876E /* Build configuration list for PBXProject "AICamera" */;
+			buildConfigurationList = 480C6CEC1FB16CD80009876E /* Build configuration list for PBXProject "PDCamera" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -205,7 +202,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				480C6CF01FB16CD80009876E /* AICamera */,
+				480C6CF01FB16CD80009876E /* PDCamera */,
 			);
 		};
 /* End PBXProject section */
@@ -217,7 +214,6 @@
 			files = (
 				48C36C0B1FBC18D5009CDE05 /* face_mobilenet_160_91.paddle in Resources */,
 				48C36C051FBAD309009CDE05 /* pascal_mobilenet_300_66.paddle in Resources */,
-				48C36C031FBAA1D3009CDE05 /* mobilenet_ssd_160.paddle in Resources */,
 				4883B2381FB50D9B00F9204A /* vgg_ssd_net.paddle in Resources */,
 				480C6CFF1FB16CD80009876E /* LaunchScreen.storyboard in Resources */,
 				480C6CFC1FB16CD80009876E /* Assets.xcassets in Resources */,
@@ -400,7 +396,7 @@
 					"-force_load",
 					"${PROJECT_DIR}/paddle-ios/lib/libpaddle_capi_layers.a",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.paddlepaddle.AICamera;
+				PRODUCT_BUNDLE_IDENTIFIER = com.paddlepaddle.PDCamera;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "AICamera/AICamera-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -432,7 +428,7 @@
 					"-force_load",
 					"${PROJECT_DIR}/paddle-ios/lib/libpaddle_capi_layers.a",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.paddlepaddle.AICamera;
+				PRODUCT_BUNDLE_IDENTIFIER = com.paddlepaddle.PDCamera;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "AICamera/AICamera-Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
@@ -444,7 +440,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		480C6CEC1FB16CD80009876E /* Build configuration list for PBXProject "AICamera" */ = {
+		480C6CEC1FB16CD80009876E /* Build configuration list for PBXProject "PDCamera" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				480C6D011FB16CD80009876E /* Debug */,
@@ -453,7 +449,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		480C6D031FB16CD80009876E /* Build configuration list for PBXNativeTarget "AICamera" */ = {
+		480C6D031FB16CD80009876E /* Build configuration list for PBXNativeTarget "PDCamera" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				480C6D041FB16CD80009876E /* Debug */,
