@@ -12,7 +12,7 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="AICamera" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="PDCamera" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="I92-gK-Ndu"/>
                         <viewControllerLayoutGuide type="bottom" id="Pef-It-D3H"/>
@@ -34,17 +34,6 @@
                                         </state>
                                         <connections>
                                             <action selector="pascalMobileNet300Click:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ijA-lm-ylj"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="50Z-KA-bMh">
-                                        <rect key="frame" x="7" y="79" width="175" height="32"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                        <state key="normal" title="Pascal MobileNet 160">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="pascalMobileNet160Click:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Yog-hA-pA0"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xmr-z0-KPZ">
@@ -123,7 +112,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="144-7k-RtD">
-                                        <rect key="frame" x="187" y="77" width="145" height="30"/>
+                                        <rect key="frame" x="3" y="77" width="145" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                         <state key="normal" title="Pascal VGG 300">
@@ -145,7 +134,6 @@
                         <outlet property="backCameraBtn" destination="xmr-z0-KPZ" id="1T0-PH-qmf"/>
                         <outlet property="faceMobileNetBtn" destination="wIc-dn-Wkb" id="4dB-n9-ECl"/>
                         <outlet property="frontCameraBtn" destination="otZ-Gd-lVW" id="b9E-Te-Kkj"/>
-                        <outlet property="pascalMobileNet160Btn" destination="50Z-KA-bMh" id="YfS-4c-HVx"/>
                         <outlet property="pascalMobileNetBtn" destination="7Oq-VI-KoV" id="ltY-9a-uVV"/>
                         <outlet property="pascalVgg300Btn" destination="144-7k-RtD" id="3bb-Ap-U3F"/>
                         <outlet property="settingsView" destination="Yp6-1s-Z8I" id="iab-0B-XXj"/>

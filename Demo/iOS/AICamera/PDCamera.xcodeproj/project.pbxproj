@@ -15,7 +15,6 @@
 		480C6D071FB242CA0009876E /* SSDDrawLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480C6D061FB242CA0009876E /* SSDDrawLayer.swift */; };
 		480C6D091FB262BF0009876E /* ImageRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480C6D081FB262BF0009876E /* ImageRecognizer.swift */; };
 		48540B771FB3AD8E00C05A0F /* paddle_image_recognizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 48540B751FB3AD8E00C05A0F /* paddle_image_recognizer.cpp */; };
-		4883B2381FB50D9B00F9204A /* vgg_ssd_net.paddle in Resources */ = {isa = PBXBuildFile; fileRef = 480520B31FB3DAEF008482C5 /* vgg_ssd_net.paddle */; };
 		488E78C91FB290580075A8E3 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 488E78C81FB290580075A8E3 /* Accelerate.framework */; };
 		488E78CC1FB290AE0075A8E3 /* libpaddle_capi_engine.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 488E78CA1FB290AE0075A8E3 /* libpaddle_capi_engine.a */; };
 		488E78CD1FB290AE0075A8E3 /* libpaddle_capi_layers.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 488E78CB1FB290AE0075A8E3 /* libpaddle_capi_layers.a */; };
@@ -33,7 +32,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		480520B31FB3DAEF008482C5 /* vgg_ssd_net.paddle */ = {isa = PBXFileReference; lastKnownFileType = file; path = vgg_ssd_net.paddle; sourceTree = "<group>"; };
 		480C6CF11FB16CD80009876E /* PDCamera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PDCamera.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		480C6CF41FB16CD80009876E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		480C6CF61FB16CD80009876E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -88,7 +86,6 @@
 			children = (
 				48C36C0A1FBC18C6009CDE05 /* face_mobilenet_160_91.paddle */,
 				48C36C041FBAC702009CDE05 /* pascal_mobilenet_300_66.paddle */,
-				480520B31FB3DAEF008482C5 /* vgg_ssd_net.paddle */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -214,7 +211,6 @@
 			files = (
 				48C36C0B1FBC18D5009CDE05 /* face_mobilenet_160_91.paddle in Resources */,
 				48C36C051FBAD309009CDE05 /* pascal_mobilenet_300_66.paddle in Resources */,
-				4883B2381FB50D9B00F9204A /* vgg_ssd_net.paddle in Resources */,
 				480C6CFF1FB16CD80009876E /* LaunchScreen.storyboard in Resources */,
 				480C6CFC1FB16CD80009876E /* Assets.xcassets in Resources */,
 				480C6CFA1FB16CD80009876E /* Main.storyboard in Resources */,
@@ -382,6 +378,7 @@
 				DEVELOPMENT_TEAM = H8UUXRDF6H;
 				HEADER_SEARCH_PATHS = "${PROJECT_DIR}/paddle-ios/include/**";
 				INFOPLIST_FILE = AICamera/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -414,6 +411,7 @@
 				DEVELOPMENT_TEAM = H8UUXRDF6H;
 				HEADER_SEARCH_PATHS = "${PROJECT_DIR}/paddle-ios/include/**";
 				INFOPLIST_FILE = AICamera/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

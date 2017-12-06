@@ -38,7 +38,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     @IBOutlet weak var timeRefreshLabel: UILabel!
     @IBOutlet weak var pascalMobileNetBtn: UIButton!
     @IBOutlet weak var pascalVgg300Btn: UIButton!
-    @IBOutlet weak var pascalMobileNet160Btn: UIButton!
     @IBOutlet weak var faceMobileNetBtn: UIButton!
     @IBOutlet weak var backCameraBtn: UIButton!
     @IBOutlet weak var frontCameraBtn: UIButton!
@@ -52,10 +51,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     @IBAction func faceMobileNet300Click(_ sender: UIButton) {
         pendingRestartWithNewModel(newModel: SSDModel.FaceMobileNet160)
-    }
-    
-    @IBAction func pascalMobileNet160Click(_ sender: UIButton) {
-        pendingRestartWithNewModel(newModel: SSDModel.PascalMobileNet160)
     }
     
     @IBAction func pascalVgg300Click(_ sender: UIButton) {
@@ -142,6 +137,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         self.settingsView.isHidden = true
         
+        checkModel()
+        
         populateInitialSettings()
         
         let gesture = UITapGestureRecognizer(target: self, action:  #selector (self.toggleSettings (_:)))
@@ -150,6 +147,13 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         imageRecognizer = ImageRecognizer(model: ssdModel)
         
         setupVideoCaptureAndStart()
+    }
+    
+    func checkModel() {
+        var bundlePath = Bundle.main.bundlePath
+        bundlePath.append("/")
+        bundlePath.append(SSDModel.PascalVGG300.rawValue)
+        pascalVgg300Btn.isHidden = !FileManager.default.fileExists(atPath: bundlePath)
     }
     
     func populateInitialSettings() {
@@ -162,8 +166,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         var highlightBtn : UIButton?
         if ssdModel == SSDModel.FaceMobileNet160 {
             highlightBtn = faceMobileNetBtn;
-        } else if ssdModel == SSDModel.PascalMobileNet160 {
-            highlightBtn = pascalMobileNet160Btn;
         } else if ssdModel == SSDModel.PascalMobileNet300 {
             highlightBtn = pascalMobileNetBtn;
         } else if ssdModel == SSDModel.PascalVGG300 {
@@ -266,7 +268,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
     
     func captureOutput(_ output: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        print("didDrop")
     }
     
     func captureOutput(_ output: AVCaptureOutput, didOutputSampleBuffer sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
@@ -293,8 +294,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 }
             }
         }
-        
-        NSLog("didOutput \(index)")
         
         index = index + 1
         if let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) {
