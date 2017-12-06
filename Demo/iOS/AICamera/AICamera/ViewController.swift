@@ -232,7 +232,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         previewLayer.frame = previewContainer.bounds
         previewLayer.contentsGravity = kCAGravityResizeAspect
         previewLayer.videoGravity = AVLayerVideoGravityResizeAspect
-        //        previewLayer.connection.videoOrientation = .portrait
         previewContainer.insertSublayer(previewLayer, at: 0)
         self.previewLayer = previewLayer
         
@@ -260,7 +259,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                     // use portrait does not work for some reason, try to rotate in c++ code instead
                     //                    connection.videoOrientation = .portrait
                 }
-//                self.videoConnection = connection
             }
             captureSession.startRunning()
         }
@@ -272,23 +270,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     func captureOutput(_ output: AVCaptureOutput, didOutputSampleBuffer sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         
-//        if (isRestarting) {
-//            restart()
-//            return;
-//        }
-        
-//        let timeStampNow = NSDate().timeIntervalSince1970
         if let ts = self.timeStamp {
-//            let timeSinceLastResult = timeStampNow - ts
-//            if (timeSinceLastResult < minTimeInterval) {
-//                Thread.sleep(forTimeInterval: minTimeInterval - timeSinceLastResult)
-//            }
-            
             while(true) {
-//                if (isRestarting) {
-//                    restart()
-//                    return;
-//                }
                 if (NSDate().timeIntervalSince1970 >= Double(minTimeInterval) + ts) {
                     break;
                 }
@@ -308,7 +291,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             CVPixelBufferUnlockBaseAddress(imageBuffer, CVPixelBufferLockFlags(rawValue: 0))
             
             let ssdDataList = imageRecognizer?.inference(imageBuffer: intBuffer, width: Int32(width), height: Int32(height), score: accuracyThreshold)
-            print("width = \(width) height =\(height) count =\(ssdDataList!.count)")
             
             self.timeStamp = NSDate().timeIntervalSince1970
             

@@ -8,12 +8,16 @@ You can look at SSD model architecture [here](https://github.com/PaddlePaddle/mo
 ## Download and run the app
 
 To simply run the demo with iPhone/iPad, scan the QR code below, click "Install PDCamera" in the link and the app will be downloaded in the background.
-After installed, go to Settings -> General -> To enable Trust Baidu LLC
+After installed, go to Settings -> General -> Device Management -> Baidu USA llc -> Trust "Baidu USA llc"
 
-//QR code link
 
-//screenshot link
+### QR code link
 
+[image](https://github.com/PaddlePaddle/Mobile/tree/develop/Demo/iOS/AICamera/assets/qr_code_ios.png)
+
+### Demo screenshot
+
+[image](https://github.com/PaddlePaddle/Mobile/tree/develop/Demo/iOS/AICamera/assets/demo_screenshot.jpg)
 
 Detected object will be highlighted as a bounding box with a classified object label and probability.
 
@@ -93,7 +97,7 @@ XCode target -> Bulid Phases -> Copy Bundle Resources, click '+' to add vgg_ssd_
 
 | Model                    | Dimensions | Accuracy |
 | ------------------------ |:----------:| --------:|
-| face_mobilenet_160_91    | 160x160    | 71%      |
-| pascal_mobilenet_300_66  | 300x300    | 91%      |
-| vgg_ssd_net              | 300x300    | 66%      |
+| face_mobilenet_160_91    | 160x160    | 91%      |
+| pascal_mobilenet_300_66  | 300x300    | 66%      |
+| vgg_ssd_net              | 300x300    | 71%      |
 

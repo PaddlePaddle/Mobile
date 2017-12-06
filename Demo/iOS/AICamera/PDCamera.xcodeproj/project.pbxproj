@@ -14,7 +14,8 @@
 		480C6CFF1FB16CD80009876E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 480C6CFD1FB16CD80009876E /* LaunchScreen.storyboard */; };
 		480C6D071FB242CA0009876E /* SSDDrawLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480C6D061FB242CA0009876E /* SSDDrawLayer.swift */; };
 		480C6D091FB262BF0009876E /* ImageRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480C6D081FB262BF0009876E /* ImageRecognizer.swift */; };
-		48540B771FB3AD8E00C05A0F /* paddle_image_recognizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 48540B751FB3AD8E00C05A0F /* paddle_image_recognizer.cpp */; };
+		483332F11FD8B0D800699E24 /* image_utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 483332ED1FD8B0D700699E24 /* image_utils.cpp */; };
+		483332F21FD8B0D800699E24 /* paddle_image_recognizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 483332F01FD8B0D800699E24 /* paddle_image_recognizer.cpp */; };
 		488E78C91FB290580075A8E3 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 488E78C81FB290580075A8E3 /* Accelerate.framework */; };
 		488E78CC1FB290AE0075A8E3 /* libpaddle_capi_engine.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 488E78CA1FB290AE0075A8E3 /* libpaddle_capi_engine.a */; };
 		488E78CD1FB290AE0075A8E3 /* libpaddle_capi_layers.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 488E78CB1FB290AE0075A8E3 /* libpaddle_capi_layers.a */; };
@@ -41,8 +42,11 @@
 		480C6D001FB16CD80009876E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		480C6D061FB242CA0009876E /* SSDDrawLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSDDrawLayer.swift; sourceTree = "<group>"; };
 		480C6D081FB262BF0009876E /* ImageRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageRecognizer.swift; sourceTree = "<group>"; };
-		48540B751FB3AD8E00C05A0F /* paddle_image_recognizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = paddle_image_recognizer.cpp; sourceTree = "<group>"; };
-		48540B761FB3AD8E00C05A0F /* paddle_image_recognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = paddle_image_recognizer.h; sourceTree = "<group>"; };
+		483332ED1FD8B0D700699E24 /* image_utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image_utils.cpp; sourceTree = "<group>"; };
+		483332EE1FD8B0D700699E24 /* image_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = image_utils.h; sourceTree = "<group>"; };
+		483332EF1FD8B0D800699E24 /* paddle_image_recognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = paddle_image_recognizer.h; sourceTree = "<group>"; };
+		483332F01FD8B0D800699E24 /* paddle_image_recognizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = paddle_image_recognizer.cpp; sourceTree = "<group>"; };
+		483332F31FD8B13A00699E24 /* image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = image.h; sourceTree = "<group>"; };
 		4883B2371FB4E7FE00F9204A /* ImageRecognizerPaddleWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageRecognizerPaddleWrapper.h; sourceTree = "<group>"; };
 		488E78C81FB290580075A8E3 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		488E78CA1FB290AE0075A8E3 /* libpaddle_capi_engine.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpaddle_capi_engine.a; path = "paddle-ios/lib/libpaddle_capi_engine.a"; sourceTree = "<group>"; };
@@ -116,8 +120,11 @@
 				480C6CF61FB16CD80009876E /* ViewController.swift */,
 				480C6D061FB242CA0009876E /* SSDDrawLayer.swift */,
 				D09B082A1FB280CD0014EF43 /* SSDMultiboxLayer.swift */,
-				48540B751FB3AD8E00C05A0F /* paddle_image_recognizer.cpp */,
-				48540B761FB3AD8E00C05A0F /* paddle_image_recognizer.h */,
+				483332F31FD8B13A00699E24 /* image.h */,
+				483332ED1FD8B0D700699E24 /* image_utils.cpp */,
+				483332EE1FD8B0D700699E24 /* image_utils.h */,
+				483332F01FD8B0D800699E24 /* paddle_image_recognizer.cpp */,
+				483332EF1FD8B0D800699E24 /* paddle_image_recognizer.h */,
 				48C36BFF1FBA529B009CDE05 /* PaddleHelper.mm */,
 				48C36C011FBA544C009CDE05 /* PaddleHelper.h */,
 				48CAD1431FB2B3B3009A0523 /* ImageRecognizerPaddleWrapper.mm */,
@@ -226,14 +233,15 @@
 			files = (
 				480C6CF71FB16CD80009876E /* ViewController.swift in Sources */,
 				480C6CF51FB16CD80009876E /* AppDelegate.swift in Sources */,
+				483332F21FD8B0D800699E24 /* paddle_image_recognizer.cpp in Sources */,
 				D09B082B1FB280CD0014EF43 /* SSDMultiboxLayer.swift in Sources */,
 				48CAD1441FB2B3B3009A0523 /* ImageRecognizerPaddleWrapper.mm in Sources */,
 				48C36C081FBBA721009CDE05 /* SSDModel.swift in Sources */,
+				483332F11FD8B0D800699E24 /* image_utils.cpp in Sources */,
 				480C6D071FB242CA0009876E /* SSDDrawLayer.swift in Sources */,
 				48C36C001FBA529C009CDE05 /* PaddleHelper.mm in Sources */,
 				480C6D091FB262BF0009876E /* ImageRecognizer.swift in Sources */,
 				48C36BFB1FB8320C009CDE05 /* SSDData.m in Sources */,
-				48540B771FB3AD8E00C05A0F /* paddle_image_recognizer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

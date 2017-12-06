@@ -18,6 +18,3 @@
 @property (nonatomic) float ymax;
 
 @end
-
-
-
