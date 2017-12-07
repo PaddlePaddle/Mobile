@@ -13,17 +13,17 @@ After installed, go to Settings -> General -> Device Management -> Baidu USA llc
 
 ### QR code link
 
-[image](https://github.com/PaddlePaddle/Mobile/tree/develop/Demo/iOS/AICamera/assets/qr_code_ios.png)
+<img src="assets/qr_code_ios.png" width = "20%" />
 
 ### Demo screenshot
 
-[image](https://github.com/PaddlePaddle/Mobile/tree/develop/Demo/iOS/AICamera/assets/demo_screenshot.jpg)
+<img src="assets/demo_screenshot.jpg" width = "30%" />
 
 Detected object will be highlighted as a bounding box with a classified object label and probability.
 
 
 ## Classifications
-pascal_mobilenet_300_66 and vgg_ssd_net models can only classify following 20 objects:
+`pascal_mobilenet_300_66` and `vgg_ssd_net` models can only classify following 20 objects:
 
 - aeroplane
 - bicycle
@@ -46,7 +46,7 @@ pascal_mobilenet_300_66 and vgg_ssd_net models can only classify following 20 ob
 - train
 - tvmonitor
 
-face_mobilenet_160_91 can only classify human's face
+`face_mobilenet_160_91` can only classify human's face
 
 
 ## Settings
@@ -54,7 +54,7 @@ face_mobilenet_160_91 can only classify human's face
 Simply tap on the screen to toggle settings
 
 - Models: Select Pascal MobileNet 300 or Face MobileNet 160, App will exit, need to launch to restart.
-- Camera: Toggle Front/Back Camera. App will exit, need to launch to restart. 
+- Camera: Toggle Front/Back Camera. App will exit, need to launch to restart.
 - Accuracy Threshold: Adjust threshold to filter more/less objects based on probability
 - Time Refresh Rate: Adjust the time to refresh bounding box more/less frequently
 
@@ -100,4 +100,3 @@ XCode target -> Bulid Phases -> Copy Bundle Resources, click '+' to add vgg_ssd_
 | face_mobilenet_160_91    | 160x160    | 91%      |
 | pascal_mobilenet_300_66  | 300x300    | 66%      |
 | vgg_ssd_net              | 300x300    | 71%      |
-

@@ -11,6 +11,7 @@ Here mainly describes how to deploy PaddlePaddle to the mobile end, as well as s
 
 ## Demo
 - [An inference demo program based on the Paddle C API.](./benchmark/tool/C/README.md)
+- [iOS demo of AICamera](./Demo/iOS/AICamera/README.md)
 
 ## Deployment optimization methods
 - [Merge batch normalization before deploying the model to the mobile.](./tools/merge_batch_normalization/README.md)
