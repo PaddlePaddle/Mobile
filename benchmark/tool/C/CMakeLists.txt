@@ -41,7 +41,8 @@ if(ANDROID_ABI)
     target_link_libraries(${PROJECT_NAME}
                           -Wl,--start-group -Wl,--whole-archive -lpaddle_capi_layers
                           -Wl,--no-whole-archive -lpaddle_capi_engine -Wl,--end-group
-                          ${THIRD_PARTY_LIBRARYS})
+                          ${THIRD_PARTY_LIBRARYS}
+                          log)
 else()
     target_link_libraries(${PROJECT_NAME}
                     -Wl,--start-group -Wl,--whole-archive -lpaddle_capi_whole
