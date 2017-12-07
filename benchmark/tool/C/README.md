@@ -9,7 +9,7 @@ To compile and run this demo in an Android environment, please follow the follow
 
 1. Refer to [this document](https://github.com/PaddlePaddle/Paddle/blob/develop/doc/mobile/cross_compiling_for_android_en.md) to compile the Android version of PaddlePaddle. After following the mentioned steps, make install will generate an output directory containing three subdirectories: include, lib, and third_party( `libpaddle_capi_shared.so` will be produced in the `lib` directory).
 
-2. Compile `inference.cc` to an executable program for the Android environment as follows:
+2. Compile `inference.cc` to an executable program for the Android environment as follows (run in `Mobile/benchmark/tool/C`):
     - For armeabi-v7a
     ```
     mkdir build
