@@ -14,6 +14,7 @@ To compile and run this demo in an Android environment, please follow the follow
 - **Step 2, build the inference demo.**
 
   Compile `inference.cc` to an executable program for the Android environment as follows:
+
     - For armeabi-v7a
 
     ```bash
