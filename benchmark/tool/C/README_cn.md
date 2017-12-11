@@ -66,6 +66,8 @@
     wget -C http://cloud.dlnel.org/filepub/?uuid=4a3fcd7a-719c-479f-96e1-28a4c3f2195e -O mobilenet_flowers102.tar.gz
     ```
 
+    **注意，用来`merge model`的模型配置文件必须只包含`inference`网络**。
+
     在准备好模型配置文件（.py）和参数文件（.tar.gz）之后，且所在机器已经成功安装了PaddlePaddle的Python包之后，我们可以通过执行以下脚本生成需要的`merged model`。
 
     ```bash
@@ -94,6 +96,10 @@
     inference  mobilenet_flowers102.paddle
     odin:/data/local/tmp $ chmod +x inference
     odin:/data/local/tmp $ ./inference --merged_model ./mobilenet_flowers102.paddle --input_size 150528 # 执行测试程序
+    I1211 17:12:53.334666  4858 Util.cpp:166] commandline:
+    Time of init paddle 3.4388 ms.
+    Time of create from merged model file 141.045 ms.
+    Time of forward time 398.818 ms.
     ```
 
     `inference`可执行程序需要设置两个运行时参数：

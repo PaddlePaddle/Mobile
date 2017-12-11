@@ -66,6 +66,10 @@ To compile and run this demo in an Android environment, please follow the follow
     inference  mobilenet_flowers102.paddle
     odin:/data/local/tmp $ chmod +x inference
     odin:/data/local/tmp $ ./inference --merged_model ./mobilenet_flowers102.paddle --input_size 150528 # run the executable
+    I1211 17:12:53.334666  4858 Util.cpp:166] commandline:
+    Time of init paddle 3.4388 ms.
+    Time of create from merged model file 141.045 ms.
+    Time of forward time 398.818 ms.
     ```
 
     **Note:** `input_size` is 150528, cause that the input size of the model is `3 * 224 * 224 = 150528`
