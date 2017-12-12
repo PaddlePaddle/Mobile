@@ -60,7 +60,7 @@
 
     Android设备上推荐使用`merged model`。以Mobilenet为例，要生成`merged model`，首先你需要准备以下文件：
     - 模型配置文件[mobilenet.py](https://github.com/PaddlePaddle/Mobile/blob/develop/models/mobilenet.py)，它是使用PaddlePaddle的v2 api编写的`Mobilenet`模型的网络结构。用户可在[models](https://github.com/PaddlePaddle/Mobile/tree/develop/models)获取更多PaddlePaddle常用的网络配置，该repo下面同时提供了使用PaddlePaddle训练模型的方法。
-    - 模型参数文件。使用PaddlePaddle v2 api训练得到的参数将会存储成`.tar.gz`文件。比如，我们提供le一个使用`flower102`数据集训练`Mobilnet`分类模型的参数文件[mobilenet\_flowers102.tar.gz](http://cloud.dlnel.org/filepub/?uuid=4a3fcd7a-719c-479f-96e1-28a4c3f2195e)。你也可以使用以下命令下载该参数文件：
+    - 模型参数文件。使用PaddlePaddle v2 api训练得到的参数将会存储成`.tar.gz`文件。比如，我们提供了一个使用[flowers102](http://www.robots.ox.ac.uk/~vgg/data/flowers/102/)数据集训练`Mobilnet`分类模型的参数文件[mobilenet\_flowers102.tar.gz](http://cloud.dlnel.org/filepub/?uuid=4a3fcd7a-719c-479f-96e1-28a4c3f2195e)。你也可以使用以下命令下载该参数文件：
 
     ```bash
     wget -C http://cloud.dlnel.org/filepub/?uuid=4a3fcd7a-719c-479f-96e1-28a4c3f2195e -O mobilenet_flowers102.tar.gz
