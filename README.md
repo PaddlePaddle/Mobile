@@ -14,9 +14,9 @@ Here mainly describes how to deploy PaddlePaddle to the mobile end, as well as s
 - [iOS demo of AICamera](./Demo/iOS/AICamera/README.md)
 
 ## Deployment optimization methods
-- [Merge batch normalization before deploying the model to the mobile.](./tools/merge_batch_normalization/README.md)
-- [Compress the model before deploying the model to the mobile.](./tools/rounding/README.md)
-- [Merge model config and parameter files into one file.](./tools/merge_config_parameters/README.md)
+- [Merge batch normalization before deploying the model to the mobile.](./deployment/model/merge_batch_normalization/README.md)
+- [Compress the model before deploying the model to the mobile.](./deployment/model/rounding/README.md)
+- [Merge model config and parameter files into one file.](./deployment/model/merge_config_parameters/README.md)
 - How to deploy int8 model in mobile inference with PaddlePaddle.
 
 ## Model compression
