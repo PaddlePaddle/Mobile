@@ -5,6 +5,8 @@ dist: trusty
 
 os:
   - linux
+env:
+  - JOB=PRE_COMMIT
 
 addons:
   apt:
@@ -15,7 +17,12 @@ addons:
       - python2.7-dev
   ssh_known_hosts: 52.76.173.135
 
+before_install:
+  - sudo pip install -U virtualenv pre-commit pip
+
 script:
+  - exit_code=0
+  - .travis/pre_commit.sh || exit_code=$(( exit_code | $? ))
   - |
     if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then exit 0; fi;
     if [[ "$TRAVIS_BRANCH" != "develop"  && ! "$TRAVIS_BRANCH" =~ ^v[[:digit:]]+\.[[:digit:]]+(\.[[:digit:]]+)?(-\S*)?$ ]]; then echo "not develop branch, no deploy"; exit 0; fi;
@@ -23,6 +30,9 @@ script:
     export MOBILE_DIR=`pwd`
     cd ..
     curl $DEPLOY_DOCS_SH | bash -s $CONTENT_DEC_PASSWD $TRAVIS_BRANCH $MOBILE_DIR
+    exit_code=$(( exit_code | $? ))
+    exit $exit_code
+
 notifications:
   email:
     on_success: change
