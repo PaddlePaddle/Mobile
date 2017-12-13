@@ -1,60 +1,43 @@
-# For more information about using CMake with Android Studio, read the
-# documentation: https://d.android.com/studio/projects/add-native-code.html
+# Copyright (c) 2016 PaddlePaddle Authors. All Rights Reserve.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License
 
-# Sets the minimum version of CMake required to build the native library.
+# Sets the minimum version of CMake required to build the native
+# library. You should either keep the default value or only pass a
+# value of 3.4.0 or lower.
 
 cmake_minimum_required(VERSION 3.4.1)
 
-# Creates and names a library, sets it as either STATIC
-# or SHARED, and provides the relative paths to its source code.
-# You can define multiple libraries, and CMake builds them for you.
-# Gradle automatically packages shared libraries with your APK.
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/")
 
-add_library( # Sets the name of the library.
-             paddle_image_recognizer
+# Prebuilt third-party library: paddle
+set(PADDLE_ROOT ${CMAKE_SOURCE_DIR}/paddle-android)
+find_package(Paddle)
 
-             # Sets the library as a shared library.
-             SHARED
+set(SRC_FILES src/main/cpp/paddle_image_recognizer.cpp)
 
-             # Provides a relative path to your source file(s).
-             src/main/cpp/paddle_image_recognizer.cpp)
+set(LINK_FLAGS "-Wl,--version-script ${CMAKE_CURRENT_SOURCE_DIR}/paddle_jni.map")
+add_library(paddle_image_recognizer SHARED ${SRC_FILES})
+set_target_properties(paddle_image_recognizer PROPERTIES LINK_FLAGS "${LINK_FLAGS}")
 
-add_library( paddle_capi_shared
-             SHARED
-             IMPORTED )
+target_include_directories(paddle_image_recognizer PRIVATE
+                           ${PADDLE_INC_DIR})
 
-set_target_properties( # Specifies the target library.
-                       paddle_capi_shared
+target_link_libraries(paddle_image_recognizer
+                      ${PADDLE_LIBRARIES}
+                      ${PADDLE_THIRD_PARTY_LIBRARIES}
+                      android
+                      log)
 
-                       # Specifies the parameter you want to define.
-                       PROPERTIES IMPORTED_LOCATION
 
-                       # Provides the path to the library you want to import.
-                       paddle-android/lib/${ANDROID_ABI}/libpaddle_capi_shared.so )
 
-# Specifies a path to native header files.
-include_directories(paddle-android/include)
-
-# Searches for a specified prebuilt library and stores the path as a
-# variable. Because CMake includes system libraries in the search path by
-# default, you only need to specify the name of the public NDK library
-# you want to add. CMake verifies that the library exists before
-# completing its build.
-
-find_library( # Sets the name of the path variable.
-              log-lib
-
-              # Specifies the name of the NDK library that
-              # you want CMake to locate.
-              log )
-
-# Specifies libraries CMake should link to your target library. You
-# can link multiple libraries, such as libraries you define in this
-# build script, prebuilt third-party libraries, or system libraries.
-
-target_link_libraries( # Specifies the target library.
-                       paddle_image_recognizer
-
-                       # Links the target library to the log library
-                       # included in the NDK.
-                       ${log-lib} )

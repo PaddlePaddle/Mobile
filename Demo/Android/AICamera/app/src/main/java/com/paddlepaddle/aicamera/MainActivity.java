@@ -21,6 +21,6 @@ public class MainActivity extends AppCompatActivity {
 
     // Used to load the 'native-lib' library on application startup.
     static {
-        System.loadLibrary("paddle-image-recognizer");
+        System.loadLibrary("paddle_image_recognizer");
     }
 }

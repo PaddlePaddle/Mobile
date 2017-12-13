@@ -10,9 +10,15 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters "arm64-v8a" //armeabi-v7a has some issues, revisit later
+        }
         externalNativeBuild {
             cmake {
-                cppFlags "-std=c++11 -frtti -fexceptions"
+                arguments "-DANDROID_TOOLCHAIN=gcc",
+                        "-DANDROID_ARM_NEON=FALSE",
+                        "-DCMAKE_VERBOSE_MAKEFILE=1"
+                cppFlags "-O3 -std=c++11 -frtti -fexceptions"
             }
         }
     }
@@ -30,7 +36,12 @@ android {
 
     sourceSets {
         main {
-            jniLibs.srcDirs 'paddle-android/lib/${ANDROID_ABI}/'
+
+            manifest.srcFile "src/main/AndroidManifest.xml"
+            java.srcDirs = ["src/main/java"]
+            assets.srcDirs = ["src/main/assets"]
+            jni.srcDirs = ["src/main/cpp"]
+            jniLibs.srcDirs = ["paddle-android/lib"]
         }
     }
 }

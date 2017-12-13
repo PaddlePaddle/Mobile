@@ -1,6 +1,6 @@
 {
 	global:
-		paddle_*;
+		Java_*;
 	local:
 		*;
 };
