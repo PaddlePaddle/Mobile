@@ -38,6 +38,3 @@ target_link_libraries(paddle_image_recognizer
                       ${PADDLE_THIRD_PARTY_LIBRARIES}
                       android
                       log)
-
-
-
