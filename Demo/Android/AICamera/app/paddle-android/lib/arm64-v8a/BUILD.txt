@@ -1,9 +1,0 @@
-Compiler:
-	/opt/toolchains/arm64-android-21/bin/aarch64-linux-android-clang
-	/opt/toolchains/arm64-android-21/bin/aarch64-linux-android-clang++
-Compiler Flags:
-	
-	-ffunction-sections -fdata-sections -march=armv8-a   -std=c++11 -fPIC -fno-omit-frame-pointer -Wall -Wextra -Werror -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wno-unused-parameter -Wno-unused-function -Wno-error=sign-compare -Wno-error=unused-local-typedefs -Wno-error=parentheses-equality
-Android API: 21
-Lastest commit:
-	7eacb30665531b6ea59b00470016e3421213ba23 Merge pull request #5536 from luotao1/faq
