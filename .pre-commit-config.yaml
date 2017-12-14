@@ -19,9 +19,13 @@
     sha: v1.0.1
     hooks:
     -   id: forbid-crlf
+        files: \.(md|c|cc|cxx|cpp|cu|h|hpp|hxx)$
     -   id: remove-crlf
+        files: \.(md|c|cc|cxx|cpp|cu|h|hpp|hxx)$
     -   id: forbid-tabs
+        files: \.(md|c|cc|cxx|cpp|cu|h|hpp|hxx)$
     -   id: remove-tabs
+        files: \.(md|c|cc|cxx|cpp|cu|h|hpp|hxx)$
 -   repo: local
     hooks:
     -   id: clang-format-with-version-check
