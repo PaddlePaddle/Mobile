@@ -13,8 +13,13 @@
 
 @interface ImageRecognizerPaddleWrapper : NSObject
 
-- (instancetype)initWithModel:(NSString*)modelFileName withNormHeight:(int)height withNormWidth:(int)width;
-- (NSMutableArray*)inference:(unsigned char *)pixels withHeight:(int)height withWidth:(int)width withFilterScore:(float) filterScore;
+- (instancetype)initWithModel:(NSString *)modelFileName
+               withNormHeight:(int)height
+                withNormWidth:(int)width;
+- (NSMutableArray *)inference:(unsigned char *)pixels
+                   withHeight:(int)height
+                    withWidth:(int)width
+              withFilterScore:(float)filterScore;
 - (void)destroy;
 
 @end

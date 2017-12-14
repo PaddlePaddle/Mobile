@@ -20,17 +20,19 @@ import paddle.v2 as paddle
 from mobilenet_pruning import mobile_net
 
 BATCH = 40
+
+
 def main():
-    datadim = 3 * 224 * 224 
+    datadim = 3 * 224 * 224
     classdim = 102
 
     # PaddlePaddle init
-    paddle.init(use_gpu=True, trainer_count=1, gpu_id = 0)
+    paddle.init(use_gpu=True, trainer_count=1, gpu_id=0)
 
     momentum_optimizer = paddle.optimizer.Momentum(
         momentum=0.9,
         regularization=paddle.optimizer.L2Regularization(rate=0.0005 * BATCH),
-        learning_rate=0.001/ BATCH,
+        learning_rate=0.001 / BATCH,
         learning_rate_schedule='constant')
 
     out = mobile_net(datadim, classdim, 1.0)
@@ -46,7 +48,7 @@ def main():
     for param_name in fparameters.names():
         if param_name in parameters.names():
             parameters.set(param_name, fparameters.get(param_name))
-	
+
     # End batch and end pass event handler
     def event_handler(event):
         if isinstance(event, paddle.event.EndIteration):
@@ -58,7 +60,8 @@ def main():
                 sys.stdout.flush()
         if isinstance(event, paddle.event.EndPass):
             # save parameters
-            with gzip.open('pruning_mobilenet_params_pass_%d.tar.gz' % event.pass_id, 'w') as f:
+            with gzip.open('pruning_mobilenet_params_pass_%d.tar.gz' %
+                           event.pass_id, 'w') as f:
                 parameters.to_tar(f)
 
             result = trainer.test(
@@ -80,6 +83,7 @@ def main():
         event_handler=event_handler,
         feeding={'image': 0,
                  'label': 1})
+
 
 if __name__ == '__main__':
     main()

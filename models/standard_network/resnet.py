@@ -1,5 +1,6 @@
 import paddle.v2 as paddle
 
+
 def conv_bn_layer(input,
                   ch_out,
                   filter_size,
@@ -19,11 +20,14 @@ def conv_bn_layer(input,
         bias_attr=False)
     return paddle.layer.batch_norm(input=tmp, act=active_type)
 
+
 def shortcut(input, ch_in, ch_out, stride):
     if ch_in != ch_out:
-	    return conv_bn_layer(input, ch_out, 1, stride, 0, paddle.activation.Linear())
+        return conv_bn_layer(input, ch_out, 1, stride, 0,
+                             paddle.activation.Linear())
     else:
         return input
+
 
 def basicblock(input, ch_in, ch_out, stride):
     short = shortcut(input, ch_in, ch_out, stride)
@@ -32,11 +36,13 @@ def basicblock(input, ch_in, ch_out, stride):
     return paddle.layer.addto(
         input=[short, conv2], act=paddle.activation.Relu())
 
+
 def layer_warp(block_func, input, ch_in, ch_out, count, stride):
     conv = block_func(input, ch_in, ch_out, stride)
     for i in range(1, count):
         conv = block_func(conv, ch_out, ch_out, 1)
     return conv
+
 
 def resnet18(data_dim, class_dim, depth=18):
     input = paddle.layer.data(
@@ -57,6 +63,7 @@ def resnet18(data_dim, class_dim, depth=18):
     out = paddle.layer.fc(
         input=pool2, size=class_dim, act=paddle.activation.Softmax())
     return out
+
 
 if __name__ == '__main__':
     data_dim = 3 * 224 * 224

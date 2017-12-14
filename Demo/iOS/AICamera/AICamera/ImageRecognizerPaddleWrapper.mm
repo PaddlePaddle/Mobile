@@ -32,13 +32,13 @@ static NSString * kLabels [21] = {
     {
         int channel = 3;
         const std::vector<float> means({104, 117, 124});
-        
+
         NSBundle* bundle = [NSBundle mainBundle];
         NSString* resourceDirectoryPath = [bundle bundlePath];
         NSString* path = [[resourceDirectoryPath stringByAppendingString:@"/"] stringByAppendingString:modelFileName];
-        
+
         self->recognizer.init([path UTF8String], height, width, channel, means);
-        
+
     }
     return self;
 }
@@ -48,14 +48,14 @@ static NSString * kLabels [21] = {
     int channel = 4;
     image::Config config(image::kBGR, image::CLOCKWISE_R90);
     self->recognizer.infer(pixels, height, width, channel, config, result);
-    
+
     NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:result.height];
     int w = result.width;
-    
+
     for (int i = 0; i < result.height; i++) {
         float score = result.data[i * w + 2];
         if (score < filterScore) continue;
-        
+
         SSDData *ssdData = [[SSDData alloc] init];
         ssdData.label = kLabels[(int) result.data[i * w + 1]];
         ssdData.accuracy = score;
@@ -63,10 +63,10 @@ static NSString * kLabels [21] = {
         ssdData.ymin = result.data[i * w + 4];
         ssdData.xmax = result.data[i * w + 5];
         ssdData.ymax = result.data[i * w + 6];
-        
+
         [array addObject:ssdData];
     }
-    
+
     return array;
 }
 

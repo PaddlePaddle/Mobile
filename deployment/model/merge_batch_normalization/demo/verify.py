@@ -31,10 +31,10 @@ def infer(net, model):
 
     cur_dir = os.path.dirname(os.path.realpath(__file__))
     inference = Inference(output_layer=net, parameters=parameters)
-    
+
     test_img = load_image(cur_dir + '/image/cat.jpg')
     test_data = []
-     
+
     test_data.append((test_img, ))
     sum = 0.0
     loops_num = 1
@@ -43,10 +43,11 @@ def infer(net, model):
         probs = inference.infer(field='value', input=test_data)
         end = time.time()
         sum += (end - start)
-           
+
     print 'time :', sum / loops_num
     print 'class : ', probs[0].argmax()
     print 'prob : ', probs[0].max()
+
 
 def load_image(file, resize_size=256, crop_size=224, mean_file=None):
     # load image
@@ -66,18 +67,17 @@ def load_image(file, resize_size=256, crop_size=224, mean_file=None):
     h_end, w_end = h_start + crop_size, w_start + crop_size
     im = im[h_start:h_end, w_start:w_end, :]
     # transpose to CHW order
-    mean = np.array([103.94,116.78,123.68])
+    mean = np.array([103.94, 116.78, 123.68])
     im = im - mean
     im = im.transpose((2, 0, 1))
 
-    #im = im * 0.017 
+    #im = im * 0.017
     return im
-
 
 
 if __name__ == '__main__':
 
-    img_size = 3 * 224 * 224 
+    img_size = 3 * 224 * 224
     class_num = 102
 
     paddle.init(use_gpu=False, trainer_count=1)

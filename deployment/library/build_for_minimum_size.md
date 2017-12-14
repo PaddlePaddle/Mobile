@@ -4,7 +4,7 @@ In the mobile application, there usually are some limitations to the size of an 
 Here we explore how to compile the inference library for minimum size.
 
 **Note:**  
-In the original PaddlePaddle, all computationally relevant code is implemented in Matrix.cpp and BaseMatrix.cu, 
+In the original PaddlePaddle, all computationally relevant code is implemented in Matrix.cpp and BaseMatrix.cu,
 this causes the large compiled Matrix.o and BaseMatrix.o files which can not be split.
 The module of Layer can be split, but the Layer forward and backward computing is included in the same file.
 The configuration definition in proto is redundant. These all will lead to the size of inference library larger.
@@ -24,4 +24,3 @@ But don't forget to use `-no-whole-archive` after `libpaddle_capi_layers.a`, avo
 - Remove useless symbols in the shared library: When building a shared library by `libpaddle_capi_layers.a` and `libpaddle_capi_engine.a`,
 you can remove the useless export symbols with the `--version-script` option to reduce the size of the `.dynsym` and `.dynstr` sections.
 [Here's an example](https://github.com/PaddlePaddle/Paddle/blob/develop/paddle/capi/CMakeLists.txt#L61)
-

@@ -12,20 +12,20 @@
     -   id: detect-private-key
         files: (?!.*tar.gz)^.*$ 
     -   id: end-of-file-fixer
-        files: \.md$
+        files: \.(md|py|mm|swift|java|c|cc|cxx|cpp|cu|h|hpp|hxx)$
     -   id: trailing-whitespace
-        files: \.md$
+        files: \.(md|py|mm|swift|java|c|cc|cxx|cpp|cu|h|hpp|hxx)$
 -   repo: https://github.com/Lucas-C/pre-commit-hooks.git
     sha: v1.0.1
     hooks:
     -   id: forbid-crlf
-        files: \.(md|c|cc|cxx|cpp|cu|h|hpp|hxx)$
+        files: \.(md|py|mm|swift|java|c|cc|cxx|cpp|cu|h|hpp|hxx)$
     -   id: remove-crlf
-        files: \.(md|c|cc|cxx|cpp|cu|h|hpp|hxx)$
+        files: \.(md|py|mm|swift|java|c|cc|cxx|cpp|cu|h|hpp|hxx)$
     -   id: forbid-tabs
-        files: \.(md|c|cc|cxx|cpp|cu|h|hpp|hxx)$
+        files: \.(md|py|mm|swift|java|c|cc|cxx|cpp|cu|h|hpp|hxx)$
     -   id: remove-tabs
-        files: \.(md|c|cc|cxx|cpp|cu|h|hpp|hxx)$
+        files: \.(md|py|mm|swift|java|c|cc|cxx|cpp|cu|h|hpp|hxx)$
 -   repo: local
     hooks:
     -   id: clang-format-with-version-check
