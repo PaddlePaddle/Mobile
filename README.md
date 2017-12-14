@@ -10,7 +10,7 @@ Here mainly describes how to deploy PaddlePaddle to the mobile end, as well as s
 - [How to build PaddlePaddle mobile inference library with minimum size.](./deployment/library/build_for_minimum_size.md)
 
 ## Demo
-- [An inference demo program based on the Paddle C API.](./benchmark/tool/C/README.md)
+- [A command-line inference demo.](./benchmark/tool/C/README.md)
 - [iOS demo of AICamera](./Demo/iOS/AICamera/README.md)
 
 ## Deployment optimization methods
