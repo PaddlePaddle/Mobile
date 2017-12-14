@@ -1,6 +1,8 @@
 # Mobile
 
 [![Build Status](https://travis-ci.org/PaddlePaddle/Mobile.svg?branch=develop)](https://travis-ci.org/PaddlePaddle/Mobile)
+[![Documentation Status](https://img.shields.io/badge/docs-latest-brightgreen.svg?style=flat)](http://www.paddlepaddle.org/docs/develop/mobile/README.html)
+[![Release](https://img.shields.io/github/release/PaddlePaddle/Mobile.svg)](https://github.com/PaddlePaddle/Mobile/wiki)
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](LICENSE)
 
 Here mainly describes how to deploy PaddlePaddle to the mobile end, as well as some deployment optimization methods and some benchmark.
