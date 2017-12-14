@@ -6,7 +6,7 @@ dist: trusty
 os:
   - linux
 env:
-  - JOB=PRE_COMMIT
+  - JOB=pre_commit
 
 addons:
   apt:
@@ -15,14 +15,19 @@ addons:
       - python
       - python-pip
       - python2.7-dev
+      - clang-format-3.8
   ssh_known_hosts: 52.76.173.135
 
 before_install:
   - sudo pip install -U virtualenv pre-commit pip
 
 script:
-  - exit_code=0
-  - .travis/pre_commit.sh || exit_code=$(( exit_code | $? ))
+  - if [[ "$JOB" == "pre_commit" ]]; then sudo ln -s /usr/bin/clang-format-3.8 /usr/bin/clang-format; fi
+  - |
+    function timeout() { perl -e 'alarm shift; exec @ARGV' "$@"; }
+  - |
+    timeout 600 .travis/${JOB}.sh # 10min timeout
+    RESULT=$?; if [ $RESULT -eq 0 ] || [ $RESULT -eq 142 ]; then true; else exit 1; fi;
   - |
     if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then exit 0; fi;
     if [[ "$TRAVIS_BRANCH" != "develop"  && ! "$TRAVIS_BRANCH" =~ ^v[[:digit:]]+\.[[:digit:]]+(\.[[:digit:]]+)?(-\S*)?$ ]]; then echo "not develop branch, no deploy"; exit 0; fi;
@@ -30,8 +35,6 @@ script:
     export MOBILE_DIR=`pwd`
     cd ..
     curl $DEPLOY_DOCS_SH | bash -s $CONTENT_DEC_PASSWD $TRAVIS_BRANCH $MOBILE_DIR
-    exit_code=$(( exit_code | $? ))
-    exit $exit_code
 
 notifications:
   email:
