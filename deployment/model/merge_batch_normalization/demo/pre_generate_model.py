@@ -19,18 +19,21 @@ import os
 import paddle.v2 as paddle
 from mobilenet_without_bn import mobile_net
 
+
 def parse_args():
     """Parse input arguments."""
-    parser = argparse.ArgumentParser(description='we pre-generate model parameters without BN')
-    parser.add_argument('--model_name', 
-                        help='name the pre-generate model name',
-                        type=str)
+    parser = argparse.ArgumentParser(
+        description='we pre-generate model parameters without BN')
+    parser.add_argument(
+        '--model_name', help='name the pre-generate model name', type=str)
     return parser.parse_args()
+
 
 def generate_model(net, model_path):
     with gzip.open(model_path, 'w') as f:
         paddle.parameters.create(net).to_tar(f)
     print 'SUCCESS! ', 'we pre-generate our model without bn in ', model_path
+
 
 if __name__ == '__main__':
     args = parse_args()

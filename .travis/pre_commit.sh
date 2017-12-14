@@ -1,10 +1,7 @@
 #!/bin/bash
 function abort(){
-    echo "Your commit not fit PaddlePaddle code style" 1>&2
-    echo "Please use pre-commit scripts to auto-format your code" 1>&2
-    echo "Install pre-commit following 2 steps:" 1>&2
-    echo "1> pip install pre-commit" 1>&2
-    echo "2> pre-commit install (under the Mobile repo)" 1>&2
+    echo "Your change doesn't follow PaddlePaddle's code style" 1>&2
+    echo "Please use pre-commit to auto-format your code." 1>&2
     exit 1
 }
 
@@ -14,6 +11,7 @@ cd `dirname $0`
 cd ..
 export PATH=/usr/bin:$PATH
 pre-commit install
+clang-format --version
 
 if ! pre-commit run -a ; then
   ls -lh

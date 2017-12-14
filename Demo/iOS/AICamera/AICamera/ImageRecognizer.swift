@@ -14,20 +14,20 @@ protocol ImageRecognizerDelegate {
 }
 
 class ImageRecognizer {
-    
+
     var imageRecognizer: ImageRecognizerPaddleWrapper?
-    
+
     init(model: SSDModel) {
         imageRecognizer = ImageRecognizerPaddleWrapper(model: model.rawValue, withNormHeight: model.normDimension().0, withNormWidth: model.normDimension().1)
     }
-    
+
     func inference(imageBuffer: UnsafeMutablePointer<UInt8>!, width: Int32, height: Int32, score: Float) -> NSMutableArray! {
-        
+
         return imageRecognizer?.inference(imageBuffer, withHeight: height, withWidth: width, withFilterScore: score)
     }
-    
+
     func release() {
         imageRecognizer?.destroy()
     }
-    
+
 }

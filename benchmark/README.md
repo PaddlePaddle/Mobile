@@ -9,5 +9,4 @@ Inference benchmark of deep learning models implemented by paddlepaddle.
 
 Note:
 - ST means using single-threaded calculation.
-- MI 5, Android 7.0, Snapdragon 820 1.8GHz 
-
+- MI 5, Android 7.0, Snapdragon 820 1.8GHz

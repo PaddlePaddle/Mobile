@@ -1,5 +1,8 @@
 # Mobile
 
+[![Build Status](https://travis-ci.org/PaddlePaddle/Mobile.svg?branch=develop)](https://travis-ci.org/PaddlePaddle/Mobile)
+[![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](LICENSE)
+
 Here mainly describes how to deploy PaddlePaddle to the mobile end, as well as some deployment optimization methods and some benchmark.
 
 ## How to build PaddlePaddle for mobile
@@ -26,3 +29,5 @@ Here mainly describes how to deploy PaddlePaddle to the mobile end, as well as s
 - [Benchmark of Mobilenet](./benchmark/README.md)
 - Benchmark of ENet
 - [Benchmark of DepthwiseConvolution in PaddlePaddle](https://github.com/hedaoyuan/Function/blob/master/src/conv/README.md)
+
+This tutorial is contributed by [PaddlePaddle](https://github.com/PaddlePaddle/Paddle) and licensed under the [Apache-2.0 license](LICENSE).
