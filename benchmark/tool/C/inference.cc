@@ -93,7 +93,7 @@ paddle_gradient_machine init(std::string merged_model_path,
     Timer time("create gradient_machine from merged model");
     long size = 0;
     void* merged_model = NULL;
-    { read_file(merged_model_path.c_str(), &merged_model, &size); }
+    read_file(merged_model_path.c_str(), &merged_model, &size);
     PD_CHECK(paddle_gradient_machine_create_for_inference_with_parameters(
         &machine, merged_model, size));
     free(merged_model);
