@@ -7,7 +7,7 @@ Here mainly describes how to deploy PaddlePaddle to the mobile end, as well as s
 
 ## How to build PaddlePaddle for mobile
 - Build PaddlePaddle for Android [[Chinese](https://github.com/PaddlePaddle/Paddle/blob/develop/doc/mobile/cross_compiling_for_android_cn.md)] [[English](https://github.com/PaddlePaddle/Paddle/blob/develop/doc/mobile/cross_compiling_for_android_en.md)]
-- Build PaddlePaddle for IOS [[Chinese](https://github.com/PaddlePaddle/Paddle/blob/develop/doc/mobile/cross_compiling_for_ios_cn.md)]
+- Build PaddlePaddle for IOS [[Chinese](https://github.com/PaddlePaddle/Paddle/blob/develop/doc/mobile/cross_compiling_for_ios_cn.md)] [[English](https://github.com/PaddlePaddle/Paddle/blob/develop/doc/mobile/cross_compiling_for_ios_en.md)]
 - Build PaddlePaddle for Raspberry Pi3 [[Chinese](https://github.com/PaddlePaddle/Paddle/blob/develop/doc/mobile/cross_compiling_for_raspberry_cn.md)] [[English](https://github.com/PaddlePaddle/Paddle/blob/develop/doc/mobile/cross_compiling_for_raspberry_en.md)]
 - Build PaddlePaddle for PX2
 - [How to build PaddlePaddle mobile inference library with minimum size.](./deployment/library/build_for_minimum_size.md)
