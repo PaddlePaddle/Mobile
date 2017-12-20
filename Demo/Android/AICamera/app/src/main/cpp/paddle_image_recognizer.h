@@ -20,33 +20,6 @@ limitations under the License */
 #include <vector>
 #include "image_utils.h"
 
-static const char* paddle_error_string(paddle_error status) {
-  switch (status) {
-    case kPD_NULLPTR:
-      return "nullptr error";
-    case kPD_OUT_OF_RANGE:
-      return "out of range error";
-    case kPD_PROTOBUF_ERROR:
-      return "protobuf error";
-    case kPD_NOT_SUPPORTED:
-      return "not supported error";
-    case kPD_UNDEFINED_ERROR:
-      return "undefined error";
-    default:
-      return "";
-  };
-}
-
-#define CHECK(stmt)                                            \
-  do {                                                         \
-    paddle_error __err__ = stmt;                               \
-    if (__err__ != kPD_NO_ERROR) {                             \
-      const char* str = paddle_error_string(__err__);          \
-      fprintf(stderr, "%s (%d) in " #stmt "\n", str, __err__); \
-      exit(__err__);                                           \
-    }                                                          \
-  } while (0)
-
 class ImageRecognizer {
 public:
   struct Result {
@@ -64,13 +37,6 @@ public:
         normed_width_(0),
         normed_channel_(0) {}
 
-  static void init_paddle() {
-    // Initalize Paddle
-    char* argv[] = {const_cast<char*>("--use_gpu=False"),
-                    const_cast<char*>("--pool_limit_size=0")};
-    CHECK(paddle_init(2, (char**)argv));
-  }
-
   void init(const char* merged_model_path,
             const size_t normed_height,
             const size_t normed_width,
@@ -85,6 +51,8 @@ public:
   void release();
 
 protected:
+  void init_paddle();
+
   void preprocess(const unsigned char* pixels,
                   float* normed_pixels,
                   const size_t height,

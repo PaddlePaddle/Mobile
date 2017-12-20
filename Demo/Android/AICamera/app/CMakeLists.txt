@@ -26,6 +26,7 @@ find_package(Paddle)
 
 set(SRC_FILES src/main/cpp/image_recognizer_jni.cpp
               src/main/cpp/paddle_image_recognizer.cpp
+              src/main/cpp/binary_reader.cpp
               src/main/cpp/image_utils.cpp)
 
 set(LINK_FLAGS "-Wl,--version-script ${CMAKE_CURRENT_SOURCE_DIR}/paddle_jni.map")

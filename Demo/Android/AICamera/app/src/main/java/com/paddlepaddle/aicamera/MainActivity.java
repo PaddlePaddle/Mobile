@@ -15,6 +15,16 @@ public class MainActivity extends AppCompatActivity {
 
         mImageRecognizer = new ImageRecognizer(this);
 
+        int height = 300;
+        int width = 300;
+        int channel = 3;
+        byte[] pixels = new byte[height * width * channel];
+        for (int i = 0; i < height * width * channel; ++i) {
+            pixels[i] = (byte) i;
+        }
+
+        mImageRecognizer.infer(pixels, height, width, channel, 0.6f);
+
     // Example of a call to a native method
     TextView tv = (TextView) findViewById(R.id.sample_text);
 //    tv.setText(stringFromJNI());

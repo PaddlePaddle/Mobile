@@ -12,69 +12,80 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License */
 
-#include <jni.h>
 #include <android/asset_manager_jni.h>
-#include <string>
+#include <jni.h>
 #include <memory>
+#include <string>
+#include "binary_reader.h"
 #include "paddle_image_recognizer.h"
 
 extern "C" {
 
-static std::shared_ptr<ImageRecognizer> recognizer;
-
-JNIEXPORT void
+JNIEXPORT jlong
 Java_com_paddlepaddle_aicamera_ImageRecognizer_init(JNIEnv *env,
-                                          jobject thiz,
-                                          jobject jasset_manager,
-                                          jstring jmodel_path,
-                                          jint jheight,
-                                          jint jwidth,
-                                          jint jchannel,
-                                          jfloatArray jmeans) {
+                                                    jobject thiz,
+                                                    jobject jasset_manager,
+                                                    jstring jmerged_model_path,
+                                                    jint jnormed_height,
+                                                    jint jnormed_width,
+                                                    jint jnormed_channel,
+                                                    jfloatArray jmeans) {
+  if (jmerged_model_path == nullptr) {
+    return 0;
+  }
 
+  AAssetManager *aasset_manager = AAssetManager_fromJava(env, jasset_manager);
+  BinaryReader::set_aasset_manager(aasset_manager);
 
-    AAssetManager *aasset_manager = AAssetManager_fromJava(env, jasset_manager);
+  const char *merged_model_path = env->GetStringUTFChars(jmerged_model_path, 0);
 
+  const float *m = env->GetFloatArrayElements(jmeans, 0);
+  std::vector<float> means(m, m + sizeof(m) / sizeof(m[0]));
 
-    recognizer = std::make_shared<ImageRecognizer>();
+  ImageRecognizer *recognizer = new ImageRecognizer();
+  recognizer->init(
+      merged_model_path, jnormed_height, jnormed_width, jnormed_channel, means);
 
-    long size = 0;
-    const char *model_path = env->GetStringUTFChars(jmodel_path, 0);
-//    void *merged_model = read_binary(aasset_manager, model_path, &size);
+  env->ReleaseStringUTFChars(jmerged_model_path, merged_model_path);
 
-    const float *m = env->GetFloatArrayElements(jmeans, 0);
-    std::vector<float> means(m, m + sizeof m / sizeof m[0]);
-    ImageRecognizer recognizer1;
-    recognizer1.init(model_path, jheight, jwidth, jchannel, means);
-
-    env->ReleaseStringUTFChars(jmodel_path, model_path);
-
+  return reinterpret_cast<jlong>(recognizer);
 }
 
 JNIEXPORT jfloatArray
 Java_com_paddlepaddle_aicamera_ImageRecognizer_infer(JNIEnv *env,
                                                      jobject thiz,
+                                                     jlong jrecognizer,
                                                      jbyteArray jpixels,
                                                      jint jheight,
                                                      jint jwidth,
                                                      jint jchannel) {
+  if (jrecognizer == 0 || jpixels == nullptr || jheight <= 0 || jwidth <= 0 ||
+      jchannel <= 0) {
+    return nullptr;
+  }
 
-    ImageRecognizer::Result result;
-    image::Config config(image::kBGR, image::CLOCKWISE_R90);
+  ImageRecognizer *recognizer =
+      reinterpret_cast<ImageRecognizer *>(jrecognizer);
 
-    int len = env->GetArrayLength (jpixels);
-    unsigned char* pixels = new unsigned char[len];
-    env->GetByteArrayRegion (jpixels, 0, len, reinterpret_cast<jbyte*>(pixels));
+  ImageRecognizer::Result result;
+  image::Config config(image::kBGR, image::CLOCKWISE_R90);
 
-    recognizer->infer(pixels, jheight, jwidth, jchannel, config, result);
+  const unsigned char *pixels =
+      (unsigned char *)env->GetByteArrayElements(jpixels, 0);
+  recognizer->infer(pixels, jheight, jwidth, jchannel, config, result);
+  env->ReleaseByteArrayElements(jpixels, (jbyte *)pixels, 0);
 
+  return nullptr;
 }
 
-JNIEXPORT void
-Java_com_paddlepaddle_aicamera_ImageRecognizer_release(JNIEnv *env,
-                                                     jobject thiz) {
-    recognizer->release();
-}
+JNIEXPORT void Java_com_paddlepaddle_aicamera_ImageRecognizer_release(
+    JNIEnv *env, jobject thiz, jlong jrecognizer) {
+  if (jrecognizer == 0) {
+    return;
+  }
 
+  ImageRecognizer *recognizer =
+      reinterpret_cast<ImageRecognizer *>(jrecognizer);
+  recognizer->release();
 }
-
+}

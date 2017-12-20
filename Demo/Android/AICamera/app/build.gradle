@@ -5,7 +5,7 @@ android {
     buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "com.paddlepaddle.aicamera"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -15,9 +15,7 @@ android {
         }
         externalNativeBuild {
             cmake {
-                arguments "-DANDROID_TOOLCHAIN=gcc",
-                        "-DANDROID_ARM_NEON=FALSE",
-                        "-DCMAKE_VERBOSE_MAKEFILE=1"
+                arguments "-DCMAKE_VERBOSE_MAKEFILE=1"
                 cppFlags "-O3 -std=c++11 -frtti -fexceptions"
             }
         }

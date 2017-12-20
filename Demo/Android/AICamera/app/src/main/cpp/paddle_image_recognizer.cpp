@@ -14,20 +14,64 @@ limitations under the License */
 
 #include "paddle_image_recognizer.h"
 #include <string.h>
+#include "binary_reader.h"
 
-static void* read_config(const char* filename, long* size) {
-  FILE* file = fopen(filename, "rb");
-  if (file == NULL) {
-    fprintf(stderr, "Open %s error\n", filename);
-    return NULL;
+#define TAG "PaddlePaddle"
+
+#ifdef __ANDROID__
+#include <android/log.h>
+#define LOGI(format, ...) \
+  __android_log_print(ANDROID_LOG_INFO, TAG, format, ##__VA_ARGS__)
+#define LOGW(format, ...) \
+  __android_log_print(ANDROID_LOG_WARN, TAG, format, ##__VA_ARGS__)
+#define LOGE(format, ...) \
+  __android_log_print(ANDROID_LOG_ERROR, TAG, "Error: " format, ##__VA_ARGS__)
+#else
+#include <stdio.h>
+#define LOGI(format, ...) \
+  fprintf(stdout, "[" TAG "]" format "\n", ##__VA_ARGS__)
+#define LOGW(format, ...) \
+  fprintf(stdout, "[" TAG "]" format "\n", ##__VA_ARGS__)
+#define LOGE(format, ...) \
+  fprintf(stderr, "[" TAG "]Error: " format "\n", ##__VA_ARGS__)
+#endif
+
+static const char* paddle_error_string(paddle_error status) {
+  switch (status) {
+    case kPD_NULLPTR:
+      return "nullptr error";
+    case kPD_OUT_OF_RANGE:
+      return "out of range error";
+    case kPD_PROTOBUF_ERROR:
+      return "protobuf error";
+    case kPD_NOT_SUPPORTED:
+      return "not supported error";
+    case kPD_UNDEFINED_ERROR:
+      return "undefined error";
+    default:
+      return "";
+  };
+}
+
+#define CHECK(stmt)                                   \
+  do {                                                \
+    paddle_error __err__ = stmt;                      \
+    if (__err__ != kPD_NO_ERROR) {                    \
+      const char* str = paddle_error_string(__err__); \
+      LOGE("%s (%d) in " #stmt "\n", str, __err__);   \
+      exit(__err__);                                  \
+    }                                                 \
+  } while (0)
+
+void ImageRecognizer::init_paddle() {
+  static bool called = false;
+  if (!called) {
+    // Initalize Paddle
+    char* argv[] = {const_cast<char*>("--use_gpu=False"),
+                    const_cast<char*>("--pool_limit_size=0")};
+    CHECK(paddle_init(2, (char**)argv));
+    called = true;
   }
-  fseek(file, 0L, SEEK_END);
-  *size = ftell(file);
-  fseek(file, 0L, SEEK_SET);
-  void* buf = malloc(*size);
-  fread(buf, 1, *size, file);
-  fclose(file);
-  return buf;
 }
 
 void ImageRecognizer::init(const char* merged_model_path,
@@ -50,9 +94,13 @@ void ImageRecognizer::init(const char* merged_model_path,
     }
   }
 
+  // Initialize PaddlePaddle environment.
+  init_paddle();
+
   // Step 1: Reading merged model.
+  LOGI("merged_model_path = %s", merged_model_path);
   long size;
-  void* buf = read_config(merged_model_path, &size);
+  void* buf = BinaryReader()(merged_model_path, &size);
 
   // Step 2:
   //    Create a gradient machine for inference.
@@ -168,15 +216,17 @@ void ImageRecognizer::infer(const unsigned char* pixels,
                             const image::Config& config,
                             Result& result) {
   if (height < normed_height_ || width < normed_width_) {
-    fprintf(stderr,
-            "Image size should be no less than the normed size (%u vs %u, %u "
-            "vs %u).\n",
-            height,
-            normed_height_,
-            width,
-            normed_width_);
+    LOGE(
+        "Image size should be no less than the normed size (%u vs %u, %u vs "
+        "%u).\n",
+        height,
+        normed_height_,
+        width,
+        normed_width_);
     return;
   }
+
+  LOGI("height = %ld, width = %ld, channel = %ld\n", height, width, channel);
 
   // Step 3: Prepare input Arguments
   paddle_arguments in_args = paddle_arguments_create_none();

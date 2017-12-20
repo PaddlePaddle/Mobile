@@ -27,19 +27,16 @@ public class ImageRecognizer {
     private static final String TAG = "ImageRecognizer";
     private static float[] means = {104, 117, 124};
 
-    private long mImageRecognizerPtr = 0;
+    private long mImageRecognizer = 0;
 
     public ImageRecognizer(Context context) {
-        //copy model to file
-        CopyModelUtils.copyFilesToStorage(context);
-
-        String modelPath = "pascal_mobilenet_300_66.paddle";
-        mImageRecognizerPtr = init(context.getAssets(), context.getExternalCacheDir().getAbsolutePath() + "/" + modelPath, 300, 300, 3, means);
+        String modelPath = "models/pascal_mobilenet_300_66.paddle";
+        mImageRecognizer = init(context.getAssets(), modelPath, 300, 300, 3, means);
     }
 
-    public List<SSDData> infer(byte[] pixels, int height, int width, float filterScore) {
+    public List<SSDData> infer(byte[] pixels, int height, int width, int channel, float filterScore) {
 
-        float[] result = infer(mImageRecognizerPtr, pixels, height, width, 4);
+        float[] result = infer(mImageRecognizer, pixels, height, width, channel);
 
         List<SSDData> resultList = new ArrayList<SSDData>();
         SSDData data = new SSDData();
@@ -52,18 +49,13 @@ public class ImageRecognizer {
         release();
     }
 
-
     private native long init(AssetManager assetManager, String modelPath, int normHeight, int normWidth, int normChannel, float[] means);
 
-    private native float[] infer(long imageRecognizerPtr,
-                                     byte[] pixels,
-                                     int height,
-                                     int width,
-                                     int channel);
+    private native float[] infer(long imageRecognizer,
+                                 byte[] pixels,
+                                 int height,
+                                 int width,
+                                 int channel);
 
     private native void release();
-
 }
-
-
-
