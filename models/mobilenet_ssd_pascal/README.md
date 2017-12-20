@@ -1,4 +1,4 @@
-# Mobilenet SSD    
+# Mobilenet SSD  
 
 We offer the mobilenet(1.0) ssd model trained on PASCAL VOC0712 dataset. This model can be deployed on embedded system
 and you can modify the network to adapt to your own application.
@@ -13,4 +13,3 @@ and you can modify the network to adapt to your own application.
 
 ## train on your own dataset
 You can modify the network to adapt to your own application. PaddlePaddle provides a detailed document to show how to train your model with SSD, refer the document [here](https://github.com/PaddlePaddle/models/tree/develop/ssd).
-
