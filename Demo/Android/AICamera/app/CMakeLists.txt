@@ -24,7 +24,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/")
 set(PADDLE_ROOT ${CMAKE_SOURCE_DIR}/paddle-android)
 find_package(Paddle)
 
-set(SRC_FILES src/main/cpp/paddle_image_recognizer.cpp)
+set(SRC_FILES src/main/cpp/image_recognizer_jni.cpp
+              src/main/cpp/paddle_image_recognizer.cpp
+              src/main/cpp/image_utils.cpp)
 
 set(LINK_FLAGS "-Wl,--version-script ${CMAKE_CURRENT_SOURCE_DIR}/paddle_jni.map")
 add_library(paddle_image_recognizer SHARED ${SRC_FILES})
