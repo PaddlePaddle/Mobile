@@ -12,6 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License */
 
+#include <android/log.h>
 #include <android/asset_manager_jni.h>
 #include <jni.h>
 #include <memory>
@@ -75,7 +76,13 @@ Java_com_paddlepaddle_aicamera_ImageRecognizer_infer(JNIEnv *env,
   recognizer->infer(pixels, jheight, jwidth, jchannel, config, result);
   env->ReleaseByteArrayElements(jpixels, (jbyte *)pixels, 0);
 
-  return nullptr;
+  uint64_t result_size = result.height * result.width;
+  jfloatArray jresult = env->NewFloatArray(result_size);
+  jfloat *jresult_ptr = env->GetFloatArrayElements(jresult, 0);
+  memcpy(jresult_ptr, result.data, result_size * sizeof(float));
+  env->ReleaseFloatArrayElements(jresult, jresult_ptr, 0);
+
+  return jresult;
 }
 
 JNIEXPORT void Java_com_paddlepaddle_aicamera_ImageRecognizer_release(
