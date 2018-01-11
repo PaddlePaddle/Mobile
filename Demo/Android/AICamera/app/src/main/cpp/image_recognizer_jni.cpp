@@ -59,7 +59,8 @@ Java_com_paddlepaddle_aicamera_ImageRecognizer_infer(JNIEnv *env,
                                                      jbyteArray jpixels,
                                                      jint jheight,
                                                      jint jwidth,
-                                                     jint jchannel) {
+                                                     jint jchannel,
+                                                     jboolean jback_camera) {
   if (jrecognizer == 0 || jpixels == nullptr || jheight <= 0 || jwidth <= 0 ||
       jchannel <= 0) {
     return nullptr;
@@ -69,7 +70,7 @@ Java_com_paddlepaddle_aicamera_ImageRecognizer_infer(JNIEnv *env,
       reinterpret_cast<ImageRecognizer *>(jrecognizer);
 
   ImageRecognizer::Result result;
-  image::Config config(image::kBGR, image::CLOCKWISE_R90);
+  image::Config config(image::kRGB, jback_camera == true ? image::CLOCKWISE_R90 : image::CLOCKWISE_R270);
 
   const unsigned char *pixels =
       (unsigned char *)env->GetByteArrayElements(jpixels, 0);

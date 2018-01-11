@@ -22,7 +22,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.Size;
@@ -45,7 +44,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
-import butterknife.Optional;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -71,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
     private SSDModel mModel = SSDModel.PASCAL_MOBILENET_300;
     private boolean mBackCamera = true;
-    private float mAccuracyThreshold = 0.5f; //only display above this threshold
+    private float mAccuracyThreshold = 0.3f; //only display above this threshold
     private SharedPreferences mPrefs;
     private boolean mSettingsShown;
     private SettingsViewHolder mSettingsViewHolder;
@@ -146,8 +144,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-                }
+                public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) { }
 
                 @Override
                 public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
@@ -155,9 +152,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-
-                }
+                public void onSurfaceTextureUpdated(SurfaceTexture surface) { }
             });
         }
     }
@@ -168,6 +163,12 @@ public class MainActivity extends AppCompatActivity {
         stopCaptureThread();
         stopInferThread();
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mImageRecognizer.destroy();
     }
 
     private void startCaptureThread() {
@@ -242,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onOpened(@NonNull CameraDevice camera) {
                     mCameraDevice = camera;
-                    createCameraPreviewSession();
+                    createCaptureSession();
                 }
 
                 @Override
@@ -263,63 +264,23 @@ public class MainActivity extends AppCompatActivity {
         } catch (SecurityException e) {
             android.util.Log.e(TAG, "Start Capture exception", e);
         }
-
-//        try {
-//            int cameraId = 0;
-//            final CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
-//
-////            final StreamConfigurationMap map =
-////                    characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-//
-////            // For still image captures, we use the largest available size.
-////            final Size largest =
-////                    Collections.max(
-////                            Arrays.asList(map.getOutputSizes(ImageFormat.YUV_420_888)),
-////                            new CompareSizesByArea());
-////
-////            sensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
-//
-//            // Danger, W.R.! Attempting to use too large a preview size could  exceed the camera
-//            // bus' bandwidth limitation, resulting in gorgeous previews but the storage of
-//            // garbage capture data.
-//            previewSize =
-//                    chooseOptimalSize(map.getOutputSizes(SurfaceTexture.class),
-//                            inputSize.getWidth(),
-//                            inputSize.getHeight());
-//
-//            // We fit the aspect ratio of TextureView to the size of preview we picked.
-//            final int orientation = getResources().getConfiguration().orientation;
-//            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-//                textureView.setAspectRatio(previewSize.getWidth(), previewSize.getHeight());
-//            } else {
-//                textureView.setAspectRatio(previewSize.getHeight(), previewSize.getWidth());
-//            }
-//        } catch (final CameraAccessException e) {
-//        }
-
     }
 
-    private void createCameraPreviewSession() {
+    private void createCaptureSession() {
         try {
             final SurfaceTexture texture = mTextureView.getSurfaceTexture();
-
-            // We configure the size of default buffer to be the size of camera preview we want.
             texture.setDefaultBufferSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
 
             final Surface surface = new Surface(texture);
+            final CaptureRequest.Builder captureRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
+            captureRequestBuilder.addTarget(surface);
 
-            // We set up a CaptureRequest.Builder with the output Surface.
-            final CaptureRequest.Builder previewRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
-            previewRequestBuilder.addTarget(surface);
-
-            // Create the reader for the preview frames.
             mImageReader = ImageReader.newInstance(
                     mPreviewSize.getWidth(), mPreviewSize.getHeight(), ImageFormat.YUV_420_888, 2);
 
             mImageReader.setOnImageAvailableListener(new ImageReader.OnImageAvailableListener() {
                 @Override
                 public void onImageAvailable(ImageReader reader) {
-
                     final int previewWidth = mPreviewSize.getWidth();
                     final int previewHeight = mPreviewSize.getHeight();
                     if (previewWidth == 0 || previewHeight == 0) {
@@ -339,18 +300,17 @@ public class MainActivity extends AppCompatActivity {
 
                     mInProcessing = true;
 
+                    final byte[][] yuvBytes = new byte[3][];
+                    final Image.Plane[] planes = image.getPlanes();
+                    ImageUtils.fillBytes(planes, yuvBytes);
+                    final int yRowStride = planes[0].getRowStride();
+                    final int uvRowStride = planes[1].getRowStride();
+                    final int uvPixelStride = planes[1].getPixelStride();
+
+
                     mInferHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            byte[][] yuvBytes = new byte[3][];
-                            int yRowStride = 0;
-
-                            final Image.Plane[] planes = image.getPlanes();
-                            ImageUtils.fillBytes(planes, yuvBytes);
-                            yRowStride = planes[0].getRowStride();
-                            final int uvRowStride = planes[1].getRowStride();
-                            final int uvPixelStride = planes[1].getPixelStride();
-
                             ImageUtils.convertYUV420ToARGB8888(
                                     yuvBytes[0],
                                     yuvBytes[1],
@@ -362,8 +322,11 @@ public class MainActivity extends AppCompatActivity {
                                     uvPixelStride,
                                     mRgbBytes);
 
-                            List<SSDData> results = mImageRecognizer.infer(mRgbBytes, previewHeight, previewWidth, 3, mAccuracyThreshold);
-                            mSSDLayerView.populateSSDList(results);
+                            if (mRgbBytes == null) return;
+
+                            List<SSDData> results = mImageRecognizer.infer(mRgbBytes, previewHeight, previewWidth, 3, mAccuracyThreshold, mBackCamera);
+
+                            mSSDLayerView.populateSSDList(results, mModel != SSDModel.FACE_MOBILENET_160);
 
                             image.close();
                             mInProcessing = false;
@@ -371,30 +334,27 @@ public class MainActivity extends AppCompatActivity {
                     });
                 }
             }, mCaptureHandler);
-            previewRequestBuilder.addTarget(mImageReader.getSurface());
+            captureRequestBuilder.addTarget(mImageReader.getSurface());
 
-            // Here, we create a CameraCaptureSession for camera preview.
             mCameraDevice.createCaptureSession(
                     Arrays.asList(surface, mImageReader.getSurface()),
                     new CameraCaptureSession.StateCallback() {
 
                         @Override
                         public void onConfigured(final CameraCaptureSession cameraCaptureSession) {
-                            // The camera is already closed
                             if (null == mCameraDevice) {
                                 return;
                             }
 
-                            // When the session is ready, we start displaying the preview.
                             mCaptureSession = cameraCaptureSession;
                             try {
-                                previewRequestBuilder.set(
+                                captureRequestBuilder.set(
                                         CaptureRequest.CONTROL_AF_MODE,
                                         CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
-                                previewRequestBuilder.set(
+                                captureRequestBuilder.set(
                                         CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
 
-                                CaptureRequest previewRequest = previewRequestBuilder.build();
+                                CaptureRequest previewRequest = captureRequestBuilder.build();
                                 mCaptureSession.setRepeatingRequest(
                                         previewRequest, new CameraCaptureSession.CaptureCallback() {
                                             @Override
@@ -428,7 +388,7 @@ public class MainActivity extends AppCompatActivity {
                     },
                     null);
         } catch (final CameraAccessException e) {
-            Log.e(TAG, "createCameraPreviewSession exception ", e);
+            Log.e(TAG, "createCaptureSession exception ", e);
         }
     }
 
@@ -475,20 +435,24 @@ public class MainActivity extends AppCompatActivity {
         @OnCheckedChanged({R.id.backCameraRadioBtn, R.id.frontCameraRadioBtn})
         public void onCameraSelected(CompoundButton button, boolean checked) {
 
-            Log.d("XXX", "onCameraSelected");
             if (checked) {
                 switch (button.getId()) {
                     case R.id.backCameraRadioBtn:
+                        if (mBackCamera) return; //do not save or restart camera if no change
                         mBackCamera = true;
                         break;
 
                     case R.id.frontCameraRadioBtn:
+                        if (!mBackCamera) return;
                         mBackCamera = false;
                         break;
                 }
                 SharedPreferences.Editor editor = mPrefs.edit();
                 editor.putBoolean(PREF_KEY_CAMERA, mBackCamera);
                 editor.commit();
+
+                closeCamera();
+                startCapture();
             }
         }
 
@@ -497,16 +461,20 @@ public class MainActivity extends AppCompatActivity {
             if (checked) {
                 switch (button.getId()) {
                     case R.id.pascalRadioBtn:
+                        if (mModel == SSDModel.PASCAL_MOBILENET_300) return;
                         mModel = SSDModel.PASCAL_MOBILENET_300;
                         break;
 
                     case R.id.faceRadioBtn:
+                        if (mModel == SSDModel.FACE_MOBILENET_160) return;
                         mModel = SSDModel.FACE_MOBILENET_160;
                         break;
                 }
                 SharedPreferences.Editor editor = mPrefs.edit();
                 editor.putString(PREF_KEY_MODEL, mModel.modelFileName);
                 editor.commit();
+
+                mImageRecognizer = new ImageRecognizer(MainActivity.this, mModel);
             }
         }
     }
@@ -536,7 +504,7 @@ public class MainActivity extends AppCompatActivity {
     private void loadSettings() {
         mPrefs = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         mBackCamera = mPrefs.getBoolean(PREF_KEY_CAMERA, true);
-        mAccuracyThreshold = mPrefs.getFloat(PREF_KEY_THRESHOLD, 0.5f);
+        mAccuracyThreshold = mPrefs.getFloat(PREF_KEY_THRESHOLD, 0.3f);
         String modelFileName = mPrefs.getString(PREF_KEY_MODEL, SSDModel.PASCAL_MOBILENET_300.modelFileName);
         mModel = SSDModel.fromModelFileName(modelFileName);
     }
@@ -578,7 +546,4 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
 }

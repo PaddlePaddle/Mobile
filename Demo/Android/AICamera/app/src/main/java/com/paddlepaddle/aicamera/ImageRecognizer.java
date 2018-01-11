@@ -15,7 +15,6 @@ package com.paddlepaddle.aicamera;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,32 +42,34 @@ public class ImageRecognizer {
         mImageRecognizer = init(context.getAssets(), modelPath, model.height, model.width, 3, means);
     }
 
-    public List<SSDData> infer(byte[] pixels, int height, int width, int channel, float filterScore) {
+    public List<SSDData> infer(byte[] pixels, int height, int width, int channel, float filterScore, boolean backCamera) {
 
-        float[] result = infer(mImageRecognizer, pixels, height, width, channel);
+        float[] result = infer(mImageRecognizer, pixels, height, width, channel, backCamera);
 
         int w = 7;
         int h = result.length / w;
 
         List<SSDData> resultList = new ArrayList<SSDData>();
 
-        Log.d("ZZZ", "h = " + h);
-
         for (int i = 0; i < h; i++) {
             float score = result[i * w + 2];
-
-            Log.d("ZZZ", "score = " + score);
 
             if (score < filterScore) continue;
             SSDData ssdData = new SSDData();
             ssdData.label = LABELS[(int) result[i * w + 1]];
             ssdData.accuracy = score;
 
-
             ssdData.xmin = result[i * w + 3];
             ssdData.ymin = result[i * w + 4];
             ssdData.xmax = result[i * w + 5];
             ssdData.ymax = result[i * w + 6];
+
+            if (!backCamera) {
+                //need to reverse location horizontally for front camera
+                float xmin = ssdData.xmin;
+                ssdData.xmin = 1 - ssdData.xmax;
+                ssdData.xmax = 1 - xmin;
+            }
 
             resultList.add(ssdData);
         }
@@ -86,7 +87,8 @@ public class ImageRecognizer {
                                  byte[] pixels,
                                  int height,
                                  int width,
-                                 int channel);
+                                 int channel,
+                                 boolean backCamera);
 
     private native void release();
 }
