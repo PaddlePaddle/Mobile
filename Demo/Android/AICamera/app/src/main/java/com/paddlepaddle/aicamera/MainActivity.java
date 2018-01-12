@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     private byte[] mRgbBytes;
 
     private boolean mInProcessing;
+    private boolean mCapturing;
 
     private SSDModel mModel = SSDModel.PASCAL_MOBILENET_300;
     private boolean mBackCamera = true;
@@ -165,12 +166,6 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mImageRecognizer.destroy();
-    }
-
     private void startCaptureThread() {
         mCaptureThread = new HandlerThread("capture");
         mCaptureThread.start();
@@ -209,6 +204,10 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        if (mCapturing) return;
+
+        mCapturing = true;
+
         final CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
 
         String cameraIdAvailable = null;
@@ -232,8 +231,8 @@ public class MainActivity extends AppCompatActivity {
             final StreamConfigurationMap map =
                     characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             mPreviewSize = ImageUtils.chooseOptimalSize(map.getOutputSizes(SurfaceTexture.class),
-                    mTextureView.getHeight(),
-                    mTextureView.getWidth());
+                    mTextureView.getHeight() / 2,
+                    mTextureView.getWidth() / 2);
             mTextureView.setAspectRatio(
                     mPreviewSize.getHeight(), mPreviewSize.getWidth());
             float aspectRatio = mPreviewSize.getWidth() * 1.0f / mPreviewSize.getHeight();
@@ -250,6 +249,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onDisconnected(@NonNull CameraDevice camera) {
                     camera.close();
                     mCameraDevice = null;
+                    mCapturing = false;
                 }
 
                 @Override
@@ -257,11 +257,14 @@ public class MainActivity extends AppCompatActivity {
                     android.util.Log.e(TAG, "open Camera on Error =  " + error);
                     camera.close();
                     mCameraDevice = null;
+                    mCapturing = false;
                 }
             }, mCaptureHandler);
         } catch (CameraAccessException e) {
+            mCapturing = false;
             android.util.Log.e(TAG, "Start Capture exception", e);
         } catch (SecurityException e) {
+            mCapturing = false;
             android.util.Log.e(TAG, "Start Capture exception", e);
         }
     }
@@ -300,17 +303,17 @@ public class MainActivity extends AppCompatActivity {
 
                     mInProcessing = true;
 
-                    final byte[][] yuvBytes = new byte[3][];
-                    final Image.Plane[] planes = image.getPlanes();
-                    ImageUtils.fillBytes(planes, yuvBytes);
-                    final int yRowStride = planes[0].getRowStride();
-                    final int uvRowStride = planes[1].getRowStride();
-                    final int uvPixelStride = planes[1].getPixelStride();
-
 
                     mInferHandler.post(new Runnable() {
                         @Override
                         public void run() {
+                            final byte[][] yuvBytes = new byte[3][];
+                            final Image.Plane[] planes = image.getPlanes();
+                            ImageUtils.fillBytes(planes, yuvBytes);
+                            final int yRowStride = planes[0].getRowStride();
+                            final int uvRowStride = planes[1].getRowStride();
+                            final int uvPixelStride = planes[1].getPixelStride();
+
                             ImageUtils.convertYUV420ToARGB8888(
                                     yuvBytes[0],
                                     yuvBytes[1],
@@ -321,8 +324,6 @@ public class MainActivity extends AppCompatActivity {
                                     uvRowStride,
                                     uvPixelStride,
                                     mRgbBytes);
-
-                            if (mRgbBytes == null) return;
 
                             List<SSDData> results = mImageRecognizer.infer(mRgbBytes, previewHeight, previewWidth, 3, mAccuracyThreshold, mBackCamera);
 
@@ -360,8 +361,6 @@ public class MainActivity extends AppCompatActivity {
                                             @Override
                                             public void onCaptureProgressed(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull CaptureResult partialResult) {
                                                 super.onCaptureProgressed(session, request, partialResult);
-
-                                                Log.d(TAG, "onCaptureProgressed");
                                             }
 
                                             @Override
@@ -405,6 +404,8 @@ public class MainActivity extends AppCompatActivity {
             mImageReader.close();
             mImageReader = null;
         }
+
+        mCapturing = false;
     }
 
     //------- Settings ------------
@@ -453,6 +454,7 @@ public class MainActivity extends AppCompatActivity {
 
                 closeCamera();
                 startCapture();
+                mImageRecognizer = new ImageRecognizer(MainActivity.this, mModel);
             }
         }
 
