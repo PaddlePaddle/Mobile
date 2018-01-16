@@ -131,11 +131,8 @@ public class ImageUtils {
 
         byte[] result = new byte[3];
         result[0] = (byte)(r / 1000);
-//        if (result[0] < 0) result[0] += 256;
         result[1] = (byte)(g / 1000);
-//        if (result[1] < 0) result[1] += 256;
         result[2] = (byte)(b / 1000);
-//        if (result[2] < 0) result[2] += 256;
 
         return result;
     }
