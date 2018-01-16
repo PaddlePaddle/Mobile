@@ -12,8 +12,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License */
 
-#include <android/log.h>
 #include <android/asset_manager_jni.h>
+#include <android/log.h>
 #include <jni.h>
 #include <memory>
 #include <string>
@@ -70,7 +70,9 @@ Java_com_paddlepaddle_aicamera_ImageRecognizer_infer(JNIEnv *env,
       reinterpret_cast<ImageRecognizer *>(jrecognizer);
 
   ImageRecognizer::Result result;
-  image::Config config(image::kRGB, jback_camera == true ? image::CLOCKWISE_R90 : image::CLOCKWISE_R270);
+  image::Config config(
+      image::kRGB,
+      jback_camera == true ? image::CLOCKWISE_R90 : image::CLOCKWISE_R270);
 
   const unsigned char *pixels =
       (unsigned char *)env->GetByteArrayElements(jpixels, 0);
