@@ -61,7 +61,7 @@ Simply tap on the screen to toggle settings
 
 Use latest Android Studio for development. This demo requires a camera for object detection, therefore you must use an Android device for development and testing. Emulators will not work as they cannot access camera.
 
-For developers, feel free to use this as a reference to start a new project. This demo fully demonstrates how to integrate Paddle C Library to Android, including CMake scripts and JNI wrapper and called from Java. Download Android NDK tools from Android Studio in order to debug c++ code. Click [here](https://developer.android.com/ndk/guides/index.html) for Android NDK guide. 
+For developers, feel free to use this as a reference to start a new project. This demo fully demonstrates how to integrate Paddle C Library to Android, including CMake scripts and JNI wrapper and called from Java. Download Android NDK tools from Android Studio in order to debug c++ code. Click [here](https://developer.android.com/ndk/guides/index.html) for Android NDK guide.
 
 
 ## Integrate Paddle C Library to Android
@@ -70,7 +70,7 @@ For developers, feel free to use this as a reference to start a new project. Thi
 -Create a folder paddle-android and add to PROJECT_ROOT/AICamera/app . Put the 3 paddle libs folder under paddle-android.
 -Add [FindPaddle.cmake](https://github.com/PaddlePaddle/Mobile/blob/develop/Demo/Android/AICamera/app/FindPaddle.cmake) in PROJECT_ROOT/AICamera/app to locate the dependencies of Paddle libraries. You should be using this file for your android project.
 -Add [CMakeList.txt](https://github.com/PaddlePaddle/Mobile/blob/develop/Demo/Android/AICamera/app/CMakeList.txt) in PROJECT_ROOT/AICamera/app to link your C++ files to Paddle Libraries.
--Create JNI wrapper such as [image_recognizer_jni.cpp](https://github.com/PaddlePaddle/Mobile/blob/develop/Demo/Android/AICamera/app/src/main/cpp/image_recognizer_jni.cpp) to access C++ API in Paddle Library and a bridge calling from Java client. 
+-Create JNI wrapper such as [image_recognizer_jni.cpp](https://github.com/PaddlePaddle/Mobile/blob/develop/Demo/Android/AICamera/app/src/main/cpp/image_recognizer_jni.cpp) to access C++ API in Paddle Library and a bridge calling from Java client.
 
 
 ## Download Models
@@ -84,4 +84,3 @@ Our models are too large to upload to Github. Create a model folder and add to a
 | ------------------------ |:----------:| --------:|
 | face_mobilenet_160_91    | 160x160    | 91%      |
 | pascal_mobilenet_300_66  | 300x300    | 66%      |
-| vgg_ssd_net              | 300x300    | 71%      |

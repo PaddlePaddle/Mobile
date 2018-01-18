@@ -63,9 +63,6 @@ public class SettingsActivity extends Activity{
             }
 
             SettingsManager.getInstance().cameraChanged(backCamera);
-
-//            finish();
-//            overridePendingTransition(0, 0);
         }
     }
 
@@ -87,9 +84,6 @@ public class SettingsActivity extends Activity{
             }
 
             SettingsManager.getInstance().modelChanged(ssdModel);
-
-//            finish();
-//            overridePendingTransition(0, 0);
         }
     }
 
