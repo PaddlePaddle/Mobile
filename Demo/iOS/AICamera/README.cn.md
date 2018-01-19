@@ -51,9 +51,9 @@ App模型需要开启摄像头权限。启动App后，点击屏幕，将会出�
 
 ## 快速安装
 
-如果你想快速地体验PDCamera，可通过扫描以下二维码进行安装。成功识别二维码之后，会自动跳转到安装页面，点击“Install PDCamera”链接，App会自动下载并安装到你的iOS设备上。
+如果你想快速地体验PDCamera，可通过扫描以下二维码进行安装。成功识别二维码之后，会自动跳转到安装页面，点击**“Install PDCamera”**链接，App会自动下载并安装到你的iOS设备上。
 
-成功安装App后，你还需要安装如下步骤进一步设置：设置 → 通用 → 设备管理 → Baidu USA llc → 信任“Baidu USA llc”。
+成功安装App后，你还需要按照如下步骤设置你的iOS设备：**设置 → 通用 → 设备管理 → Baidu USA llc → 信任“Baidu USA llc”**。
 
 <p align="center">
 <img src="assets/qr_code_ios.png" width = "30%"/>
@@ -70,6 +70,8 @@ App模型需要开启摄像头权限。启动App后，点击屏幕，将会出�
 Github上面只维护了该Demo相关的源码文件和项目配置。用户可下载[face\_mobilenet\_160\_91.paddle](http://cloud.dlnel.org/filepub/?uuid=038c1dbf-08b3-42a9-b2dc-efccd63859fb)和[pascal\_mobilenet\_300\_66.paddle](http://cloud.dlnel.org/filepub/?uuid=39c325d9-b468-4940-ba47-d50c8ec5fd5b)，加入项目根目录下面的`models`子目录下面。
 
 VGG模型的识别精度高，但由于模型较大（104.3MB），需要占用较高的内存（\~800MB），并且识别速度慢（每帧~1.5秒），因此对设备的计算能力要求较高（iPhone6s以上），默认没有添加到项目中。用户也可自行下载[vgg\_ssd\_net.paddle](http://cloud.dlnel.org/filepub/?uuid=1116a5f3-7762-44b5-82bb-9954159cb5d4)，添加到项目中，体验其高精度识别效果。
+
+这里，我们使用的是**合并的模型**（merged model）。如何从配置文件（例如`config.py`）和训练得到的参数文件（例如`params_pass_0.tar.gz`）得的**合并的模型**文件，请参考[如何合并模型](../../../deployment/model/merge_config_parameters/README.cn.md)。
 
 ### 准备PaddlePaddle库
 

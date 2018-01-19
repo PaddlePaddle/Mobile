@@ -10,8 +10,8 @@ This applies to all PaddlePaddle v2 models, we show a demo of mobilenet.
 
 ### Step 1: Prepartions
 
-**Model Config :** [Mobilenet model config](../../models/mobilenet.py).  
-**Model Parameters:** [Mobilenet model param pretrained on flower102 download](https://pan.baidu.com/s/1geHkrw3)
+**Model Config :** [Mobilenet model config](../../../models/standard_network/mobilenet.py).  
+**Model Parameters:** [Mobilenet model param pretrained on flower102 download](http://cloud.dlnel.org/filepub/?uuid=4a3fcd7a-719c-479f-96e1-28a4c3f2195e).
 
 ### Step2: Merge
 

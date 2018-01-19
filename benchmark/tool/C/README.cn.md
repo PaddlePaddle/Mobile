@@ -9,12 +9,14 @@
 
 - **Step 1，编译Android平台上适用的PaddlePaddle库。**
 
-    用户需要按照[Android平台编译指南](https://github.com/PaddlePaddle/Paddle/blob/develop/doc/mobile/cross_compiling_for_android_cn.md)，编译Android平台上适用的PaddlePaddle库。在执行`make install`之后，PaddlePaddle库将会安装在`CMAKE_INSTALL_PREFIX`所指定的目录下。该目录包含如下几个子目录：
+    用户可以按照[Android平台编译指南](https://github.com/PaddlePaddle/Paddle/blob/develop/doc/mobile/cross_compiling_for_android_cn.md)，拉取PaddlePaddle最新代码，编译Android平台上适用的PaddlePaddle库。在执行`make install`之后，PaddlePaddle库将会安装在`CMAKE_INSTALL_PREFIX`所指定的目录下。该目录包含如下几个子目录：
     - `include`，其中包含使用PaddlePaddle所需要引入的头文件，通常代码中加入`#include <paddle/capi.h>`即可。
     - `lib`，其中包含了PaddlePaddle对应架构的库文件。其中包括：
       - 动态库，`libpaddle_capi_shared.so`。
       - 静态库，`libpaddle_capi_layers.a`和`libpaddle_capi_engine.a`。
     - `third_party`，PaddlePaddle所依赖的第三方库。
+
+    你也可以从[wiki](https://github.com/PaddlePaddle/Mobile/wiki)下载编译好的版本。
 
 - **Step 2，编译示例程序。**
 
@@ -58,8 +60,8 @@
 
 - **Step 3，准备模型。**
 
-    Android设备上推荐使用`merged model`。以Mobilenet为例，要生成`merged model`，首先你需要准备以下文件：
-    - 模型配置文件[mobilenet.py](https://github.com/PaddlePaddle/Mobile/blob/develop/models/mobilenet.py)，它是使用PaddlePaddle的v2 api编写的`Mobilenet`模型的网络结构。用户可在[models](https://github.com/PaddlePaddle/Mobile/tree/develop/models)获取更多PaddlePaddle常用的网络配置，该repo下面同时提供了使用PaddlePaddle训练模型的方法。
+    Android设备上推荐使用**合并的模型（merged model）**。以Mobilenet为例，要生成**合并的模型**文件，首先你需要准备以下文件：
+    - 模型配置文件[mobilenet.py](https://github.com/PaddlePaddle/Mobile/tree/develop/models/standard_network/mobilenet.py)，它是使用PaddlePaddle的v2 api编写的`Mobilenet`模型的网络结构。当前repo的[models](https://github.com/PaddlePaddle/Mobile/tree/develop/models)目录下维护了一些移动端常用的PaddlePaddle网络配置。同时，用户可在[models](https://github.com/PaddlePaddle/models)repo下面找到更多PaddlePaddle常用的网络配置，该repo下面同时提供了使用PaddlePaddle训练模型的方法。
     - 模型参数文件。使用PaddlePaddle v2 api训练得到的参数将会存储成`.tar.gz`文件。比如，我们提供了一个使用[flowers102](http://www.robots.ox.ac.uk/~vgg/data/flowers/102/)数据集训练`Mobilnet`分类模型的参数文件[mobilenet\_flowers102.tar.gz](http://cloud.dlnel.org/filepub/?uuid=4a3fcd7a-719c-479f-96e1-28a4c3f2195e)。你也可以使用以下命令下载该参数文件：
 
     ```bash
@@ -71,7 +73,7 @@
     在准备好模型配置文件（.py）和参数文件（.tar.gz）之后，且所在机器已经成功安装了PaddlePaddle的Python包之后，我们可以通过执行以下脚本生成需要的`merged model`。
 
     ```bash
-    $ cd Mobile/tools/merge_config_parameters
+    $ cd Mobile/deployment/model/merge_config_parameters
     $ python merge_model.py
     ```
 
@@ -81,7 +83,7 @@
     wget -C http://cloud.dlnel.org/filepub/?uuid=d3b95cf9-4dc3-476f-bdc7-98ac410c4f71 -O mobilenet_flowers102.paddle
     ```
 
-    更多有关于生成`merged model`的详情，请参考[merge\_config\_parameters](https://github.com/PaddlePaddle/Mobile/tree/develop/tools/merge_config_parameters)。
+    更多有关于生成`merged model`的详情，请参考[merge\_config\_parameters](https://github.com/PaddlePaddle/Mobile/tree/develop/deployment/model/merge_config_parameters/README.cn.md)。
 
 - **Step 4，在Android设备上测试。**
 
