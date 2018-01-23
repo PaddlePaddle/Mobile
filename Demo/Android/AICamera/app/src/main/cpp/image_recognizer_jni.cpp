@@ -23,7 +23,7 @@ limitations under the License */
 extern "C" {
 
 JNIEXPORT jlong
-Java_com_paddlepaddle_aicamera_ImageRecognizer_init(JNIEnv *env,
+Java_com_paddlepaddle_pdcamera_ImageRecognizer_init(JNIEnv *env,
                                                     jobject thiz,
                                                     jobject jasset_manager,
                                                     jstring jmerged_model_path,
@@ -53,7 +53,7 @@ Java_com_paddlepaddle_aicamera_ImageRecognizer_init(JNIEnv *env,
 }
 
 JNIEXPORT jfloatArray
-Java_com_paddlepaddle_aicamera_ImageRecognizer_infer(JNIEnv *env,
+Java_com_paddlepaddle_pdcamera_ImageRecognizer_infer(JNIEnv *env,
                                                      jobject thiz,
                                                      jlong jrecognizer,
                                                      jbyteArray jpixels,
@@ -88,7 +88,7 @@ Java_com_paddlepaddle_aicamera_ImageRecognizer_infer(JNIEnv *env,
   return jresult;
 }
 
-JNIEXPORT void Java_com_paddlepaddle_aicamera_ImageRecognizer_release(
+JNIEXPORT void Java_com_paddlepaddle_pdcamera_ImageRecognizer_release(
     JNIEnv *env, jobject thiz, jlong jrecognizer) {
   if (jrecognizer == 0) {
     return;
