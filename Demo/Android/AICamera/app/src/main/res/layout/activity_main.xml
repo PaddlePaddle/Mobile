@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
-    tools:context="com.paddlepaddle.aicamera.MainActivity">
+    tools:context="com.paddlepaddle.pdcamera.MainActivity">
 
-    <com.paddlepaddle.aicamera.AutoFitTextureView
+    <com.paddlepaddle.pdcamera.AutoFitTextureView
         android:id="@+id/textureView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <com.paddlepaddle.aicamera.SSDLayerView
+    <com.paddlepaddle.pdcamera.SSDLayerView
         android:id="@+id/ssdLayerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

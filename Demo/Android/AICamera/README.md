@@ -70,4 +70,3 @@ Here, we are using **merged model**. If you want to know how to use model config
 - Add [FindPaddle.cmake](https://github.com/PaddlePaddle/Mobile/blob/develop/Demo/Android/AICamera/app/FindPaddle.cmake) in PROJECT_ROOT/AICamera/app to locate the dependencies of Paddle libraries. You should be using this file for your android project.
 - Add [CMakeList.txt](https://github.com/PaddlePaddle/Mobile/blob/develop/Demo/Android/AICamera/app/CMakeList.txt) in PROJECT_ROOT/AICamera/app to link your C++ files to Paddle Libraries.
 - Create JNI wrapper such as [image_recognizer_jni.cpp](https://github.com/PaddlePaddle/Mobile/blob/develop/Demo/Android/AICamera/app/src/main/cpp/image_recognizer_jni.cpp) to access C++ API in Paddle Library and a bridge calling from Java client.
-

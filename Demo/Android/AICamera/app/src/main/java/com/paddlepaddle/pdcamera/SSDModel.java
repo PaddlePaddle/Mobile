@@ -1,4 +1,4 @@
-package com.paddlepaddle.aicamera;
+package com.paddlepaddle.pdcamera;
 
 /**
  * Created by Nickychan on 1/9/18.

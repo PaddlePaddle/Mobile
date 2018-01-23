@@ -1,4 +1,4 @@
-package com.paddlepaddle.aicamera;
+package com.paddlepaddle.pdcamera;
 
 import android.media.Image;
 import android.util.Size;

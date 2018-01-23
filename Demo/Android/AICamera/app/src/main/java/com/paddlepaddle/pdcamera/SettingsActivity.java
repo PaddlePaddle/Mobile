@@ -1,4 +1,4 @@
-package com.paddlepaddle.aicamera;
+package com.paddlepaddle.pdcamera;
 
 import android.app.Activity;
 import android.os.Bundle;

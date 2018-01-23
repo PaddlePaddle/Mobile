@@ -1,4 +1,4 @@
-package com.paddlepaddle.aicamera;
+package com.paddlepaddle.pdcamera;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.paddlepaddle.aicamera;
+package com.paddlepaddle.pdcamera;
 
 import android.content.Context;
 import android.graphics.Canvas;

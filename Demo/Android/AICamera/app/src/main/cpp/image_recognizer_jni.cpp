@@ -15,8 +15,8 @@ limitations under the License */
 #include <android/asset_manager_jni.h>
 #include <android/log.h>
 #include <jni.h>
-#include <memory>
 #include <string.h>
+#include <memory>
 #include "binary_reader.h"
 #include "paddle_image_recognizer.h"
 
