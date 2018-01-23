@@ -398,6 +398,12 @@ public class MainActivity extends AppCompatActivity implements SettingsManager.S
         mCapturing = false;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Process.killProcess(Process.myPid());
+    }
+
     @OnClick(R.id.ssdLayerView)
     public void onLayerClick(View v) {
         startActivity(new Intent(this, SettingsActivity.class));
@@ -412,9 +418,9 @@ public class MainActivity extends AppCompatActivity implements SettingsManager.S
 
     @Override
     public void onModelChanged(SSDModel ssdModel) {
-        //restart app to load new model, creating ImageRecognizer seems to have issues
-        AlarmManager alm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        alm.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, PendingIntent.getActivity(this, 0, new Intent(this, this.getClass()), 0));
+        closeCamera();
+        stopCaptureThread();
+        stopInferThread();
         Process.killProcess(Process.myPid());
     }
 

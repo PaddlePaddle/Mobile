@@ -16,7 +16,7 @@ limitations under the License */
 #include <android/log.h>
 #include <jni.h>
 #include <memory>
-#include <string>
+#include <string.h>
 #include "binary_reader.h"
 #include "paddle_image_recognizer.h"
 

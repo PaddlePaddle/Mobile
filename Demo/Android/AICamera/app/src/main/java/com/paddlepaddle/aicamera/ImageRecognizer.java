@@ -25,21 +25,12 @@ public class ImageRecognizer {
         System.loadLibrary("paddle_image_recognizer");
     }
     private static final String TAG = "ImageRecognizer";
-    private static float[] means = {104, 117, 124};
-
-    private static final String[] LABELS = {
-            "background" , "aeroplane", "bicycle"  , "background" ,
-            "boat"       , "bottle"   , "bus"      , "car"        ,
-            "cat"        , "chair"    , "cow"      , "diningtable",
-            "dog"        , "horse"    , "motorbike", "person"     ,
-            "pottedplant", "sheep"    , "sofa"     , "train"      ,
-            "tvmonitor" };
 
     private long mImageRecognizer = 0;
 
     public ImageRecognizer(Context context, SSDModel model) {
         String modelPath = "models/" + model.modelFileName;
-        mImageRecognizer = init(context.getAssets(), modelPath, model.height, model.width, 3, means);
+        mImageRecognizer = init(context.getAssets(), modelPath, model.height, model.width, 3, SSDModel.MEANS);
     }
 
     public List<SSDData> infer(byte[] pixels, int height, int width, int channel, float filterScore, boolean backCamera) {
@@ -56,7 +47,7 @@ public class ImageRecognizer {
 
             if (score < filterScore) continue;
             SSDData ssdData = new SSDData();
-            ssdData.label = LABELS[(int) result[i * w + 1]];
+            ssdData.label = SSDModel.LABELS[(int) result[i * w + 1]];
             ssdData.accuracy = score;
 
             ssdData.xmin = result[i * w + 3];
