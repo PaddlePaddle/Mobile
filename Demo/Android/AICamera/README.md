@@ -58,7 +58,7 @@ The app requires Camera and Storage permission. After granting permissions, tap 
 
 
 <p align="center">
-<img src="readme_assets/demo_main.jpg" width = "25%" />
+<img src="readme_assets/demo_app.jpg" width = "25%" />
 <img src="readme_assets/demo_pascal.jpg" width = "25%" />
 <img src="readme_assets/demo_face.jpg" width = "25%" /><br/>
 （pic-1）App Settings &nbsp;&nbsp;&nbsp;&nbsp;
