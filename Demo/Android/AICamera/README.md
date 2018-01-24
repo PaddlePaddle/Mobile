@@ -1,12 +1,12 @@
 # PDCamera Android Demo
 
-- [Intro](#Intro)
-  - [Models](#Models)
-  - [Demo](#Demo)
-- [Quick Install](#Quick Install)
-- [Development](#Development)
-  - [Prepare Models](#Prepare Models)
-  - [Integrate Paddle Library to Android](#Integrate Paddle Library to Android)
+- [Intro](#intro)
+  - [Models](#models)
+  - [Demo](#demo)
+- [Quick Install](#quick-install)
+- [Development](#development)
+  - [Prepare Models](#prepare-models)
+  - [Integrate Paddle Library to Android](#integrate-paddle-library-to-android)
 
 ## Intro
 
@@ -25,19 +25,50 @@ We have provided two pretrained models for demo purposes. `pascal_mobilenet_300_
 
 Click on the model name in the table to download the corresponding model through the browser.
 
+Following is a list of 20 objects that pascal model can classify:
+
+- aeroplane
+- bicycle
+- background
+- boat
+- bottle
+- bus
+- car
+- cat
+- chair
+- cow
+- diningtable
+- dog
+- horse
+- motorbike
+- person
+- pottedplant
+- sheep
+- sofa
+- train
+- tvmonitor
 
 ### Demo
 
-The app requires Camera and Storage permission. After granting permissions, tap on the screen will toggle settings as following:
+The app requires Camera and Storage permission. After granting permissions, tap on the screen to toggle settings which shows (pic-1):
 
 - Models: Select Pascal MobileNet 300 or Face MobileNet 160 (Requires restart)
 - Camera: Select Front or Back Camera
 - Accuracy Threshold: Adjust threshold to filter more/less objects based on probability
 
 
-For Pascal model, detected object will be highlighted as a bounding box with a classified object label and probability.
-For Face model, detected face will be highlighted as a bounding box and probability.
+<p align="center">
+<img src="readme_assets/demo_main.jpeg" width = "25%" />
+<img src="readme_assets/demo_pascal.jpg" width = "25%" />
+<img src="readme_assets/demo_face.jpeg" width = "25%" /><br/>
+（pic-1）App Settings &nbsp;&nbsp;&nbsp;&nbsp;
+（pic-2）Common object classifications &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+（pic-3）Face detection
+</p>
 
+
+For Pascal model, detected object will be highlighted as a bounding box with a classified object label and probability. (pic-2)
+For Face model, detected face will be highlighted as a bounding box and probability. (pic-3)
 
 
 ## Quick Install
@@ -45,7 +76,7 @@ For Face model, detected face will be highlighted as a bounding box and probabil
 To simply run the demo with Android devices, scan the QR code below to download and install the apk. It runs on Android 5.0+ devices, support both arm64 and armv7a architecture.
 
 <p align="center">
-<img src="assets/qr_code_android.png" width = "30%" />
+<img src="readme_assets/qr_code_android.jpg" width = "30%" />
 </p>
 
 
@@ -58,7 +89,7 @@ For developers, feel free to use this as a reference to start a new project. Thi
 
 ### Prepare Models
 
-Our models are too large to upload to Github. Create a model folder and add to assets folder. Download [face_mobilenet_160_91.paddle](http://cloud.dlnel.org/filepub/?uuid=038c1dbf-08b3-42a9-b2dc-efccd63859fb) and [pascal_mobilenet_300_66.paddle](http://cloud.dlnel.org/filepub/?uuid=39c325d9-b468-4940-ba47-d50c8ec5fd5b) to model folder.
+Our models are too large to upload to Github. Create a model folder and add to assets folder. Download [face_mobilenet_160_91.paddle](http://cloud.dlnel.org/filepub/?uuid=038c1dbf-08b3-42a9-b2dc-efccd63859fb) and [pascal_mobilenet_300_66.paddle](http://cloud.dlnel.org/filepub/?uuid=39c325d9-b468-4940-ba47-d50c8ec5fd5b) and put them to model folder.
 
 Here, we are using **merged model**. If you want to know how to use model config file (such as `config.py`) and model params file from training(such as `params_pass_0.tar.gz`) to get **merged model** file, please see [Merged model config and parameters](../../../deployment/model/merge_config_parameters/README.md)
 
