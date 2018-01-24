@@ -58,17 +58,17 @@ The app requires Camera and Storage permission. After granting permissions, tap 
 
 
 <p align="center">
-<img src="readme_assets/demo_main.jpeg" width = "25%" />
+<img src="readme_assets/demo_main.jpg" width = "25%" />
 <img src="readme_assets/demo_pascal.jpg" width = "25%" />
-<img src="readme_assets/demo_face.jpeg" width = "25%" /><br/>
+<img src="readme_assets/demo_face.jpg" width = "25%" /><br/>
 （pic-1）App Settings &nbsp;&nbsp;&nbsp;&nbsp;
 （pic-2）Common object classifications &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 （pic-3）Face detection
 </p>
 
 
-For Pascal model, detected object will be highlighted as a bounding box with a classified object label and probability. (pic-2)
-For Face model, detected face will be highlighted as a bounding box and probability. (pic-3)
+For Pascal model, detected object will be highlighted as a bounding box with a classified object label and probability(pic-2). 
+For Face model, detected face will be highlighted as a bounding box and probability(pic-3). 
 
 
 ## Quick Install
