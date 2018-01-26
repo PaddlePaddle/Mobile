@@ -67,8 +67,8 @@ The app requires Camera and Storage permission. After granting permissions, tap 
 </p>
 
 
-For Pascal model, detected object will be highlighted as a bounding box with a classified object label and probability(pic-2). 
-For Face model, detected face will be highlighted as a bounding box and probability(pic-3). 
+For Pascal model, detected object will be highlighted as a bounding box with a classified object label and probability(pic-2).
+For Face model, detected face will be highlighted as a bounding box and probability(pic-3).
 
 
 ## Quick Install
