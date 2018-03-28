@@ -145,5 +145,107 @@ void rotate_hwc(const unsigned char* pixels,
   }
 }
 
+void normalize(const unsigned char* pixels,
+               float* normed_pixels,
+               const size_t height,
+               const size_t width,
+               const size_t channel,
+               const size_t normed_height,
+               const size_t normed_width,
+               const size_t normed_channel,
+               const std::vector<float>& means,
+               const image::Config& config) {
+  bool need_resize = true;
+  size_t resized_height = 0;
+  size_t resized_width = 0;
+  if (config.option == image::NO_ROTATE ||
+      config.option == image::CLOCKWISE_R180) {
+    if (height == normed_height && width == normed_width) {
+      need_resize = false;
+    }
+    resized_height = normed_height;
+    resized_width = normed_width;
+  } else if (config.option == image::CLOCKWISE_R90 ||
+             config.option == image::CLOCKWISE_R270) {
+    if (height == normed_width && width == normed_height) {
+      need_resize = false;
+    }
+    resized_height = normed_width;
+    resized_width = normed_height;
+  }
+
+  unsigned char* resized_pixels = nullptr;
+  if (!need_resize) {
+    resized_pixels = const_cast<unsigned char*>(pixels);
+  } else {
+    // Bilinear Interpolation Resize
+    resized_pixels = static_cast<unsigned char*>(malloc(
+        resized_height * resized_width * channel * sizeof(unsigned char)));
+    resize_hwc(pixels,
+               resized_pixels,
+               height,
+               width,
+               channel,
+               resized_height,
+               resized_width);
+  }
+
+  unsigned char* rotated_pixels = nullptr;
+  if (config.option == image::NO_ROTATE) {
+    rotated_pixels = resized_pixels;
+  } else {
+    rotated_pixels = static_cast<unsigned char*>(
+        malloc(normed_height * normed_width * channel * sizeof(unsigned char)));
+    rotate_hwc(resized_pixels,
+               rotated_pixels,
+               resized_height,
+               resized_width,
+               channel,
+               config.option);
+  }
+
+  if (true) {
+    // HWC -> CHW
+    size_t index = 0;
+    if (config.format == image::kRGB) {
+      // RGB/RGBA -> RGB
+      for (size_t c = 0; c < normed_channel; ++c) {
+        for (size_t h = 0; h < normed_height; ++h) {
+          for (size_t w = 0; w < normed_width; ++w) {
+            normed_pixels[index] =
+                static_cast<float>(
+                    rotated_pixels[(h * normed_width + w) * channel + c]) -
+                means[c];
+            index++;
+          }
+        }
+      }
+    } else if (config.format == image::kBGR) {
+      // BGR/BGRA -> RGB
+      for (size_t c = 0; c < normed_channel; ++c) {
+        for (size_t h = 0; h < normed_height; ++h) {
+          for (size_t w = 0; w < normed_width; ++w) {
+            normed_pixels[index] =
+                static_cast<float>(
+                    rotated_pixels[(h * normed_width + w) * channel +
+                                   (normed_channel - 1 - c)]) -
+                means[c];
+            index++;
+          }
+        }
+      }
+    }
+  }
+
+  if (rotated_pixels != nullptr && rotated_pixels != resized_pixels) {
+    free(rotated_pixels);
+    rotated_pixels = nullptr;
+  }
+  if (resized_pixels != nullptr && resized_pixels != pixels) {
+    free(resized_pixels);
+    resized_pixels = nullptr;
+  }
+}
+
 }  // namespace utils
 }  // namespace image

@@ -63,104 +63,6 @@ void ImageRecognizer::init(const char* merged_model_path,
   buf = nullptr;
 }
 
-void ImageRecognizer::preprocess(const unsigned char* pixels,
-                                 float* normed_pixels,
-                                 const size_t height,
-                                 const size_t width,
-                                 const size_t channel,
-                                 const image::Config& config) {
-  bool need_resize = true;
-  size_t resized_height = 0;
-  size_t resized_width = 0;
-  if (config.option == image::NO_ROTATE ||
-      config.option == image::CLOCKWISE_R180) {
-    if (height == normed_height_ && width == normed_width_) {
-      need_resize = false;
-    }
-    resized_height = normed_height_;
-    resized_width = normed_width_;
-  } else if (config.option == image::CLOCKWISE_R90 ||
-             config.option == image::CLOCKWISE_R270) {
-    if (height == normed_width_ && width == normed_height_) {
-      need_resize = false;
-    }
-    resized_height = normed_width_;
-    resized_width = normed_height_;
-  }
-
-  unsigned char* resized_pixels = nullptr;
-  if (!need_resize) {
-    resized_pixels = const_cast<unsigned char*>(pixels);
-  } else {
-    // Bilinear Interpolation Resize
-    resized_pixels = static_cast<unsigned char*>(malloc(
-        resized_height * resized_width * channel * sizeof(unsigned char)));
-    image::utils::resize_hwc(pixels,
-                             resized_pixels,
-                             height,
-                             width,
-                             channel,
-                             resized_height,
-                             resized_width);
-  }
-
-  unsigned char* rotated_pixels = nullptr;
-  if (config.option == image::NO_ROTATE) {
-    rotated_pixels = resized_pixels;
-  } else {
-    rotated_pixels = static_cast<unsigned char*>(malloc(
-        normed_height_ * normed_width_ * channel * sizeof(unsigned char)));
-    image::utils::rotate_hwc(resized_pixels,
-                             rotated_pixels,
-                             resized_height,
-                             resized_width,
-                             channel,
-                             config.option);
-  }
-
-  if (true) {
-    // HWC -> CHW
-    size_t index = 0;
-    if (config.format == image::kRGB) {
-      // RGB/RGBA -> RGB
-      for (size_t c = 0; c < normed_channel_; ++c) {
-        for (size_t h = 0; h < normed_height_; ++h) {
-          for (size_t w = 0; w < normed_width_; ++w) {
-            normed_pixels[index] =
-                static_cast<float>(
-                    rotated_pixels[(h * normed_width_ + w) * channel + c]) -
-                means_[c];
-            index++;
-          }
-        }
-      }
-    } else if (config.format == image::kBGR) {
-      // BGR/BGRA -> RGB
-      for (size_t c = 0; c < normed_channel_; ++c) {
-        for (size_t h = 0; h < normed_height_; ++h) {
-          for (size_t w = 0; w < normed_width_; ++w) {
-            normed_pixels[index] =
-                static_cast<float>(
-                    rotated_pixels[(h * normed_width_ + w) * channel +
-                                   (normed_channel_ - 1 - c)]) -
-                means_[c];
-            index++;
-          }
-        }
-      }
-    }
-  }
-
-  if (rotated_pixels != nullptr && rotated_pixels != resized_pixels) {
-    free(rotated_pixels);
-    rotated_pixels = nullptr;
-  }
-  if (resized_pixels != nullptr && resized_pixels != pixels) {
-    free(resized_pixels);
-    resized_pixels = nullptr;
-  }
-}
-
 void ImageRecognizer::infer(const unsigned char* pixels,
                             const size_t height,
                             const size_t width,
@@ -196,7 +98,16 @@ void ImageRecognizer::infer(const unsigned char* pixels,
   paddle_real* array;
   CHECK(paddle_matrix_get_row(mat, 0, &array));
 
-  preprocess(pixels, array, height, width, channel, config);
+  image::utils::normalize(pixels,
+                          array,
+                          height,
+                          width,
+                          channel,
+                          normed_height_,
+                          normed_width_,
+                          normed_channel_,
+                          means_,
+                          config);
 
   // Step 4: Do inference.
   paddle_arguments out_args = paddle_arguments_create_none();
