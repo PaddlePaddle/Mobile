@@ -13,7 +13,7 @@ PaddlePaddle可以通过原生编译、交叉编译的方式，构建多种移�
 - [Android平台编译指南](https://github.com/PaddlePaddle/Paddle/blob/develop/doc/mobile/cross_compiling_for_android_cn.md)
 - [iOS平台编译指南](https://github.com/PaddlePaddle/Paddle/blob/develop/doc/mobile/cross_compiling_for_ios_cn.md)
 - [Rapsberry Pi3平台编译指南](https://github.com/PaddlePaddle/Paddle/blob/develop/doc/mobile/cross_compiling_for_raspberry_cn.md)
-- NVIDIA Driver PX2平台，采用原生编译的方式，可直接依照[PaddlePaddle源码编译指南](https://github.com/PaddlePaddle/Paddle/blob/develop/doc/getstarted/build_and_install/build_from_source_cn.rst)进行编译
+- NVIDIA Driver PX2平台，采用原生编译的方式，可直接依照[PaddlePaddle源码编译指南](https://github.com/PaddlePaddle/Paddle/blob/develop/doc/v2/build_and_install/build_from_source_cn.rst)进行编译
 
 ## 使用示例
 
