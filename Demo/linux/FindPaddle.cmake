@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License
 
+set(PADDLE_FOUND OFF)
+
 set(PADDLE_ROOT $ENV{PADDLE_ROOT} CACHE PATH "Paddle Path")
 if(NOT PADDLE_ROOT)
   message(FATAL_ERROR "Set PADDLE_ROOT as your root directory installed PaddlePaddle")
@@ -27,6 +29,7 @@ find_library(PADDLE_LAYERS_LIB NAMES paddle_capi_layers PATHS
 find_library(PADDLE_ENGINE_LIB NAMES paddle_capi_engine PATHS
     ${PADDLE_ROOT}/lib/${ANDROID_ABI})
 if(PADDLE_INC_DIR AND PADDLE_LAYERS_LIB AND PADDLE_ENGINE_LIB)
+  set(PADDLE_FOUND ON)
   add_library(paddle_capi_layers STATIC IMPORTED)
   set_target_properties(paddle_capi_layers PROPERTIES IMPORTED_LOCATION
                         ${PADDLE_LAYERS_LIB})
@@ -40,12 +43,14 @@ if(PADDLE_INC_DIR AND PADDLE_LAYERS_LIB AND PADDLE_ENGINE_LIB)
   message(STATUS "Found PaddlePaddle (include: ${PADDLE_INC_DIR}; "
                  "library: ${PADDLE_LAYERS_LIB}, ${PADDLE_ENGINE_LIB})")
 elseif(PADDLE_INC_DIR AND PADDLE_WHOLE_LIB)
+  set(PADDLE_FOUND ON)
   add_library(paddle_capi_whole STATIC IMPORTED)
   set_target_properties(paddle_capi_whole PROPERTIES IMPORTED_LOCATION
                         ${PADDLE_WHOLE_LIB})
   set(PADDLE_LIBRARIES -Wl,--whole-archive paddle_capi_whole -Wl,--no-whole-archive)
 else()
-  message(FATAL_ERROR "Cannot find PaddlePaddle on ${PADDLE_ROOT}")
+  set(PADDLE_FOUND OFF)
+  return()
 endif()
 
 include_directories(${PADDLE_INC_DIR})

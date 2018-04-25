@@ -1,4 +1,4 @@
-/* Copyright (c) 2016 PaddlePaddle Authors. All Rights Reserve.
+/* Copyright (c) 2018 PaddlePaddle Authors. All Rights Reserve.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,38 +14,15 @@ limitations under the License */
 
 #pragma once
 
-#include <paddle/capi.h>
+#include <paddle/fluid/framework/init.h>
+#include <paddle/fluid/framework/lod_tensor.h>
+#include <paddle/fluid/inference/io.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <memory>
+#include <string>
 #include <vector>
 #include "image_utils.h"
-
-static const char* paddle_error_string(paddle_error status) {
-  switch (status) {
-    case kPD_NULLPTR:
-      return "nullptr error";
-    case kPD_OUT_OF_RANGE:
-      return "out of range error";
-    case kPD_PROTOBUF_ERROR:
-      return "protobuf error";
-    case kPD_NOT_SUPPORTED:
-      return "not supported error";
-    case kPD_UNDEFINED_ERROR:
-      return "undefined error";
-    default:
-      return "";
-  };
-}
-
-#define CHECK(stmt)                                            \
-  do {                                                         \
-    paddle_error __err__ = stmt;                               \
-    if (__err__ != kPD_NO_ERROR) {                             \
-      const char* str = paddle_error_string(__err__);          \
-      fprintf(stderr, "%s (%d) in " #stmt "\n", str, __err__); \
-      exit(__err__);                                           \
-    }                                                          \
-  } while (0)
 
 class ImageRecognizer {
 public:
@@ -59,19 +36,17 @@ public:
 
 public:
   ImageRecognizer()
-      : gradient_machine_(nullptr),
+      : place_(nullptr),
+        executor_(nullptr),
+        scope_(nullptr),
         normed_height_(0),
         normed_width_(0),
         normed_channel_(0) {}
 
-  static void init_paddle() {
-    // Initalize Paddle
-    char* argv[] = {const_cast<char*>("--use_gpu=False"),
-                    const_cast<char*>("--pool_limit_size=0")};
-    CHECK(paddle_init(2, (char**)argv));
-  }
+  static void init_paddle() { paddle::framework::InitDevices(); }
 
-  void init(const char* merged_model_path,
+  void init(const std::string& model_path,
+            const std::string& params_path,
             const size_t normed_height,
             const size_t normed_width,
             const size_t normed_channel,
@@ -85,7 +60,10 @@ public:
   void release();
 
 private:
-  paddle_gradient_machine gradient_machine_;
+  std::unique_ptr<paddle::framework::ProgramDesc> inference_program_;
+  paddle::platform::CPUPlace* place_;
+  paddle::framework::Executor* executor_;
+  paddle::framework::Scope* scope_;
 
   size_t normed_height_;
   size_t normed_width_;

@@ -15,6 +15,7 @@ limitations under the License */
 #pragma once
 
 #include <stdio.h>
+#include <vector>
 #include "image.h"
 
 namespace image {
@@ -34,6 +35,17 @@ void rotate_hwc(const unsigned char* pixels,
                 const size_t width,
                 const size_t channel,
                 const RotateOption option);
+
+void normalize(const unsigned char* pixels,
+               float* normed_pixels,
+               const size_t height,
+               const size_t width,
+               const size_t channel,
+               const size_t normed_height,
+               const size_t normed_width,
+               const size_t normed_channel,
+               const std::vector<float>& means,
+               const image::Config& config);
 
 }  // namespace utils
 }  // namespace image
