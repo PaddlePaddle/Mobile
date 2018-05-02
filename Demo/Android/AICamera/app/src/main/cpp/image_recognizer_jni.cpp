@@ -13,11 +13,11 @@ See the License for the specific language governing permissions and
 limitations under the License */
 
 #include <android/asset_manager_jni.h>
-#include <android/log.h>
 #include <jni.h>
 #include <string.h>
 #include <memory>
 #include "binary_reader.h"
+#include "image_converter.h"
 #include "paddle_image_recognizer.h"
 
 extern "C" {
@@ -86,6 +86,43 @@ Java_com_paddlepaddle_pdcamera_ImageRecognizer_infer(JNIEnv *env,
   env->ReleaseFloatArrayElements(jresult, jresult_ptr, 0);
 
   return jresult;
+}
+
+JNIEXPORT void
+Java_com_paddlepaddle_pdcamera_ImageRecognizer_convertYUV420ToARGB8888(
+    JNIEnv *env,
+    jclass clazz,
+    jbyteArray y,
+    jbyteArray u,
+    jbyteArray v,
+    jbyteArray output,
+    jint width,
+    jint height,
+    jint y_row_stride,
+    jint uv_row_stride,
+    jint uv_pixel_stride,
+    jboolean halfSize) {
+  jboolean inputCopy = JNI_FALSE;
+  jbyte *const y_buff = env->GetByteArrayElements(y, &inputCopy);
+  jboolean outputCopy = JNI_FALSE;
+  jbyte *const o = env->GetByteArrayElements(output, &outputCopy);
+  jbyte *const u_buff = env->GetByteArrayElements(u, &inputCopy);
+  jbyte *const v_buff = env->GetByteArrayElements(v, &inputCopy);
+
+  ConvertYUV420ToARGB8888(reinterpret_cast<uint8_t *>(y_buff),
+                          reinterpret_cast<uint8_t *>(u_buff),
+                          reinterpret_cast<uint8_t *>(v_buff),
+                          reinterpret_cast<uint8_t *>(o),
+                          width,
+                          height,
+                          y_row_stride,
+                          uv_row_stride,
+                          uv_pixel_stride);
+
+  env->ReleaseByteArrayElements(u, u_buff, JNI_ABORT);
+  env->ReleaseByteArrayElements(v, v_buff, JNI_ABORT);
+  env->ReleaseByteArrayElements(y, y_buff, JNI_ABORT);
+  env->ReleaseByteArrayElements(output, o, 0);
 }
 
 JNIEXPORT void Java_com_paddlepaddle_pdcamera_ImageRecognizer_release(

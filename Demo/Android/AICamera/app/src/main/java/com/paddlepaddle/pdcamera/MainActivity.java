@@ -302,16 +302,16 @@ public class MainActivity extends AppCompatActivity implements SettingsManager.S
                         @Override
                         public void run() {
                             if (mImageRecognizer != null) {
-                                ImageUtils.convertYUV420ToARGB8888(
+                                mImageRecognizer.convertYUV420ToARGB8888(
                                         yuvBytes[0],
                                         yuvBytes[1],
                                         yuvBytes[2],
+                                        mRgbBytes,
                                         previewWidth,
                                         previewHeight,
                                         yRowStride,
                                         uvRowStride,
-                                        uvPixelStride,
-                                        mRgbBytes);
+                                        uvPixelStride);
 
                                 List<SSDData> results = mImageRecognizer.infer(mRgbBytes, previewHeight, previewWidth, 3, SettingsManager.getInstance().getThreshold(), SettingsManager.getInstance().isBackCamera());
 

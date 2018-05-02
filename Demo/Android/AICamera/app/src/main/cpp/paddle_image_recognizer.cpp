@@ -226,8 +226,6 @@ void ImageRecognizer::infer(const unsigned char* pixels,
     return;
   }
 
-  LOGI("height = %ld, width = %ld, channel = %ld\n", height, width, channel);
-
   // Step 3: Prepare input Arguments
   paddle_arguments in_args = paddle_arguments_create_none();
 
