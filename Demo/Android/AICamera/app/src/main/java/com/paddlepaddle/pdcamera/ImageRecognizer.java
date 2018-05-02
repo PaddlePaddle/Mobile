@@ -15,6 +15,7 @@ package com.paddlepaddle.pdcamera;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,4 +83,16 @@ public class ImageRecognizer {
                                  boolean backCamera);
 
     private native void release();
+
+
+    public static native void convertYUV420ToARGB8888(
+            byte[] y,
+            byte[] u,
+            byte[] v,
+            byte[] output,
+            int width,
+            int height,
+            int yRowStride,
+            int uvRowStride,
+            int uvPixelStride);
 }

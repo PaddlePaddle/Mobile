@@ -1,0 +1,1 @@
+Place Paddle's include, third_party and lib directories here.
